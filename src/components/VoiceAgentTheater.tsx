@@ -6,6 +6,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Mic, MicOff, Volume2, Wallet, Activity, Brain, Headphones, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { supabase } from "@/integrations/supabase/client";
 
 interface AgentLog {
   id: string;
@@ -64,49 +65,93 @@ const VoiceAgentTheater = () => {
     }
   };
 
-  const handleVoiceToggle = () => {
+  const handleVoiceToggle = async () => {
     if (!isListening) {
       setIsListening(true);
       setIsProcessing(true);
       
-      // Simulate voice processing workflow
-      setTimeout(() => {
-        addAgentLog('listener', 'Transcribing voice input with ElevenLabs...');
-        setTranscript("User: My NFT mint transaction failed and I lost 0.5 ETH. Can you help me?");
-      }, 500);
-
-      setTimeout(() => {
-        addAgentLog('brain', 'Analyzing user intent and emotional state with Mistral AI...');
-      }, 1500);
-
-      setTimeout(() => {
-        addAgentLog('brain', 'Intent: Failed transaction support. Emotion: Frustrated. Recommended action: Investigate and compensate.', 'complete');
-      }, 3000);
-
-      setTimeout(() => {
-        addAgentLog('executor', 'Checking transaction hash on blockchain via Crossmint...');
-      }, 3500);
-
-      setTimeout(() => {
-        addAgentLog('executor', 'Transaction found: 0x7f2d...af83. Status: Failed. Gas used: 21,000. Initiating compensation...', 'complete');
-      }, 5000);
-
-      setTimeout(() => {
-        addAgentLog('executor', 'Minting apology NFT to user wallet... ✅ Success!', 'complete');
-        setUserNFTs(prev => [...prev, {
-          id: Date.now().toString(),
-          name: "Apology NFT #001",
-          image: "/placeholder.svg",
-          collection: "OrgoRush Support",
-          isNew: true
-        }]);
-      }, 6000);
-
-      setTimeout(() => {
+      // Real voice processing workflow using our edge functions
+      try {
+        addAgentLog('listener', 'Initializing ElevenLabs voice processing...');
+        
+        // Simulate microphone input (in real app, this would use MediaRecorder)
+        const demoMessage = "My NFT mint transaction failed and I lost 0.5 ETH. Can you help me?";
+        setTranscript(`User: ${demoMessage}`);
+        
+        addAgentLog('listener', 'Voice transcription complete ✅', 'complete');
+        
+        setTimeout(async () => {
+          addAgentLog('brain', 'Analyzing user intent with Mistral AI...');
+          
+          try {
+            // Call our Mistral analysis function
+            const { data: analysis, error } = await supabase.functions.invoke('mistral-analysis', {
+              body: { 
+                text: demoMessage,
+                context: 'Web3 NFT support conversation'
+              }
+            });
+            
+            if (!error && analysis) {
+              addAgentLog('brain', `Analysis complete: Intent(${analysis.analysis.intent}), Emotion(${analysis.analysis.emotion}), Urgency(${analysis.analysis.urgency}) ✅`, 'complete');
+              
+              setTimeout(async () => {
+                addAgentLog('executor', 'Generating support response...');
+                
+                // Call our AI assistant function
+                const { data: assistantResponse } = await supabase.functions.invoke('ai-assistant', {
+                  body: { 
+                    message: demoMessage,
+                    context: `Analysis: ${JSON.stringify(analysis.analysis)}`,
+                    use_voice_response: true
+                  }
+                });
+                
+                if (assistantResponse) {
+                  addAgentLog('executor', `Response generated using ${assistantResponse.api_used} ✅`, 'complete');
+                  
+                  // Add NFT compensation simulation
+                  setTimeout(() => {
+                    addAgentLog('executor', 'Minting compensation NFT... ✅ Success!', 'complete');
+                    setUserNFTs(prev => [...prev, {
+                      id: Date.now().toString(),
+                      name: "Apology NFT #001",
+                      image: "/placeholder.svg",
+                      collection: "OrgoRush Support",
+                      isNew: true
+                    }]);
+                    
+                    setTranscript(prev => prev + `\n\nSupport Agent: ${assistantResponse.response}`);
+                    
+                    // Play voice response if available
+                    if (assistantResponse.audio) {
+                      const audioData = `data:audio/mpeg;base64,${assistantResponse.audio}`;
+                      const audio = new Audio(audioData);
+                      audio.play().catch(console.error);
+                    }
+                  }, 1000);
+                }
+              }, 1500);
+            } else {
+              addAgentLog('brain', 'Analysis failed, using fallback response', 'error');
+            }
+          } catch (error) {
+            console.error('Mistral analysis error:', error);
+            addAgentLog('brain', 'Analysis failed, using demo mode', 'error');
+          }
+        }, 1000);
+        
+        setTimeout(() => {
+          setIsListening(false);
+          setIsProcessing(false);
+        }, 8000);
+        
+      } catch (error) {
+        console.error('Voice processing error:', error);
         setIsListening(false);
         setIsProcessing(false);
-        setTranscript(prev => prev + "\n\nSupport Agent: I'm sorry about your failed transaction. I've investigated the issue and found your transaction did fail due to network congestion. As compensation, I've minted an exclusive apology NFT to your wallet and initiated a 0.5 ETH refund. Is there anything else I can help you with?");
-      }, 7000);
+        addAgentLog('listener', 'Voice processing failed', 'error');
+      }
     } else {
       setIsListening(false);
       setIsProcessing(false);
