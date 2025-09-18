@@ -63,7 +63,7 @@ const BlockchainPanel = () => {
     const newNFT: NFT = {
       id: Date.now().toString(),
       name: `Support Ticket #${Math.floor(Math.random() * 10000)}`,
-      collection: "OrgoRush Support",
+      collection: "RUSH Support",
       tokenId: Math.floor(Math.random() * 10000).toString(),
       image: "/placeholder.svg",
       isNew: true,

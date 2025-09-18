@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import { Flame, Zap, Crown, TrendingUp, Wallet, Clock } from "lucide-react";
 
 export default function OrgoTokenPanel() {
-  const [orgoBalance, setOrgoBalance] = useState(999.9);
+  const [solBalance, setSolBalance] = useState(999.9);
   const [totalBurned, setTotalBurned] = useState(1247.3);
   const [speedBoosts, setSpeedBoosts] = useState({
     turboMode: false,
@@ -16,12 +16,12 @@ export default function OrgoTokenPanel() {
     preExecution: false
   });
   const [speedMultiplier, setSpeedMultiplier] = useState(1.0);
-  const [stakedOrgo, setStakedOrgo] = useState(50.0);
+  const [stakedSol, setStakedSol] = useState(50.0);
   const [loading, setLoading] = useState(false);
 
-  const enableSpeedBoost = async (boostType: string, orgoRequired: number) => {
-    if (orgoBalance < orgoRequired) {
-      toast.error(`Insufficient ORGO balance. Need ${orgoRequired} ORGO.`);
+  const enableSpeedBoost = async (boostType: string, solRequired: number) => {
+    if (solBalance < solRequired) {
+      toast.error(`Insufficient SOL balance. Need ${solRequired} SOL.`);
       return;
     }
 
@@ -37,7 +37,7 @@ export default function OrgoTokenPanel() {
         body: JSON.stringify({
           user_wallet: "0x742d35Cc6634C0532925a3b8D6Ac6E7D9C",
           boost_type: boostType,
-          orgo_amount: orgoRequired,
+          sol_amount: solRequired,
           action: "enable_boost"
         })
       });
@@ -52,11 +52,11 @@ export default function OrgoTokenPanel() {
            boostType === 'priority_lane' ? 'priorityLane' : 'preExecution']: true
         }));
         
-        setOrgoBalance(result.orgo_balance || (orgoBalance - orgoRequired));
-        setTotalBurned(prev => prev + (result.orgo_burned || orgoRequired));
+        setSolBalance(result.sol_balance || (solBalance - solRequired));
+        setTotalBurned(prev => prev + (result.sol_burned || solRequired));
         setSpeedMultiplier(result.speed_gain ? parseFloat(result.speed_gain.match(/\d+/)?.[0] || "50") / 100 + 1 : speedMultiplier + 0.5);
         
-        toast.success(`🔥 ${orgoRequired} ORGO Burned for ${boostType.replace('_', ' ')}! ${result.speed_gain || '50% faster processing'}`);
+        toast.success(`🔥 ${solRequired} SOL Burned for ${boostType.replace('_', ' ')}! ${result.speed_gain || '50% faster processing'}`);
       }
     } catch (error) {
       // Fallback demo functionality
@@ -66,19 +66,19 @@ export default function OrgoTokenPanel() {
          boostType === 'priority_lane' ? 'priorityLane' : 'preExecution']: true
       }));
       
-      setOrgoBalance(prev => prev - orgoRequired);
-      setTotalBurned(prev => prev + orgoRequired);
+      setSolBalance(prev => prev - solRequired);
+      setTotalBurned(prev => prev + solRequired);
       setSpeedMultiplier(prev => prev + 0.5);
       
-      toast.success(`🔥 ${orgoRequired} ORGO Burned for ${boostType.replace('_', ' ')}! 50% faster processing`);
+      toast.success(`🔥 ${solRequired} SOL Burned for ${boostType.replace('_', ' ')}! 50% faster processing`);
     }
     
     setLoading(false);
   };
 
-  const stakeOrgo = async (amount: number) => {
-    if (orgoBalance < amount) {
-      toast.error(`Insufficient ORGO balance. Need ${amount} ORGO.`);
+  const stakeSol = async (amount: number) => {
+    if (solBalance < amount) {
+      toast.error(`Insufficient SOL balance. Need ${amount} SOL.`);
       return;
     }
 
@@ -100,15 +100,15 @@ export default function OrgoTokenPanel() {
 
       const result = await response.json();
       
-      setOrgoBalance(prev => prev - amount);
-      setStakedOrgo(prev => prev + amount);
+      setSolBalance(prev => prev - amount);
+      setStakedSol(prev => prev + amount);
       
-      toast.success(`💎 ${amount} ORGO staked successfully! Earning 12% APY`);
+      toast.success(`💎 ${amount} SOL staked successfully! Earning 12% APY`);
     } catch (error) {
       // Fallback demo
-      setOrgoBalance(prev => prev - amount);
-      setStakedOrgo(prev => prev + amount);
-      toast.success(`💎 ${amount} ORGO staked successfully! Earning 12% APY`);
+      setSolBalance(prev => prev - amount);
+      setStakedSol(prev => prev + amount);
+      toast.success(`💎 ${amount} SOL staked successfully! Earning 12% APY`);
     }
     
     setLoading(false);
@@ -118,7 +118,7 @@ export default function OrgoTokenPanel() {
     <div className="space-y-6">
       <div className="text-center">
         <h2 className="text-3xl font-bold bg-gradient-to-r from-orange-500 to-red-600 bg-clip-text text-transparent">
-          ORGO Token Utility Hub
+          SOL Token Utility Hub
         </h2>
         <p className="text-muted-foreground mt-2">Burn • Stake • Boost • Earn</p>
       </div>
@@ -129,14 +129,14 @@ export default function OrgoTokenPanel() {
           <div>
             <h3 className="text-lg font-semibold flex items-center gap-2">
               <Wallet className="h-5 w-5" />
-              ORGO Balance
+              SOL Balance
             </h3>
-            <div className="text-3xl font-bold text-orange-600">{orgoBalance.toFixed(2)} ORGO</div>
-            <p className="text-sm text-muted-foreground">${(orgoBalance * 4.73).toFixed(2)} USD value</p>
+            <div className="text-3xl font-bold text-orange-600">{solBalance.toFixed(2)} SOL</div>
+            <p className="text-sm text-muted-foreground">${(solBalance * 98.5).toFixed(2)} USD value</p>
           </div>
           <div className="text-right">
             <div className="text-sm text-muted-foreground">Staked</div>
-            <div className="text-xl font-bold text-green-600">{stakedOrgo.toFixed(1)} ORGO</div>
+            <div className="text-xl font-bold text-green-600">{stakedSol.toFixed(1)} SOL</div>
             <div className="text-sm text-green-600">+12% APY</div>
           </div>
         </div>
@@ -161,7 +161,7 @@ export default function OrgoTokenPanel() {
             </div>
             <div className="flex items-center gap-3">
               <Badge variant={speedBoosts.turboMode ? "default" : "outline"}>
-                {speedBoosts.turboMode ? "ACTIVE" : "0.1 ORGO"}
+                {speedBoosts.turboMode ? "ACTIVE" : "0.1 SOL"}
               </Badge>
               <Button
                 size="sm"
@@ -185,12 +185,12 @@ export default function OrgoTokenPanel() {
             </div>
             <div className="flex items-center gap-3">
               <Badge variant={speedBoosts.priorityLane ? "default" : "outline"}>
-                {speedBoosts.priorityLane ? "ACTIVE" : "50 ORGO"}
+                {speedBoosts.priorityLane ? "ACTIVE" : "50 SOL"}
               </Badge>
               <Button
                 size="sm"
                 disabled={speedBoosts.priorityLane || loading}
-                onClick={() => stakeOrgo(50)}
+                onClick={() => stakeSol(50)}
                 variant={speedBoosts.priorityLane ? "secondary" : "default"}
               >
                 {speedBoosts.priorityLane ? "Active" : "Stake & Enable"}
@@ -208,16 +208,16 @@ export default function OrgoTokenPanel() {
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <Badge variant={orgoBalance >= 100 ? "default" : "outline"}>
-                {orgoBalance >= 100 ? "ACTIVE" : "Hold 100+ ORGO"}
+              <Badge variant={solBalance >= 100 ? "default" : "outline"}>
+                {solBalance >= 100 ? "ACTIVE" : "Hold 100+ SOL"}
               </Badge>
               <Button
                 size="sm"
-                disabled={orgoBalance < 100 || loading}
-                onClick={() => stakeOrgo(100)}
-                variant={orgoBalance >= 100 ? "secondary" : "default"}
+                disabled={solBalance < 100 || loading}
+                onClick={() => stakeSol(100)}
+                variant={solBalance >= 100 ? "secondary" : "default"}
               >
-                {orgoBalance >= 100 ? "Qualified" : "Need More ORGO"}
+                {solBalance >= 100 ? "Qualified" : "Need More SOL"}
               </Button>
             </div>
           </div>
@@ -243,7 +243,7 @@ export default function OrgoTokenPanel() {
         <div className="grid md:grid-cols-2 gap-6">
           <div className="text-center">
             <div className="text-3xl font-bold text-red-600 mb-2">🔥 {totalBurned.toFixed(1)}</div>
-            <div className="text-sm text-muted-foreground">Total ORGO Burned</div>
+            <div className="text-sm text-muted-foreground">Total SOL Burned</div>
             <div className="text-lg font-semibold text-green-600">${(totalBurned * 4.73).toFixed(0)} Value Removed</div>
           </div>
           
@@ -258,15 +258,15 @@ export default function OrgoTokenPanel() {
           <div className="text-sm space-y-1">
             <div className="flex justify-between">
               <span>Daily Burn Rate:</span>
-              <span className="font-semibold">625 ORGO/day</span>
+              <span className="font-semibold">625 SOL/day</span>
             </div>
             <div className="flex justify-between">
               <span>Circulating Supply:</span>
-              <span className="font-semibold">98,752.7 ORGO ↓</span>
+              <span className="font-semibold">98,752.7 SOL ↓</span>
             </div>
             <div className="flex justify-between">
               <span>Next Milestone:</span>
-              <span className="font-semibold text-orange-600">2,000 ORGO burned</span>
+              <span className="font-semibold text-orange-600">2,000 SOL burned</span>
             </div>
           </div>
         </div>
@@ -274,28 +274,28 @@ export default function OrgoTokenPanel() {
 
       {/* Transaction History */}
       <Card className="p-6">
-        <h3 className="text-lg font-semibold mb-4">Recent ORGO Activity</h3>
+        <h3 className="text-lg font-semibold mb-4">Recent SOL Activity</h3>
         <div className="space-y-3">
           <div className="flex items-center justify-between p-3 bg-muted rounded-lg">
             <div className="flex items-center gap-3">
               <Flame className="h-4 w-4 text-red-500" />
               <span className="text-sm">Turbo Mode Activated</span>
             </div>
-            <span className="text-sm font-medium text-red-600">-0.1 ORGO</span>
+            <span className="text-sm font-medium text-red-600">-0.1 SOL</span>
           </div>
           <div className="flex items-center justify-between p-3 bg-muted rounded-lg">
             <div className="flex items-center gap-3">
               <TrendingUp className="h-4 w-4 text-green-500" />
               <span className="text-sm">Staking Rewards</span>
             </div>
-            <span className="text-sm font-medium text-green-600">+0.16 ORGO</span>
+            <span className="text-sm font-medium text-green-600">+0.16 SOL</span>
           </div>
           <div className="flex items-center justify-between p-3 bg-muted rounded-lg">
             <div className="flex items-center gap-3">
               <Flame className="h-4 w-4 text-red-500" />
               <span className="text-sm">Payment Processing Burn</span>
             </div>
-            <span className="text-sm font-medium text-red-600">-0.05 ORGO</span>
+            <span className="text-sm font-medium text-red-600">-0.05 SOL</span>
           </div>
         </div>
       </Card>

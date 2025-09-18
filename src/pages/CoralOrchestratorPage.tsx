@@ -1,5 +1,5 @@
 import Navigation from "@/components/Navigation";
-import CoralOrchestrator from "@/components/coral/CoralOrchestrator";
+import RealCoralOrchestrator from "@/components/coral/RealCoralOrchestrator";
 
 const CoralOrchestratorPage = () => {
   return (
@@ -21,7 +21,7 @@ const CoralOrchestratorPage = () => {
             </p>
           </div>
 
-          <CoralOrchestrator />
+          <RealCoralOrchestrator />
         </div>
       </div>
     </div>

@@ -12,7 +12,7 @@ export default function TransactionHistory() {
     type: "payment",
     status: "completed",
     amount: 150.75,
-    currency: "ORGO",
+    currency: "SOL",
     fee: 0.15,
     burn: 1.51,
     recipient: "8K3x...9fR2",
@@ -24,7 +24,7 @@ export default function TransactionHistory() {
     type: "stake",
     status: "completed",
     amount: 500.00,
-    currency: "ORGO",
+    currency: "SOL",
     fee: 0.00,
     burn: 0.00,
     recipient: "Staking Pool",
@@ -36,7 +36,7 @@ export default function TransactionHistory() {
     type: "receive",
     status: "completed",
     amount: 75.50,
-    currency: "ORGO",
+    currency: "SOL",
     fee: 0.00,
     burn: 0.00,
     recipient: "You",
@@ -60,7 +60,7 @@ export default function TransactionHistory() {
     type: "swap",
     status: "completed",
     amount: 1000.00,
-    currency: "USDC → ORGO",
+    currency: "USDC → SOL",
     fee: 3.00,
     burn: 0.00,
     recipient: "Meteora DEX",
@@ -72,7 +72,7 @@ export default function TransactionHistory() {
     type: "payment",
     status: "failed",
     amount: 50.25,
-    currency: "ORGO",
+    currency: "SOL",
     fee: 0.00,
     burn: 0.00,
     recipient: "9qX2...8fN1",
@@ -118,7 +118,7 @@ export default function TransactionHistory() {
   return <div className="space-y-6">
       <div className="text-center">
         <h2 className="text-3xl font-bold">Transaction History</h2>
-        <p className="text-muted-foreground mt-2">Workflow Steps: 1. Identity Verification: Use zero-knowledge proofs (ZKPs) for instant KYC verification. 2. Transaction Prediction: Use an LSTM model to predict and pre-sign likely transactions. 3. Fraud Detection: Analyze the transaction in real-time using an isolation forest model. 4. Atomic Swap Execution: Execute the payment via an atomic swap on Solana, burning ORGO tokens. 5. Tokenomics Enforcement: Apply dynamic burn rates, staking discounts, and mint loyalty NFTs. 6. Feedback and Retraining: Update the prediction and fraud detection models with new data.</p>
+        <p className="text-muted-foreground mt-2">Workflow Steps: 1. Identity Verification: Use zero-knowledge proofs (ZKPs) for instant KYC verification. 2. Transaction Prediction: Use an LSTM model to predict and pre-sign likely transactions. 3. Fraud Detection: Analyze the transaction in real-time using an isolation forest model. 4. Atomic Swap Execution: Execute the payment via an atomic swap on Solana, burning SOL tokens. 5. Tokenomics Enforcement: Apply dynamic burn rates, staking discounts, and mint loyalty NFTs. 6. Feedback and Retraining: Update the prediction and fraud detection models with new data.</p>
       </div>
 
       {/* Stats Overview */}
@@ -137,7 +137,7 @@ export default function TransactionHistory() {
         </Card>
         <Card className="p-4 text-center">
           <div className="text-2xl font-bold text-orange-500">142.7</div>
-          <div className="text-sm text-muted-foreground">ORGO Burned</div>
+          <div className="text-sm text-muted-foreground">SOL Burned</div>
         </Card>
       </div>
 
@@ -190,12 +190,12 @@ export default function TransactionHistory() {
                 </div>
                 
                 {tx.fee > 0 && <div className="text-xs text-muted-foreground">
-                    Fee: {tx.fee} ORGO
+                    Fee: {tx.fee} SOL
                   </div>}
                 
                 {tx.burn > 0 && <div className="text-xs text-orange-500 flex items-center gap-1">
                     <Flame className="h-3 w-3" />
-                    Burned: {tx.burn} ORGO
+                    Burned: {tx.burn} SOL
                   </div>}
                 
                 <Button variant="ghost" size="sm" className="mt-1">

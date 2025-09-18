@@ -85,43 +85,80 @@ const VoiceInterface: React.FC<VoiceInterfaceProps> = ({
 
   const processAudio = async (audioBlob: Blob) => {
     try {
-      // Step 1: Convert speech to text
+      // Step 1: Convert speech to text with enhanced options
       const formData = new FormData();
       formData.append('audio', audioBlob);
+      formData.append('model', 'eleven_multilingual_v2');
+      formData.append('enable_diarization', 'false');
       
       const { data: speechData, error: speechError } = await supabase.functions.invoke('voice-to-text', {
         body: formData
       });
       
-      if (speechError) throw speechError;
+      if (speechError) {
+        throw new Error(`Speech-to-text failed: ${speechError.message}`);
+      }
+      
+      if (!speechData.success) {
+        throw new Error(`Speech-to-text error: ${speechData.error}`);
+      }
       
       const userTranscript = speechData.transcript;
+      if (!userTranscript || userTranscript.trim().length === 0) {
+        throw new Error('No speech detected. Please try speaking more clearly.');
+      }
+      
       setTranscript(userTranscript);
       onTranscriptChange?.(userTranscript);
       
-      // Step 2: Analyze with Mistral AI
+      // Step 2: Analyze with Mistral AI (enhanced analysis)
       const { data: analysisData, error: analysisError } = await supabase.functions.invoke('mistral-analysis', {
         body: { 
           text: userTranscript,
-          context: 'Web3 support conversation'
+          context: 'Web3 support conversation',
+          analysis_type: 'comprehensive',
+          user_profile: {
+            experience_level: 'intermediate' // Could be dynamic based on user data
+          }
         }
       });
       
-      if (analysisError) throw analysisError;
+      if (analysisError) {
+        throw new Error(`Analysis failed: ${analysisError.message}`);
+      }
+      
+      if (!analysisData.success) {
+        throw new Error(`Analysis error: ${analysisData.error}`);
+      }
       
       setAnalysis(analysisData.analysis);
       onAnalysisChange?.(analysisData.analysis);
       
-      // Step 3: Generate AI response with voice
+      // Step 3: Generate AI response with enhanced context
       const { data: assistantData, error: assistantError } = await supabase.functions.invoke('ai-assistant', {
         body: { 
           message: userTranscript,
-          context: `Previous analysis: ${JSON.stringify(analysisData.analysis)}`,
-          use_voice_response: true
+          context: `Analysis: ${JSON.stringify(analysisData.analysis)}`,
+          use_voice_response: true,
+          user_preferences: {
+            response_style: 'concise',
+            expertise_level: analysisData.analysis.complexity_level === 'simple' ? 'beginner' : 'intermediate'
+          },
+          conversation_history: conversation.map(msg => ({
+            role: msg.startsWith('User:') ? 'user' : 'assistant',
+            content: msg.replace(/^(User:|Assistant:)\s*/, ''),
+            timestamp: new Date().toISOString()
+          }))
         }
       });
       
-      if (assistantError) throw assistantError;
+      if (assistantError) {
+        throw new Error(`AI assistant failed: ${assistantError.message}`);
+      }
+      
+      if (!assistantData.success) {
+        throw new Error(`AI assistant error: ${assistantData.error}`);
+      }
       
       // Update conversation
       setConversation(prev => [
@@ -134,13 +171,30 @@ const VoiceInterface: React.FC<VoiceInterfaceProps> = ({
       if (assistantData.audio) {
         const audioData = `data:audio/mpeg;base64,${assistantData.audio}`;
         const audio = new Audio(audioData);
-        audio.play().catch(console.error);
+        audio.play().catch(error => {
+          console.error('Audio playback failed:', error);
+          toast({
+            title: "Audio Playback Error",
+            description: "Could not play voice response",
+            variant: "destructive",
+          });
+        });
       }
       
       toast({
         title: "Voice Processing Complete",
-        description: `Used ${assistantData.api_used} for analysis`,
+        description: `Used ${assistantData.api_used} for analysis. Confidence: ${Math.round((assistantData.confidence_score || 0.8) * 100)}%`,
       });
+      
+      // Show suggestions if available
+      if (assistantData.suggestions && assistantData.suggestions.length > 0) {
+        setTimeout(() => {
+          toast({
+            title: "Helpful Suggestions",
+            description: assistantData.suggestions.join(', '),
+          });
+        }, 1000);
+      }
       
     } catch (error) {
       console.error('Error processing audio:', error);

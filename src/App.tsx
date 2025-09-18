@@ -18,6 +18,8 @@ import TokenInfoPage from "./pages/TokenInfoPage";
 import WalletPage from "./pages/WalletPage";
 import HistoryPage from "./pages/HistoryPage";
 import CoralOrchestratorPage from "./pages/CoralOrchestratorPage";
+import ApiHealthPage from "./pages/ApiHealthPage";
+import CoralHackathonDemo from "./components/CoralHackathonDemo";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -36,8 +38,12 @@ const App = () => (
           <Route path="/marketplace" element={<AgentMarketplacePage />} />
           <Route path="/analytics" element={<AnalyticsPage />} />
           <Route path="/docs" element={<DocumentationPage />} />
+          <Route path="/api-health" element={<ApiHealthPage />} />
           
-          {/* Legacy routes for existing OrgoRush functionality */}
+          {/* Coral Protocol Hackathon Demo */}
+          <Route path="/coral-hackathon" element={<CoralHackathonDemo />} />
+          
+          {/* Legacy routes for existing RUSH functionality */}
           <Route path="/orgo-demo" element={<LiveDemoPage />} />
           <Route path="/vm-dashboard" element={<VMDashboardPage />} />
           <Route path="/payment" element={<PaymentPage />} />

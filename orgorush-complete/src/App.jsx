@@ -76,7 +76,7 @@ function App() {
     setOrgoProgress(65)
     await sleep(60)
     
-    setOrgoStatus('🔥 Burning ORGO tokens (0.1% fee)...')
+    setOrgoStatus('🔥 Burning SOL tokens (0.1% fee)...')
     setOrgoProgress(80)
     let burnCount = 0
     const burnInterval = setInterval(() => {
@@ -186,7 +186,7 @@ function App() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            OrgoRush Payment Agent
+            RUSH Payment Agent
           </motion.h1>
           <motion.p 
             className="text-xl text-gray-600 mb-6"
@@ -230,12 +230,12 @@ function App() {
                       <div className="flex items-center justify-center gap-3 mb-2">
                         <Trophy className="h-8 w-8 text-yellow-600" />
                         <h2 className="text-2xl font-bold text-yellow-800">
-                          {winner === 'orgo' ? 'OrgoRush Wins!' : 'PayPal Wins!'}
+                          {winner === 'orgo' ? 'RUSH Wins!' : 'PayPal Wins!'}
                         </h2>
                         <Trophy className="h-8 w-8 text-yellow-600" />
                       </div>
                       <p className="text-lg text-yellow-700">
-                        OrgoRush: {orgoTime}ms vs PayPal: {paypalTime}ms
+                        RUSH: {orgoTime}ms vs PayPal: {paypalTime}ms
                         <br />
                         <span className="font-semibold">
                           {winner === 'orgo' ? `${((paypalTime - orgoTime) / orgoTime * 100).toFixed(0)}x faster!` : 'Unexpected!'}
@@ -251,7 +251,7 @@ function App() {
               <Card className="bg-gradient-to-br from-blue-50 to-indigo-100 border-blue-200">
                 <CardHeader>
                   <CardTitle className="text-2xl font-bold text-blue-800 flex items-center gap-2">
-                    <Zap className="h-6 w-6" />OrgoRush Agent
+                    <Zap className="h-6 w-6" />RUSH Agent
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
@@ -265,9 +265,9 @@ function App() {
                   <div className="bg-gradient-to-r from-orange-100 to-red-100 rounded-lg p-4">
                     <div className="flex items-center gap-2 mb-2">
                       <Flame className="h-5 w-5 text-orange-600" />
-                      <span className="font-semibold text-orange-800">ORGO Burn Counter</span>
+                      <span className="font-semibold text-orange-800">SOL Burn Counter</span>
                     </div>
-                    <div className="text-2xl font-mono font-bold text-orange-600">{orgoBurnAmount.toFixed(1)} ORGO</div>
+                    <div className="text-2xl font-mono font-bold text-orange-600">{orgoBurnAmount.toFixed(1)} SOL</div>
                   </div>
                 </CardContent>
               </Card>
@@ -352,12 +352,12 @@ function App() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <CreditCard className="w-6 h-6" />Send ORGO Payment
+                  <CreditCard className="w-6 h-6" />Send SOL Payment
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium mb-2">Amount (ORGO)</label>
+                  <label className="block text-sm font-medium mb-2">Amount (SOL)</label>
                   <Input type="number" value={paymentAmount} onChange={(e) => setPaymentAmount(e.target.value)} placeholder="Enter amount" />
                 </div>
                 <div>
@@ -368,7 +368,7 @@ function App() {
                   {paymentStatus === 'processing' ? 'Processing...' : paymentStatus === 'completed' ? 'Payment Sent!' : 'Send Payment'}
                 </Button>
                 {paymentStatus === 'completed' && (
-                  <div className="text-center text-green-600 font-medium">✅ Payment of {paymentAmount} ORGO sent successfully!</div>
+                  <div className="text-center text-green-600 font-medium">✅ Payment of {paymentAmount} SOL sent successfully!</div>
                 )}
               </CardContent>
             </Card>
@@ -378,7 +378,7 @@ function App() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Coins className="w-6 h-6" />ORGO Token Information
+                  <Coins className="w-6 h-6" />SOL Token Information
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -414,7 +414,7 @@ function App() {
               </CardHeader>
               <CardContent>
                 <div className="text-center p-8">
-                  <div className="text-4xl font-bold text-blue-600 mb-2">1,250.75 ORGO</div>
+                  <div className="text-4xl font-bold text-blue-600 mb-2">1,250.75 SOL</div>
                   <div className="text-lg text-gray-600 mb-4">≈ $29.27 USD</div>
                   <Button className="bg-gradient-to-r from-blue-600 to-purple-600">Connect Wallet</Button>
                 </div>
@@ -433,21 +433,21 @@ function App() {
                 <div className="space-y-4">
                   <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                     <div>
-                      <div className="font-medium">ORGO Transfer</div>
+                      <div className="font-medium">SOL Transfer</div>
                       <div className="text-sm text-gray-600">To: 7xKX...SAEv</div>
                     </div>
                     <div className="text-right">
-                      <div className="font-medium text-red-600">-150 ORGO</div>
+                      <div className="font-medium text-red-600">-150 SOL</div>
                       <div className="text-sm text-gray-600">5m ago</div>
                     </div>
                   </div>
                   <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                     <div>
-                      <div className="font-medium">ORGO Received</div>
+                      <div className="font-medium">SOL Received</div>
                       <div className="text-sm text-gray-600">From: 9WzD...AWWM</div>
                     </div>
                     <div className="text-right">
-                      <div className="font-medium text-green-600">+500 ORGO</div>
+                      <div className="font-medium text-green-600">+500 SOL</div>
                       <div className="text-sm text-gray-600">1h ago</div>
                     </div>
                   </div>

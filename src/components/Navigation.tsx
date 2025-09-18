@@ -11,7 +11,8 @@ import {
   Wallet, 
   History,
   Mic,
-  Network
+  Network,
+  Settings
 } from "lucide-react";
 
 const Navigation = () => {
@@ -21,13 +22,14 @@ const Navigation = () => {
     { path: "/", label: "Live Demo", icon: PlayCircle },
     { path: "/vm-dashboard", label: "VM Dashboard", icon: Monitor },
     { path: "/payment", label: "Payment", icon: CreditCard },
-    { path: "/orgo-utility", label: "ORGO Utility", icon: Coins },
+    { path: "/orgo-utility", label: "SOL Utility", icon: Coins },
     { path: "/fraud-detection", label: "Fraud Detection", icon: Shield },
     { path: "/token-info", label: "Token Info", icon: Info },
     { path: "/wallet", label: "Wallet", icon: Wallet },
     { path: "/history", label: "History", icon: History },
     { path: "/voice-agent", label: "Voice Agent", icon: Mic },
-    { path: "/coral-orchestrator", label: "Coral Protocol", icon: Network }
+    { path: "/coral-orchestrator", label: "Coral Protocol", icon: Network },
+    { path: "/api-health", label: "API Health", icon: Settings }
   ];
 
   return (
@@ -36,7 +38,7 @@ const Navigation = () => {
         <div className="flex items-center justify-between mb-6">
           <div className="text-center flex-1">
             <h1 className="text-4xl font-bold bg-gradient-to-r from-primary via-purple-500 to-blue-600 bg-clip-text text-transparent">
-              OrgoRush Payment Agent
+              RUSH Payment Agent
             </h1>
             <p className="text-muted-foreground mt-2 text-sm">
               AI-powered Web3 payments with sub-0.5s settlement • ORGO Hackathon Submission

@@ -11,7 +11,6 @@ export default function WalletBalance() {
   const [walletAddress, setWalletAddress] = useState("");
   const [balances] = useState({
     sol: 12.47,
-    orgo: 2847.39,
     usdc: 10000.00
   });
   const mockWalletAddress = "8K3x7mP9fR2qW5nL1tY8jH9mK3";
@@ -40,7 +39,7 @@ export default function WalletBalance() {
   return <div className="max-w-2xl mx-auto space-y-6">
       <div className="text-center">
         <h2 className="text-3xl font-bold">Solana Wallet</h2>
-        <p className="text-muted-foreground mt-2">Connect your wallet to start using OrgoRush. Agents auto-optimize swaps, compliance, and tokenomics in real-time.  Orgo’s 500ms desktop boot enables just-in-time agent spawning. Orgo’s desktop SDK for browser/OS control  
+        <p className="text-muted-foreground mt-2">Connect your wallet to start using RUSH. Agents auto-optimize swaps, compliance, and tokenomics in real-time.  Orgo's 500ms desktop boot enables just-in-time agent spawning. Orgo's desktop SDK for browser/OS control  
 - Solana Pay for swaps  
 - Believe.app for compliance  
 - Meteora for liquidity  
@@ -64,7 +63,7 @@ export default function WalletBalance() {
                 </>}
             </Button>
             <div className="text-xs text-muted-foreground">
-              By connecting, you agree to OrgoRush Terms of Service
+              By connecting, you agree to RUSH Terms of Service
             </div>
           </div>
         </Card> : <div className="space-y-6">
@@ -136,21 +135,21 @@ export default function WalletBalance() {
                 </div>
               </div>
 
-              {/* ORGO Balance */}
+              {/* SOL Balance */}
               <div className="flex items-center justify-between p-4 bg-primary/10 rounded-lg border border-primary/20">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-gradient-to-r from-primary to-blue-600 rounded-full flex items-center justify-center">
                     <span className="text-white font-bold text-sm">OR</span>
                   </div>
                   <div>
-                    <div className="font-medium">Orgo</div>
-                    <div className="text-sm text-muted-foreground">ORGO</div>
+                    <div className="font-medium">Solana</div>
+                    <div className="text-sm text-muted-foreground">SOL</div>
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="font-semibold">{balances.orgo.toFixed(2)} ORGO</div>
+                  <div className="font-semibold">{balances.sol.toFixed(2)} SOL</div>
                   <div className="text-sm text-muted-foreground">
-                    ${(balances.orgo * 4.73).toFixed(2)}
+                    ${(balances.sol * 98.5).toFixed(2)}
                   </div>
                 </div>
               </div>
@@ -180,7 +179,7 @@ export default function WalletBalance() {
             <div className="flex justify-between items-center">
               <span className="font-medium">Total Portfolio Value</span>
               <span className="text-xl font-bold">
-                ${(balances.sol * 98.5 + balances.orgo * 4.73 + balances.usdc).toFixed(2)}
+                ${(balances.sol * 98.5 + balances.usdc).toFixed(2)}
               </span>
             </div>
           </Card>
@@ -189,13 +188,13 @@ export default function WalletBalance() {
           <div className="grid grid-cols-2 gap-4">
             <Card className="p-4 text-center hover:bg-muted/50 transition-colors cursor-pointer">
               <Plus className="h-8 w-8 mx-auto mb-2 text-primary" />
-              <div className="font-medium">Buy ORGO</div>
+              <div className="font-medium">Buy SOL</div>
               <div className="text-sm text-muted-foreground">Purchase with SOL</div>
             </Card>
             
             <Card className="p-4 text-center hover:bg-muted/50 transition-colors cursor-pointer">
               <RefreshCw className="h-8 w-8 mx-auto mb-2 text-primary" />
-              <div className="font-medium">Stake ORGO</div>
+              <div className="font-medium">Stake SOL</div>
               <div className="text-sm text-muted-foreground">Earn 22.3% APY</div>
             </Card>
           </div>

@@ -213,7 +213,7 @@ class BelieveAgentPlatform:
                         [deal["id"] for deal in result["result"].get("recommended_deals", [])]
                     )
                 
-                # Add OrgoRush benefits to each deal
+                # Add RUSH benefits to each deal
                 enhanced_deals = self._enhance_deals_with_orgo_benefits(
                     result["result"].get("recommended_deals", [])
                 )
@@ -233,11 +233,11 @@ class BelieveAgentPlatform:
             return {"error": str(e)}
     
     def _enhance_deals_with_orgo_benefits(self, deals: List[Dict]) -> List[Dict]:
-        """Enhance deals with OrgoRush payment benefits"""
+        """Enhance deals with RUSH payment benefits"""
         enhanced = []
         
         for deal in deals:
-            # Calculate OrgoRush benefits
+            # Calculate RUSH benefits
             price = deal.get("price", 0)
             stripe_fee = price * 0.029 + 0.30
             orgo_fee = price * 0.001
@@ -256,7 +256,7 @@ class BelieveAgentPlatform:
         
         return enhanced
     
-    async def process_deal_purchase(self, user_id: str, deal_id: str, payment_method: str = "orgorush") -> Dict:
+    async def process_deal_purchase(self, user_id: str, deal_id: str, payment_method: str = "rush") -> Dict:
         """Process deal purchase using enhanced payment agents"""
         if user_id not in self.user_agents:
             return {"error": "User not found"}
@@ -269,7 +269,7 @@ class BelieveAgentPlatform:
         # Get user info (simplified)
         user_session = self.user_sessions.get(user_id, {})
         
-        if payment_method == "orgorush":
+        if payment_method == "rush":
             payment_agent_id = self.user_agents[user_id]["payment_processor"]
             
             # Prepare payment request
@@ -546,10 +546,10 @@ async def demo_believe_integration():
         top_deal = deals_result["deals"][0]
         print(f"\nTop Recommendation: {top_deal['name']}")
         print(f"Price: ${top_deal['price']}")
-        print(f"OrgoRush Fee Savings: ${top_deal['orgo_benefits']['fee_savings']:.2f}")
+        print(f"RUSH Fee Savings: ${top_deal['orgo_benefits']['fee_savings']:.2f}")
     
-    # Demo 3: Deal Purchase with OrgoRush
-    print("\n💳 DEAL PURCHASE WITH ORGORUSH")
+    # Demo 3: Deal Purchase with RUSH
+    print("\n💳 DEAL PURCHASE WITH RUSH")
     print("-" * 50)
     if deals_result.get("deals"):
         selected_deal = deals_result["deals"][0]
@@ -589,7 +589,7 @@ async def demo_believe_integration():
     print("\n🎉 BELIEVE.APP INTEGRATION DEMO COMPLETED!")
     print("✅ All 6 OpenAI Agent Components Successfully Integrated!")
     print("✅ Real-world SaaS marketplace functionality demonstrated!")
-    print("✅ OrgoRush payment processing with AI optimization!")
+    print("✅ RUSH payment processing with AI optimization!")
 
 if __name__ == "__main__":
     asyncio.run(demo_believe_integration())

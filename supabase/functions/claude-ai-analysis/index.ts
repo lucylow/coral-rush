@@ -101,7 +101,7 @@ async function executeClaudeAnalysis(apiKey: string, type: string, data: any, vm
 function generatePromptForAnalysis(type: string, data: any, vmId: string): string {
   switch (type) {
     case 'market':
-      return `As an AI financial analyst for OrgoRush payment platform, analyze the current DeFi market conditions for treasury optimization. 
+      return `As an AI financial analyst for RUSH payment platform, analyze the current DeFi market conditions for treasury optimization. 
 
 Current data:
 - Total treasury value: $847,293
@@ -119,10 +119,10 @@ Provide strategic recommendations for the next 24 hours to maximize yield while 
 Format your response with clear recommendations and risk assessments.`;
 
     case 'risk':
-      return `As a cybersecurity AI specialist for OrgoRush, analyze the following transaction pattern for fraud detection:
+      return `As a cybersecurity AI specialist for RUSH, analyze the following transaction pattern for fraud detection:
 
 Transaction data:
-- Amount: ${data.amount || '150 ORGO'}
+- Amount: ${data.amount || '150 SOL'}
 - Frequency: ${data.frequency || '3 transactions/hour'}
 - Geographic locations: ${data.locations || 'US, Canada'}
 - Device fingerprints: ${data.devices || '2 unique devices'}
@@ -137,7 +137,7 @@ Assess fraud probability and provide:
 Focus on behavioral analysis and pattern recognition.`;
 
     case 'optimization':
-      return `As a transaction routing AI for OrgoRush, optimize the payment routing strategy:
+      return `As a transaction routing AI for RUSH, optimize the payment routing strategy:
 
 Current network conditions:
 - Solana: 0.00025 SOL fee, 400ms avg confirmation
@@ -146,7 +146,7 @@ Current network conditions:
 - Arbitrum: 0.002 ETH fee, 1s avg confirmation
 
 Transaction requirements:
-- Amount: ${data.amount || '100 ORGO'}
+- Amount: ${data.amount || '100 SOL'}
 - Priority: ${data.priority || 'Standard'}
 - Destination: ${data.destination || 'US merchant'}
 
@@ -159,7 +159,7 @@ Recommend optimal routing strategy considering:
 Provide specific routing path and cost-benefit analysis.`;
 
     case 'insight':
-      return `As an AI insights analyst for OrgoRush, provide strategic insights on the payment platform performance:
+      return `As an AI insights analyst for RUSH, provide strategic insights on the payment platform performance:
 
 Current metrics:
 - Daily volume: $1.24M
@@ -178,7 +178,7 @@ Analyze trends and provide:
 Focus on actionable business intelligence for platform optimization.`;
 
     default:
-      return `Analyze the provided data for OrgoRush payment platform and provide relevant insights.`;
+      return `Analyze the provided data for RUSH payment platform and provide relevant insights.`;
   }
 }
 

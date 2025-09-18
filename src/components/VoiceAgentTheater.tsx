@@ -34,7 +34,7 @@ const VoiceAgentTheater = () => {
   const [userNFTs, setUserNFTs] = useState<NFT[]>([
     { id: "1", name: "Bored Ape #1234", image: "/placeholder.svg", collection: "BAYC" },
     { id: "2", name: "Punk #5678", image: "/placeholder.svg", collection: "CryptoPunks" },
-    { id: "3", name: "Support Ticket #9999", image: "/placeholder.svg", collection: "OrgoRush", isNew: true }
+    { id: "3", name: "Support Ticket #9999", image: "/placeholder.svg", collection: "RUSH", isNew: true }
   ]);
 
   const audioVisualizerRef = useRef<HTMLDivElement>(null);
@@ -117,7 +117,7 @@ const VoiceAgentTheater = () => {
                       id: Date.now().toString(),
                       name: "Apology NFT #001",
                       image: "/placeholder.svg",
-                      collection: "OrgoRush Support",
+                      collection: "RUSH Support",
                       isNew: true
                     }]);
                     

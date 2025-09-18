@@ -1,4 +1,4 @@
-# OrgoRush Payment Agent - ORGO Hackathon Submission
+# RUSH Payment Agent - ORGO Hackathon Submission
 
 ## 🚀 Live Demo
 **Frontend:** https://glxpakjn.manus.space  
@@ -6,7 +6,7 @@
 
 ## 🏆 Project Overview
 
-OrgoRush Payment Agent is an AI-powered Web3 payment platform built using the **ORGO Computer Environment**. It demonstrates lightning-fast cross-border payments with sub-0.5s settlement times, deflationary tokenomics through ORGO token burning, and comprehensive AI-driven fraud detection.
+RUSH Payment Agent is an AI-powered Web3 payment platform built using the **ORGO Computer Environment**. It demonstrates lightning-fast cross-border payments with sub-0.5s settlement times, deflationary tokenomics through SOL token burning, and comprehensive AI-driven fraud detection.
 
 ### 🎯 Hackathon Categories Covered
 1. **Blockchain** - Solana Web3 integration, smart contracts, Meteora DLMM
@@ -18,7 +18,7 @@ OrgoRush Payment Agent is an AI-powered Web3 payment platform built using the **
 ### 🔥 Core Differentiators
 - **Sub-0.5s Settlement** - 10x faster than traditional payments (300ms vs 3000ms)
 - **35x Lower Fees** - $10 vs $350 for international transfers
-- **100% Deflationary** - ORGO tokens burned with every transaction
+- **100% Deflationary** - SOL tokens burned with every transaction
 - **AI-Powered Intelligence** - Real-time fraud detection with 99.5% accuracy
 - **VM Orchestration** - 4 virtual machines managing payment infrastructure
 
@@ -26,7 +26,7 @@ OrgoRush Payment Agent is an AI-powered Web3 payment platform built using the **
 - **ZK-Proof Identity Verification** - Privacy-preserving authentication
 - **Pre-signed Transactions** - Instant execution without user interaction
 - **Atomic Cross-chain Swaps** - USD → USDC → PHP conversion
-- **Dynamic ORGO Burning** - Volatility-adjusted burn rates
+- **Dynamic SOL Burning** - Volatility-adjusted burn rates
 - **Meteora Integration** - Liquidity pool optimization
 
 ## 🏗️ Architecture
@@ -37,7 +37,7 @@ src/
 ├── components/
 │   ├── ui/           # Shadcn/UI components
 │   ├── VMDashboard/  # VM monitoring interface
-│   ├── TokenInfo/    # ORGO token statistics
+│   ├── TokenInfo/    # SOL token statistics
 │   ├── WalletBalance/# Solana wallet integration
 │   └── TransactionHistory/ # Payment history
 ├── App.jsx          # Main application with 7 tabs
@@ -108,7 +108,7 @@ python deploy.py
 ### Payment Processing
 - `POST /api/payment/initiate` - Start payment process
 - `GET /api/payment/status/{id}` - Check payment status
-- `POST /api/payment/burn` - Execute ORGO token burn
+- `POST /api/payment/burn` - Execute SOL token burn
 
 ### AI & Analytics
 - `POST /api/ai/analyze-market` - Market analysis via ORGO Computer
@@ -129,7 +129,7 @@ python deploy.py
 ## 🎮 Frontend Tabs
 
 ### 1. Live Demo
-Interactive $10,000 USD → PHP transfer race showing OrgoRush vs PayPal performance with real-time ORGO burn counter.
+Interactive $10,000 USD → PHP transfer race showing RUSH vs PayPal performance with real-time SOL burn counter.
 
 ### 2. VM Dashboard
 Real-time monitoring of 4 virtual machines:
@@ -139,10 +139,10 @@ Real-time monitoring of 4 virtual machines:
 - **Treasury Management** - DeFi yield optimization
 
 ### 3. Payment
-Send ORGO payments with amount input and recipient address validation.
+Send SOL payments with amount input and recipient address validation.
 
 ### 4. Token Info
-ORGO token statistics including price, market cap, holders, and 24h volume.
+SOL token statistics including price, market cap, holders, and 24h volume.
 
 ### 5. Wallet
 Solana wallet integration with balance display and transaction capabilities.
@@ -172,12 +172,12 @@ Performance metrics showcasing 10x speed, 35x cost savings, and deflationary mec
 ### Solana Network
 - **Web3.js Integration** - Direct blockchain interaction
 - **Wallet Adapter** - Multi-wallet support (Phantom, Solflare, etc.)
-- **SPL Token Support** - ORGO token transfers and burns
+- **SPL Token Support** - SOL token transfers and burns
 - **Real-time Updates** - WebSocket connections for live data
 
 ### Smart Contracts
 - **Atomic Swaps** - Trustless currency conversion
-- **Dynamic Staking** - Fee discounts for ORGO holders (25% for 250+ ORGO)
+- **Dynamic Staking** - Fee discounts for SOL holders (25% for 250+ SOL)
 - **Burn Mechanism** - 0.1% transaction fee permanently removed
 - **Governance** - veORGO tokens for protocol decisions
 
@@ -210,8 +210,8 @@ Performance metrics showcasing 10x speed, 35x cost savings, and deflationary mec
 - **Operational Costs:** 80% reduction through automation
 
 ### Token Economics
-- **Daily Burn Rate:** 625 ORGO tokens
-- **Total Burned:** 2,847.39 ORGO (and counting)
+- **Daily Burn Rate:** 625 SOL tokens
+- **Total Burned:** 2,847.39 SOL (and counting)
 - **Deflationary Pressure:** 0.1% of transaction volume
 - **Staking Rewards:** Up to 22.3% APY
 
@@ -246,7 +246,7 @@ ANTHROPIC_API_KEY=sk-ant-api03-WyjszKoNfFIHYUZvwWEsCSYPfittNOcKdh2rZ_GALT4yUJizq
 
 # Solana Configuration
 SOLANA_RPC_URL=https://api.mainnet-beta.solana.com
-ORGO_TOKEN_ADDRESS=G85CQEBqwsoe3qkb5oXXpdZFh7uhYXhDRsQAM4aJuBLV
+SOL_TOKEN_ADDRESS=G85CQEBqwsoe3qkb5oXXpdZFh7uhYXhDRsQAM4aJuBLV
 ```
 
 ## 🧪 Testing
@@ -312,10 +312,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Contact
 
-- **Team:** OrgoRush Development Team
-- **Email:** team@orgorush.com
-- **Twitter:** @OrgoRushPayments
-- **Discord:** OrgoRush Community
+- **Team:** RUSH Development Team
+- **Email:** team@rush.com
+- **Twitter:** @RUSHPayments
+- **Discord:** RUSH Community
 
 ---
 

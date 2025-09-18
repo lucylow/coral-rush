@@ -34,18 +34,18 @@ export default function PaymentForm() {
       const result = await response.json();
       if (result.success) {
         const latencyBadge = result.metrics.sub_100ms ? "🚀 Sub-100ms Achievement Unlocked!" : "";
-        toast.success(`Payment processed in ${result.metrics.total_latency_ms}ms! ${latencyBadge} 🔥 ${result.orgo_burned} ORGO burned.`);
+        toast.success(`Payment processed in ${result.metrics.total_latency_ms}ms! ${latencyBadge} 🔥 ${result.sol_burned} SOL burned.`);
 
         // Show detailed metrics
         console.log('Transaction Hash:', result.tx_hash);
         console.log('Processing Time:', result.metrics.total_latency_ms + 'ms');
-        console.log('ORGO Burned:', result.orgo_burned);
+        console.log('SOL Burned:', result.sol_burned);
       } else {
         toast.error("Payment failed. Please try again.");
       }
     } catch (error) {
       // Fallback to demo mode
-      toast.success("Payment sent successfully! ORGO tokens burned. (Demo Mode)");
+      toast.success("Payment sent successfully! SOL tokens burned. (Demo Mode)");
     }
     setLoading(false);
     setAmount("");
@@ -61,12 +61,12 @@ export default function PaymentForm() {
   };
   return <div className="max-w-md mx-auto space-y-6">
       <div className="text-center">
-        <h2 className="text-3xl font-bold">Send ORGO Payment: Lightning-fast cross-border transfers</h2>
+        <h2 className="text-3xl font-bold">Send SOL Payment: Lightning-fast cross-border transfers</h2>
         <p className="text-muted-foreground mt-2 mx-0 px-0 text-left my-0">4 Core Agents Deployed:
 Payment Agent - Main orchestrator with ORGO API integration
 Identity verification via ZK-proofs
 Predictive pre-signing for sub-second execution
-Dynamic ORGO token burning (0.1% per transaction)
+Dynamic SOL token burning (0.1% per transaction)
 Real-time fraud detection
 LSTM Predictor - Transaction forecasting for pre-signing
 Bidirectional LSTM architecture
@@ -86,7 +86,7 @@ Demo payment processing
       <Card className="p-6">
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <Label htmlFor="amount">Amount (ORGO)</Label>
+            <Label htmlFor="amount">Amount (SOL)</Label>
             <Input id="amount" type="number" step="0.001" placeholder="Enter amount" value={amount} onChange={e => setAmount(e.target.value)} required />
           </div>
 
@@ -98,15 +98,15 @@ Demo payment processing
           {amount && <div className="space-y-2 p-4 bg-muted rounded-lg">
               <div className="flex justify-between text-sm">
                 <span>Transaction Fee:</span>
-                <span>{calculateFee(amount)} ORGO</span>
+                <span>{calculateFee(amount)} SOL</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span>Tokens to Burn:</span>
-                <span className="text-primary font-medium">{calculateBurn(amount)} ORGO</span>
+                <span className="text-primary font-medium">{calculateBurn(amount)} SOL</span>
               </div>
               <div className="flex justify-between text-sm border-t pt-2">
                 <span className="font-medium">Total Cost:</span>
-                <span className="font-medium">{(parseFloat(amount) + parseFloat(calculateFee(amount))).toFixed(3)} ORGO</span>
+                <span className="font-medium">{(parseFloat(amount) + parseFloat(calculateFee(amount))).toFixed(3)} SOL</span>
               </div>
             </div>}
 

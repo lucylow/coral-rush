@@ -13,7 +13,7 @@ import VoiceAgentTheater from "@/components/VoiceAgentTheater";
 import VoiceAgentLayout from "@/components/VoiceAgentLayout";
 
 const Index = () => {
-  const [viewMode, setViewMode] = useState<'orgorush' | 'voice-agent'>('voice-agent');
+  const [viewMode, setViewMode] = useState<'rush' | 'voice-agent'>('voice-agent');
 
   if (viewMode === 'voice-agent') {
     return <VoiceAgentLayout />;
@@ -26,7 +26,7 @@ const Index = () => {
           <div className="flex items-center justify-between">
             <div className="text-center flex-1">
               <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
-                OrgoRush Payment Agent
+                RUSH Payment Agent
               </h1>
               <p className="text-muted-foreground mt-2">
                 AI-powered Web3 payments with sub-0.5s settlement • ORGO Hackathon Submission
@@ -49,7 +49,7 @@ const Index = () => {
             <TabsTrigger value="demo">Live Demo</TabsTrigger>
             <TabsTrigger value="vm">VM Dashboard</TabsTrigger>
             <TabsTrigger value="payment">Payment</TabsTrigger>
-            <TabsTrigger value="orgo">ORGO Utility</TabsTrigger>
+            <TabsTrigger value="orgo">SOL Utility</TabsTrigger>
             <TabsTrigger value="fraud">Fraud Detection</TabsTrigger>
             <TabsTrigger value="voice">Voice Agent</TabsTrigger>
             <TabsTrigger value="token">Token Info</TabsTrigger>
