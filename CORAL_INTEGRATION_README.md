@@ -203,3 +203,4 @@ supabase functions logs coral-protocol
 **Your project now has real Coral Protocol integration!** 🎊
 
 The voice interface will work with actual microphone input, real-time agent coordination, and live voice responses through Coral Protocol and LiveKit.
+
