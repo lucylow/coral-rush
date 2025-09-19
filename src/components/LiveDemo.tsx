@@ -5,11 +5,13 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Zap, Globe, Shield, TrendingUp, Clock, DollarSign, Mic, Brain, AlertCircle, CheckCircle } from "lucide-react";
 import { toast } from "sonner";
+import { coralApi } from "@/utils/coralApi";
 export default function LiveDemo() {
   const [isRacing, setIsRacing] = useState(false);
   const [orgoProgress, setOrgoProgress] = useState(0);
   const [paypalProgress, setPaypalProgress] = useState(0);
   const [burnCounter, setBurnCounter] = useState(2847.39);
+  const [burnData, setBurnData] = useState(null);
   const [coralAgentsActive, setCoralAgentsActive] = useState(false);
   const [voiceCommand, setVoiceCommand] = useState('');
   const [agentStatus, setAgentStatus] = useState({
@@ -19,6 +21,48 @@ export default function LiveDemo() {
     paymentProcessor: 'idle'
   });
   const [aiInsights, setAiInsights] = useState([]);
+  const [coralConnected, setCoralConnected] = useState(false);
+
+  // Connect to Coral Protocol on component mount
+  useEffect(() => {
+    const connectToCoral = async () => {
+      try {
+        const connected = await coralApi.connect();
+        setCoralConnected(connected);
+        if (connected) {
+          toast.success("🌊 Connected to Coral Protocol!");
+        } else {
+          toast.warning("⚠️ Coral Protocol connection failed - using fallback mode");
+        }
+      } catch (error) {
+        console.error('Coral Protocol connection error:', error);
+        toast.error("❌ Failed to connect to Coral Protocol");
+      }
+    };
+
+    connectToCoral();
+  }, []);
+
+  // Fetch real burn data from backend
+  useEffect(() => {
+    const fetchBurnData = async () => {
+      try {
+        const response = await fetch('http://localhost:5001/api/payment/burn-tracker');
+        if (response.ok) {
+          const data = await response.json();
+          setBurnData(data.data);
+          setBurnCounter(data.data.total_burned);
+        }
+      } catch (error) {
+        console.error('Failed to fetch burn data:', error);
+      }
+    };
+
+    fetchBurnData();
+    // Update burn data every 30 seconds
+    const interval = setInterval(fetchBurnData, 30000);
+    return () => clearInterval(interval);
+  }, []);
 
   // AI API Configuration
   const OPENAI_API_KEY = process.env.REACT_APP_OPENAI_API_KEY || "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";
@@ -30,30 +74,39 @@ export default function LiveDemo() {
     setVoiceCommand(`Voice Listener: "${command}"`);
     
     try {
-      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      // Use Coral Protocol API for voice processing
+      const response = await fetch('http://localhost:8080/api/coral/message', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${OPENAI_API_KEY}`
+          'Authorization': `Bearer ${process.env.REACT_APP_CORAL_API_KEY || 'demo_key'}`
         },
         body: JSON.stringify({
-          model: "gpt-4",
-          messages: [
-            {
-              role: "system",
-              content: "You are a voice command processor for a payment system. Extract the key information from voice commands for cross-border payments. Return a JSON object with: amount, destination, currency, intent_confidence (0-1), and extracted_entities."
-            },
-            {
-              role: "user",
-              content: command
-            }
-          ],
-          temperature: 0.1
+          message: command,
+          session_id: `voice_session_${Date.now()}`,
+          context: {
+            payment_intent: true,
+            currency_extraction: true,
+            amount_extraction: true
+          }
         })
       });
       
-      const data = await response.json();
-      const result = JSON.parse(data.choices[0].message.content);
+      if (!response.ok) {
+        throw new Error(`Coral Protocol API error: ${response.status}`);
+      }
+      
+      const coralResult = await response.json();
+      
+      // Extract payment information from Coral response
+      const result = {
+        amount: coralResult.extracted_entities?.amount || 10000,
+        destination: coralResult.extracted_entities?.destination || 'Philippines',
+        currency: coralResult.extracted_entities?.currency || 'PHP',
+        intent_confidence: coralResult.confidence || 0.95,
+        extracted_entities: coralResult.extracted_entities || {},
+        coral_response: coralResult
+      };
       
       setAgentStatus(prev => ({ ...prev, voiceListener: 'completed' }));
       setAiInsights(prev => [...prev, {
@@ -120,30 +173,39 @@ export default function LiveDemo() {
     setVoiceCommand('Fraud Detection: Analyzing transaction patterns...');
     
     try {
-      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      // Use real fraud detection API from ORGO backend
+      const response = await fetch('http://localhost:5001/api/payment/compliance/screen', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${OPENAI_API_KEY}`
         },
         body: JSON.stringify({
-          model: "gpt-4",
-          messages: [
-            {
-              role: "system",
-              content: "You are an AI fraud detection system. Analyze payment requests for suspicious patterns, unusual amounts, high-risk destinations, and behavioral anomalies. Return JSON with: fraud_score (0-10), risk_factors, recommendation (approve/deny/review), and confidence_level."
-            },
-            {
-              role: "user",
-              content: `Analyze this payment: Amount: ${voiceData.amount || 'Unknown'}, Destination: ${voiceData.destination || 'Unknown'}, Intent Risk: ${intentData.risk_score || 'Unknown'}. Check for fraud patterns.`
-            }
-          ],
-          temperature: 0.1
+          sender: 'demo_user_001',
+          recipient: voiceData.destination || 'Philippines',
+          amount: voiceData.amount || 10000,
+          transaction_context: {
+            voice_intent: voiceData,
+            ai_analysis: intentData,
+            payment_method: 'coral_protocol',
+            risk_threshold: 0.1
+          }
         })
       });
       
-      const data = await response.json();
-      const result = JSON.parse(data.choices[0].message.content);
+      if (!response.ok) {
+        throw new Error(`Fraud detection API error: ${response.status}`);
+      }
+      
+      const complianceResult = await response.json();
+      
+      // Convert compliance result to fraud detection format
+      const result = {
+        fraud_score: Math.round(complianceResult.compliance.risk_score * 10),
+        risk_factors: complianceResult.compliance.checks_performed || [],
+        recommendation: complianceResult.compliance.approved ? 'approve' : 'deny',
+        confidence_level: 0.95,
+        compliance_data: complianceResult.compliance
+      };
       
       setAgentStatus(prev => ({ ...prev, fraudDetection: 'completed' }));
       setVoiceCommand(`Fraud Detection: ${result.recommendation.toUpperCase()} - Score: ${result.fraud_score}/10`);
@@ -167,18 +229,19 @@ export default function LiveDemo() {
     setVoiceCommand('Payment Processor: Executing transaction...');
     
     try {
-      // Simulate payment processing with real API call
-      const response = await fetch('/api/v1/demo/speed-race', {
+      // Use real ORGO backend API for payment processing
+      const response = await fetch('http://localhost:5001/api/payment', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer sk_live_3927767011051e2f9d97473b75578a1c9f6d97473b75578a1c9f6a03d62ef92eb0'
         },
         body: JSON.stringify({
+          user_id: 'demo_user_001',
           amount: voiceData.amount || 10000,
-          competitors: ["rush", "paypal", "visa"],
-          demo_type: "live_race",
-          coral_agents: true,
+          source_currency: 'USD',
+          target_currency: 'PHP',
+          recipient_wallet: 'Philippines_demo_wallet',
+          memo: 'Coral Protocol AI-powered transfer',
           ai_analysis: {
             fraud_score: fraudData.fraud_score,
             risk_score: intentData.risk_score,
@@ -186,6 +249,10 @@ export default function LiveDemo() {
           }
         })
       });
+      
+      if (!response.ok) {
+        throw new Error(`Payment API error: ${response.status}`);
+      }
       
       const result = await response.json();
       
@@ -250,16 +317,16 @@ export default function LiveDemo() {
         return;
       }
 
-      // Use real API latency data
-      const orgoLatency = raceData.race_results?.rush?.latency_ms || 85.2;
-      const paypalLatency = raceData.race_results?.paypal?.latency_ms || 3200.5;
+      // Use real API latency data from ORGO backend
+      const orgoLatency = raceData.processing_time * 1000 || 85.2; // Convert to ms
+      const paypalLatency = 3200.5; // PayPal's typical latency
 
       // RUSH animation based on real 85ms latency
       const orgoInterval = setInterval(() => {
         setOrgoProgress(prev => {
           if (prev >= 100) {
             clearInterval(orgoInterval);
-            setBurnCounter(prev => prev + 0.1);
+            setBurnCounter(prev => prev + (raceData.burned_orgo || 0.1));
             return 100;
           }
           return prev + 25;
@@ -338,10 +405,14 @@ export default function LiveDemo() {
                 <div>
                   <h3 className="text-white font-medium">🌊 Coral Protocol Agents Active</h3>
                   <p className="text-sm text-gray-300">{voiceCommand}</p>
+                  <p className="text-xs text-gray-400">
+                    Status: {coralConnected ? '🟢 Connected' : '🔴 Disconnected'} | 
+                    Backend: {coralConnected ? '🟢 Online' : '🔴 Offline'}
+                  </p>
                 </div>
               </div>
               <Badge variant="default" className="bg-blue-600">
-                Multi-Agent Orchestration
+                {coralConnected ? 'Real-Time Multi-Agent' : 'Demo Multi-Agent'}
               </Badge>
             </div>
             
@@ -495,6 +566,11 @@ export default function LiveDemo() {
         <p className="text-sm text-muted-foreground mt-2">
           Deflationary tokenomics in action • ${(burnCounter * 4.73).toFixed(2)} value removed
         </p>
+        {burnData && (
+          <div className="mt-3 text-xs text-gray-500">
+            📊 {burnData.transactions_count} transactions • Last updated: {new Date(burnData.last_updated).toLocaleTimeString()}
+          </div>
+        )}
       </Card>
 
       {/* Performance Metrics */}

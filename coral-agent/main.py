@@ -11,6 +11,7 @@ import logging
 from typing import Dict, List, Optional
 from dataclasses import dataclass
 import json
+import aiohttp
 
 # LiveKit imports
 from livekit.agents import AutoSubscribe, JobContext, WorkerOptions, cli, llm
@@ -42,27 +43,38 @@ class CoralVoiceAgent:
         self.capabilities = AgentCapabilities()
         self.active_sessions: Dict[str, Dict] = {}
         self.mcp_clients: Dict[str, ClientSession] = {}
+        self.coral_server_url: Optional[str] = None
         
     async def initialize_coral_connection(self):
         """Initialize connection to Coral Protocol"""
         try:
-            # Connect to Coral Server via MCP
-            coral_server_params = StdioServerParameters(
-                command="coral-server",
-                args=["--port", "8080"]
-            )
+            # Connect to Coral Server via HTTP API
+            coral_server_url = os.getenv("CORAL_SERVER_URL", "http://localhost:8080")
             
-            async with stdio_client(coral_server_params) as (read, write):
-                async with ClientSession(read, write) as session:
-                    # Initialize the session
-                    await session.initialize()
-                    self.mcp_clients["coral"] = session
-                    logger.info("Connected to Coral Protocol server")
-                    
+            # Register this agent with Coral Server
+            agent_data = {
+                "agent_id": "voice-listener-agent",
+                "name": "Voice Listener Agent",
+                "version": "1.0.0",
+                "capabilities": ["speech-to-text", "text-to-speech", "voice-processing"],
+                "description": "Handles voice input/output using ElevenLabs API",
+                "endpoint": "/api/agents/voice-listener"
+            }
+            
+            async with aiohttp.ClientSession() as session:
+                async with session.post(f"{coral_server_url}/api/agents/register", json=agent_data) as response:
+                    if response.status == 200:
+                        logger.info("Successfully registered with Coral Protocol server")
+                        self.coral_server_url = coral_server_url
+                    else:
+                        logger.warning(f"Failed to register with Coral server: {response.status}")
+                        self.coral_server_url = None
+                        
         except Exception as e:
             logger.error(f"Failed to connect to Coral Protocol: {e}")
             # Fallback to mock mode for development
             logger.info("Running in mock mode - Coral Protocol not available")
+            self.coral_server_url = None
     
     async def process_voice_input(self, audio_data: bytes, session_id: str) -> Dict:
         """Process voice input through Coral Protocol"""
@@ -98,56 +110,164 @@ class CoralVoiceAgent:
     async def _transcribe_audio(self, audio_data: bytes) -> str:
         """Transcribe audio using LiveKit STT"""
         # This would integrate with LiveKit's STT capabilities
-        # For now, return mock transcription
-        return "My NFT transaction failed and I lost 0.5 ETH"
+        # For now, return mock transcription for hackathon demo
+        return "Send $10,000 to Philippines for family support"
     
     async def _route_to_coral_agent(self, transcription: str, session_id: str) -> Dict:
         """Route transcription to Coral Protocol agent"""
         try:
-            coral_session = self.mcp_clients["coral"]
+            if not self.coral_server_url:
+                return await self._mock_agent_response(transcription, session_id)
             
-            # Send message to Coral Protocol
-            response = await coral_session.call_tool(
-                "coral_agent",
-                {
-                    "message": transcription,
-                    "session_id": session_id,
-                    "context": "voice_interface"
-                }
-            )
-            
-            return {
-                "intent": response.get("intent", "unknown"),
-                "response": response.get("response", "I understand your request."),
-                "actions": response.get("actions", [])
+            # Execute voice payment workflow
+            workflow_data = {
+                "voice_input": transcription,
+                "user_id": f"voice_user_{session_id}",
+                "session_id": session_id
             }
+            
+            async with aiohttp.ClientSession() as session:
+                async with session.post(
+                    f"{self.coral_server_url}/api/workflows/voice_payment_workflow/execute",
+                    json=workflow_data
+                ) as response:
+                    if response.status == 200:
+                        data = await response.json()
+                        execution_id = data.get("execution_id")
+                        
+                        # Wait for workflow completion
+                        result = await self._wait_for_workflow_completion(session, execution_id)
+                        return result
+                    else:
+                        logger.error(f"Failed to execute workflow: {response.status}")
+                        return await self._mock_agent_response(transcription, session_id)
             
         except Exception as e:
             logger.error(f"Error routing to Coral agent: {e}")
             return await self._mock_agent_response(transcription, session_id)
+    
+    async def _wait_for_workflow_completion(self, session: aiohttp.ClientSession, execution_id: str) -> Dict:
+        """Wait for workflow completion and return result"""
+        max_attempts = 30  # 30 seconds timeout
+        attempt = 0
+        
+        while attempt < max_attempts:
+            try:
+                async with session.get(f"{self.coral_server_url}/api/workflows/executions/{execution_id}") as response:
+                    if response.status == 200:
+                        data = await response.json()
+                        status = data.get("status")
+                        
+                        if status == "completed":
+                            results = data.get("results", {})
+                            
+                            # Extract payment result
+                            payment_result = results.get("payment_processing", {})
+                            if payment_result and payment_result.get("success"):
+                                return {
+                                    "intent": "payment_completed",
+                                    "response": f"Payment completed successfully! Transaction ID: {payment_result.get('payment_result', {}).get('transaction_id', 'N/A')}",
+                                    "actions": ["payment_completed"],
+                                    "payment_result": payment_result.get("payment_result")
+                                }
+                            else:
+                                return {
+                                    "intent": "payment_failed",
+                                    "response": "Payment processing failed. Please try again.",
+                                    "actions": ["payment_failed"]
+                                }
+                        
+                        elif status == "failed":
+                            error = data.get("error_message", "Unknown error")
+                            return {
+                                "intent": "workflow_failed",
+                                "response": f"Workflow failed: {error}",
+                                "actions": ["workflow_failed"]
+                            }
+                        
+                        attempt += 1
+                        await asyncio.sleep(1)
+                    else:
+                        logger.error(f"Failed to get workflow status: {response.status}")
+                        break
+            except Exception as e:
+                logger.error(f"Workflow monitoring error: {e}")
+                break
+        
+        # Timeout or error
+        return {
+            "intent": "timeout",
+            "response": "Request timed out. Please try again.",
+            "actions": ["timeout"]
+        }
     
     async def _mock_agent_response(self, transcription: str, session_id: str) -> Dict:
         """Mock agent response for development"""
         # Simulate agent processing
         await asyncio.sleep(0.5)
         
-        # Simple intent detection
-        if "transaction" in transcription.lower() and "failed" in transcription.lower():
+        # Enhanced intent detection for hackathon demo
+        transcription_lower = transcription.lower()
+        
+        if "send" in transcription_lower and ("money" in transcription_lower or "$" in transcription_lower):
+            # Extract amount and destination
+            amount = "10,000"  # Default for demo
+            destination = "Philippines"  # Default for demo
+            
+            # Look for amount in transcription
+            import re
+            amount_match = re.search(r'\$?([0-9,]+)', transcription)
+            if amount_match:
+                amount = amount_match.group(1)
+            
+            # Look for destination
+            destinations = ["philippines", "india", "brazil", "mexico", "europe"]
+            for dest in destinations:
+                if dest in transcription_lower:
+                    destination = dest.title()
+                    break
+            
+            return {
+                "intent": "payment_request",
+                "response": f"I understand you want to send ${amount} to {destination}. Let me process this payment for you with Coral Protocol's multi-agent system.",
+                "actions": ["voice_processing", "intent_analysis", "fraud_detection", "payment_processing"],
+                "payment_result": {
+                    "transaction_id": f"TXN_{session_id[:8].upper()}",
+                    "status": "completed",
+                    "amount_sent": float(amount.replace(",", "")),
+                    "amount_received": float(amount.replace(",", "")) * 56.5,  # PHP conversion
+                    "fee": 10,
+                    "processing_time_ms": 300,
+                    "orgo_burned": float(amount.replace(",", "")) * 0.001,
+                    "blockchain_tx_hash": f"0x{session_id}",
+                    "settlement_time": 0.3
+                }
+            }
+        elif "transaction" in transcription_lower and "failed" in transcription_lower:
             return {
                 "intent": "failed_transaction",
-                "response": "I understand your frustration. I've processed a compensation NFT and initiated a refund to your wallet.",
-                "actions": ["check_transaction", "mint_compensation_nft", "initiate_refund"]
+                "response": "I understand your frustration. I've processed a compensation NFT and initiated a refund to your wallet using Coral Protocol's executor agent.",
+                "actions": ["check_transaction", "mint_compensation_nft", "initiate_refund"],
+                "compensation_nft": {
+                    "nft_id": f"nft_{session_id[:8]}",
+                    "transaction_hash": f"tx_{session_id[:8]}",
+                    "status": "completed",
+                    "metadata": {
+                        "name": "RUSH Support Resolution NFT",
+                        "description": "Thank you for your patience while we resolved your Web3 support issue."
+                    }
+                }
             }
-        elif "nft" in transcription.lower():
+        elif "nft" in transcription_lower:
             return {
                 "intent": "nft_inquiry",
-                "response": "I can help you with NFT operations. What would you like to do?",
+                "response": "I can help you with NFT operations using Coral Protocol's executor agent. What would you like to do?",
                 "actions": ["nft_operations"]
             }
         else:
             return {
                 "intent": "general_inquiry",
-                "response": "I'm here to help with your Web3 needs. How can I assist you?",
+                "response": "I'm here to help with your Web3 needs using Coral Protocol's multi-agent system. How can I assist you?",
                 "actions": ["general_support"]
             }
     

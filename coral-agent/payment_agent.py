@@ -12,6 +12,7 @@ from typing import Dict, List, Optional, Any
 from dataclasses import dataclass, asdict
 from datetime import datetime
 import uuid
+import aiohttp
 
 # Coral Protocol imports
 from mcp import ClientSession, StdioServerParameters
@@ -227,42 +228,97 @@ class CoralPaymentAgent:
             return result
     
     async def _detect_fraud(self, request: PaymentRequest) -> float:
-        """AI-powered fraud detection"""
-        # Simulate AI fraud detection
+        """AI-powered fraud detection with advanced risk assessment"""
         await asyncio.sleep(0.1)  # Simulate processing time
         
-        # Simple fraud scoring based on amount and patterns
         fraud_score = 0.0
+        risk_factors = []
         
-        # High amount increases risk
-        if request.amount > 50000:
+        # Amount-based risk assessment
+        if request.amount > 100000:
+            fraud_score += 3.0
+            risk_factors.append("very_high_amount")
+        elif request.amount > 50000:
             fraud_score += 2.0
+            risk_factors.append("high_amount")
         elif request.amount > 10000:
             fraud_score += 1.0
-            
-        # Certain currencies have higher risk
-        high_risk_currencies = ["PHP", "INR", "BRL"]
-        if request.currency_to in high_risk_currencies:
-            fraud_score += 1.0
-            
-        # Random factor for simulation
-        import random
-        fraud_score += random.uniform(0, 1.0)
+            risk_factors.append("medium_amount")
         
-        return min(fraud_score, 10.0)
+        # Currency risk assessment
+        high_risk_currencies = ["PHP", "INR", "BRL", "MXN"]
+        medium_risk_currencies = ["EUR", "GBP", "CAD", "AUD"]
+        
+        if request.currency_to in high_risk_currencies:
+            fraud_score += 1.5
+            risk_factors.append("high_risk_currency")
+        elif request.currency_to in medium_risk_currencies:
+            fraud_score += 0.5
+            risk_factors.append("medium_risk_currency")
+        
+        # Time-based risk (simulate business hours)
+        current_hour = datetime.now().hour
+        if current_hour < 6 or current_hour > 22:  # Outside business hours
+            fraud_score += 0.5
+            risk_factors.append("off_hours_transaction")
+        
+        # Purpose-based risk
+        suspicious_purposes = ["urgent", "emergency", "family_emergency"]
+        if any(purpose in request.purpose.lower() for purpose in suspicious_purposes):
+            fraud_score += 1.0
+            risk_factors.append("suspicious_purpose")
+        
+        # Cross-border risk
+        if request.currency_from != request.currency_to:
+            fraud_score += 0.5
+            risk_factors.append("cross_border")
+        
+        # Session-based risk (simulate user behavior)
+        if hasattr(request, 'user_id') and request.user_id:
+            # In a real system, you'd check user history here
+            fraud_score += 0.2
+            risk_factors.append("new_user")
+        
+        # Add some randomness for simulation
+        import random
+        fraud_score += random.uniform(-0.5, 0.5)
+        
+        # Log risk assessment
+        logger.info(f"Fraud detection for {request.amount} {request.currency_from} -> {request.currency_to}")
+        logger.info(f"Risk factors: {risk_factors}")
+        logger.info(f"Final fraud score: {fraud_score:.2f}")
+        
+        return min(max(fraud_score, 0.0), 10.0)
     
     async def _get_conversion_rate(self, from_currency: str, to_currency: str) -> float:
-        """Get real-time conversion rate"""
-        # Simulate API call to get conversion rate
-        await asyncio.sleep(0.05)
-        
-        # Mock conversion rates
+        """Get real-time conversion rate from external API"""
+        try:
+            # Use exchangerate-api.com for real conversion rates
+            async with aiohttp.ClientSession() as session:
+                url = f"https://api.exchangerate-api.com/v4/latest/{from_currency}"
+                async with session.get(url) as response:
+                    if response.status == 200:
+                        data = await response.json()
+                        return data.get("rates", {}).get(to_currency, 1.0)
+                    else:
+                        logger.warning(f"Failed to fetch conversion rate: {response.status}")
+                        return self._get_fallback_rate(from_currency, to_currency)
+        except Exception as e:
+            logger.error(f"Error fetching conversion rate: {e}")
+            return self._get_fallback_rate(from_currency, to_currency)
+    
+    def _get_fallback_rate(self, from_currency: str, to_currency: str) -> float:
+        """Fallback conversion rates if API fails"""
         rates = {
             "USD_PHP": 56.5,
             "USD_INR": 83.2,
             "USD_BRL": 5.1,
             "USD_MXN": 17.8,
-            "USD_EUR": 0.92
+            "USD_EUR": 0.92,
+            "USD_GBP": 0.79,
+            "USD_JPY": 150.0,
+            "USD_CAD": 1.35,
+            "USD_AUD": 1.52
         }
         
         key = f"{from_currency}_{to_currency}"
