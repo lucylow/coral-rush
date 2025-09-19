@@ -12,21 +12,21 @@ interface AgentStep {
   status: 'idle' | 'processing' | 'success' | 'error';
   message: string;
   timestamp: string;
-  data?: any;
+  data?: Record<string, unknown>;
 }
 
 interface Session {
   id: string;
   status: 'idle' | 'processing' | 'completed' | 'failed';
   steps: AgentStep[];
-  result?: any;
+  result?: Record<string, unknown>;
 }
 
 interface CoralAgent {
   id: string;
   name: string;
   description: string;
-  icon: any;
+  icon: React.ComponentType<{ className?: string }>;
   color: string;
   capabilities: string[];
   status: 'idle' | 'processing' | 'success' | 'error';
@@ -204,7 +204,7 @@ const RealCoralOrchestrator = () => {
     }
   };
 
-  const simulateRealAgentFlow = async (coralResult: any, sessionId: string) => {
+  const simulateRealAgentFlow = async (coralResult: Record<string, unknown>, sessionId: string) => {
     const startTime = Date.now();
     
     const steps = [
@@ -555,27 +555,27 @@ const RealCoralOrchestrator = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="text-sm font-medium text-gray-300">Voice Command</label>
-                <p className="text-gray-200 text-sm">{session.result.transcription}</p>
+                <p className="text-gray-200 text-sm">{String(session.result.transcription || '')}</p>
               </div>
               <div>
                 <label className="text-sm font-medium text-gray-300">Intent Detected</label>
-                <p className="text-green-400 font-medium">{session.result.intent}</p>
+                <p className="text-green-400 font-medium">{String(session.result.intent || '')}</p>
               </div>
               <div>
                 <label className="text-sm font-medium text-gray-300">Processing Time</label>
-                <p className="text-blue-400 font-medium">{session.result.latency}ms</p>
+                <p className="text-blue-400 font-medium">{String(session.result.latency || 0)}ms</p>
               </div>
               <div>
                 <label className="text-sm font-medium text-gray-300">ORGO Burned</label>
-                <p className="text-orange-400 font-medium">{session.result.orgoBurned} tokens</p>
+                <p className="text-orange-400 font-medium">{String(session.result.orgoBurned || 0)} tokens</p>
               </div>
             </div>
             <div className="bg-gray-800/50 rounded-lg p-3">
               <label className="text-sm font-medium text-gray-300">Voice Confirmation</label>
-              <p className="text-gray-200 text-sm mt-1">{session.result.audioResponse}</p>
+              <p className="text-gray-200 text-sm mt-1">{String(session.result.audioResponse || '')}</p>
             </div>
             <div className="flex justify-between items-center text-xs text-gray-400">
-              <span>Session ID: {session.result.sessionId}</span>
+              <span>Session ID: {String(session.result.sessionId || '')}</span>
               <span>Powered by Coral Protocol</span>
             </div>
           </CardContent>

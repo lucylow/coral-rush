@@ -154,7 +154,7 @@ class CoralApiClient {
   /**
    * Get session history from Coral Protocol
    */
-  async getSessionHistory(sessionId: string): Promise<any[]> {
+  async getSessionHistory(sessionId: string): Promise<Record<string, unknown>[]> {
     try {
       const response = await fetch(`${this.baseUrl}/api/coral/sessions/${sessionId}/history`, {
         method: 'GET',
