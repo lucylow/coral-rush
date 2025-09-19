@@ -212,8 +212,8 @@ This checklist ensures you have everything needed to win the $5000 Track 2 Coral
 - [ ] License information
 
 ### **✅ Technical Documentation**
-- [ ] TECHNICAL_ARCHITECTURE.md
-- [ ] DEMO_GUIDE.md
+- [x] TECHNICAL_ARCHITECTURE.md
+- [x] DEMO_GUIDE.md
 - [ ] API documentation
 - [ ] Agent development guide
 - [ ] Deployment instructions

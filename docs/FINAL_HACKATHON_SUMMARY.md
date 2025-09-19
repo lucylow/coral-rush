@@ -219,7 +219,7 @@ coral-agent/
 ## 📞 **Support & Resources**
 
 - **Demo URL**: `http://localhost:5173/coral-hackathon`
-- **Documentation**: See `HACKATHON_IMPROVEMENTS.md`
+- **Documentation**: See `docs/HACKATHON_IMPROVEMENTS.md`
 - **Agent Code**: See `coral-agent/payment_agent.py`
 - **Integration Guide**: Built into the demo interface
 
