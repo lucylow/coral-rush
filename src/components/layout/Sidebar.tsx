@@ -7,16 +7,19 @@ import {
   ChartBarIcon, 
   WalletIcon,
   CogIcon,
-  XMarkIcon
+  XMarkIcon,
+  Bars3Icon
 } from '@heroicons/react/24/outline';
+import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { useAppState } from '../../contexts/AppStateContext';
 
 interface SidebarProps {
   isOpen: boolean;
   onClose: () => void;
+  onToggle: () => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
+const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, onToggle }) => {
   const location = useLocation();
   const { stats } = useAppState();
 
@@ -52,12 +55,28 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
               </div>
               <span className="text-xl font-bold text-white">RUSH</span>
             </div>
-            <button
-              onClick={onClose}
-              className="md:hidden p-2 rounded-lg hover:bg-slate-800 transition-colors"
-            >
-              <XMarkIcon className="h-6 w-6 text-slate-300" />
-            </button>
+            <div className="flex items-center gap-2">
+              {/* Desktop toggle button */}
+              <button
+                onClick={onToggle}
+                className="hidden md:block p-2 rounded-lg hover:bg-slate-800 transition-colors"
+                title="Toggle sidebar"
+              >
+                <Bars3Icon className="h-5 w-5 text-slate-300" />
+              </button>
+              {/* Mobile close button */}
+              <button
+                onClick={onClose}
+                className="md:hidden p-2 rounded-lg hover:bg-slate-800 transition-colors"
+              >
+                <XMarkIcon className="h-6 w-6 text-slate-300" />
+              </button>
+            </div>
+          </div>
+
+          {/* Wallet Connection */}
+          <div className="p-6 border-b border-slate-700">
+            <WalletMultiButton className="w-full !bg-gradient-to-r !from-purple-500 !to-blue-500 hover:!from-purple-600 hover:!to-blue-600 !text-white !font-medium !rounded-lg !py-2 !px-4 !transition-all !duration-200" />
           </div>
 
           {/* Navigation */}
