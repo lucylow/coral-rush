@@ -52,14 +52,19 @@ import { ThemeProvider } from './contexts/ThemeContext';
 import '@solana/wallet-adapter-react-ui/styles.css';
 import './App.css';
 
-// Wallet configuration
+// Wallet configuration with error handling for production
 const network = WalletAdapterNetwork.Devnet;
 const endpoint = clusterApiUrl(network);
 
-const wallets = [
-  new PhantomWalletAdapter(),
-  new SolflareWalletAdapter(),
-];
+// Safe wallet initialization for production
+const wallets = [];
+try {
+  wallets.push(new PhantomWalletAdapter());
+  wallets.push(new SolflareWalletAdapter());
+} catch (error) {
+  console.warn('Wallet adapters failed to initialize:', error);
+  // Continue without wallets in production
+}
 
 // React Query client
 const queryClient = new QueryClient({
@@ -73,11 +78,11 @@ const queryClient = new QueryClient({
 });
 
 const App: React.FC = () => {
-  const [isLoading, setIsLoading] = useState(false); // Set to false to skip loading screen
-  
+  const [isLoading, setIsLoading] = useState(false);
+  const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
-    // Initialize app
+    // Initialize app with production error handling
     const initializeApp = async () => {
       try {
         // Add any initialization logic here
@@ -86,11 +91,34 @@ const App: React.FC = () => {
       } catch (error) {
         console.error('Failed to initialize app:', error);
         setIsLoading(false);
+        setHasError(true);
       }
     };
 
     initializeApp();
   }, []);
+
+  // Production error fallback
+  if (hasError) {
+    return (
+      <div style={{ 
+        minHeight: '100vh', 
+        backgroundColor: '#1a1a1a', 
+        color: 'white', 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'center',
+        padding: '20px',
+        textAlign: 'center'
+      }}>
+        <div>
+          <h1>🚀 RUSH</h1>
+          <p>Voice-First Web3 Customer Support Agent</p>
+          <p>Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (isLoading) {
     return (
