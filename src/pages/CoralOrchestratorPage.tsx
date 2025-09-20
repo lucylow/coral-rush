@@ -1,12 +1,9 @@
-import Navigation from "@/components/Navigation";
 import RealCoralOrchestrator from "@/components/coral/RealCoralOrchestrator";
 
 const CoralOrchestratorPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-      <Navigation />
-      
-      <div className="container mx-auto px-4 pt-24 pb-12">
+      <div className="container mx-auto px-4 pt-8 pb-12">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-8">
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">

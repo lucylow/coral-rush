@@ -8,7 +8,15 @@ import {
   WalletIcon,
   CogIcon,
   XMarkIcon,
-  Bars3Icon
+  Bars3Icon,
+  PlayCircleIcon,
+  ComputerDesktopIcon,
+  CurrencyDollarIcon,
+  ShieldCheckIcon,
+  InformationCircleIcon,
+  ClockIcon,
+  GlobeAltIcon,
+  Cog6ToothIcon
 } from '@heroicons/react/24/outline';
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { useAppState } from '../../contexts/AppStateContext';
@@ -25,11 +33,17 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, onToggle }) => {
 
   const navigation = [
     { name: 'Home', href: '/', icon: HomeIcon },
-    { name: 'Voice Support', href: '/voice-support', icon: MicrophoneIcon },
-    { name: 'Payments', href: '/payments', icon: CreditCardIcon },
-    { name: 'Dashboard', href: '/dashboard', icon: ChartBarIcon },
+    { name: 'Live Demo', href: '/', icon: PlayCircleIcon },
+    { name: 'VM Dashboard', href: '/vm-dashboard', icon: ComputerDesktopIcon },
+    { name: 'Payment', href: '/payment', icon: CreditCardIcon },
+    { name: 'SOL Utility', href: '/orgo-utility', icon: CurrencyDollarIcon },
+    { name: 'Fraud Detection', href: '/fraud-detection', icon: ShieldCheckIcon },
+    { name: 'Token Info', href: '/token-info', icon: InformationCircleIcon },
     { name: 'Wallet', href: '/wallet', icon: WalletIcon },
-    { name: 'Coral Protocol', href: '/coral-hackathon', icon: CogIcon },
+    { name: 'History', href: '/history', icon: ClockIcon },
+    { name: 'Voice Agent', href: '/voice-agent', icon: MicrophoneIcon },
+    { name: 'Coral Protocol', href: '/coral-orchestrator', icon: GlobeAltIcon },
+    { name: 'API Health', href: '/api-health', icon: Cog6ToothIcon },
   ];
 
   return (
