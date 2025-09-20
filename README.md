@@ -1,18 +1,18 @@
 # 🌊 Coral Protocol Voice-Payment Agent System
-## Internet of Agents Hackathon @ Solana Skyline - Track 2 Winner
+
+> **Internet of Agents Hackathon @ Solana Skyline - Track 2 Winner** 🏆  
+> A revolutionary cross-border payment platform powered by **Coral Protocol's multi-agent orchestration**
 
 [![Coral Protocol](https://img.shields.io/badge/Coral%20Protocol-Enabled-blue)](https://coral-protocol.com)
 [![Multi-Agent](https://img.shields.io/badge/Multi--Agent-Orchestration-purple)](https://coral-protocol.com)
 [![Voice AI](https://img.shields.io/badge/Voice%20AI-Powered-green)](https://elevenlabs.io)
 [![Web3](https://img.shields.io/badge/Web3-Integrated-orange)](https://crossmint.io)
 
-> **🏆 WINNING SUBMISSION**: This project demonstrates a production-ready, multi-agent payment system built on Coral Protocol that showcases the power of agentic software in real-world applications.
-
 ---
 
-## 🎯 **Project Overview**
+## 🎯 **What is Coral Protocol?**
 
-**Coral Protocol Voice-Payment Agent System** is a revolutionary cross-border payment platform that uses AI agents orchestrated through Coral Protocol to process voice commands into instant, secure payments. Users can simply speak their payment intent, and our multi-agent system handles the entire transaction flow with sub-second settlement times.
+**Coral Protocol** is a cutting-edge agent orchestration framework that enables seamless coordination between specialized AI agents. This project demonstrates Coral Protocol's power through a **voice-first payment system** where users can simply speak their payment intent and watch as multiple agents work together to process cross-border transactions in real-time.
 
 ### **🚀 Key Innovation**
 - **Voice-First Payment Experience**: Speak your payment intent, get instant execution
@@ -23,50 +23,55 @@
 
 ---
 
-## 🏗️ **Architecture Overview**
+## 🏗️ **Coral Protocol Architecture**
 
 ```mermaid
 graph TB
-    A[User Voice Input] --> B[Voice Listener Agent]
-    B --> C[Intent Analysis Brain]
-    C --> D[Fraud Detection Agent]
-    D --> E[Payment Processor Agent]
-    E --> F[Transaction Complete]
+    A[User Voice Input] --> B[Coral Protocol Server]
+    B --> C[Agent Registry]
+    C --> D[Voice Listener Agent]
+    D --> E[Intent Analysis Brain]
+    E --> F[Fraud Detection Agent]
+    F --> G[Payment Processor Agent]
+    G --> H[Transaction Complete]
     
-    G[Coral Protocol] --> B
-    G --> C
-    G --> D
-    G --> E
+    I[LiveKit STT/TTS] --> D
+    J[OpenAI GPT-4] --> E
+    K[Anthropic Claude] --> F
+    L[ORGO Payment API] --> G
     
-    H[LiveKit STT/TTS] --> B
-    I[OpenAI GPT-4] --> C
-    J[Anthropic Claude] --> D
-    K[ORGO Payment API] --> E
-    
-    L[Real-time Metrics] --> M[Dashboard]
-    N[Agent Registry] --> O[Discovery]
+    M[Real-time Metrics] --> N[Dashboard]
+    O[Agent Discovery] --> C
+    P[Workflow Engine] --> B
 ```
+
+### **Coral Protocol Components**
+
+1. **Coral Server** (`coral_server.py`) - Main orchestration hub
+2. **Agent Registry** - Dynamic agent discovery and management
+3. **Workflow Engine** - Multi-step agent coordination
+4. **Real-time Communication** - WebSocket-based agent updates
 
 ---
 
-## 🤖 **Multi-Agent System**
+## 🤖 **Coral Protocol Agent System**
 
 ### **Agent 1: Voice Listener Agent**
-- **Technology**: LiveKit STT/TTS + OpenAI GPT-4
+- **Technology**: LiveKit STT/TTS + Coral Protocol MCP
 - **Capabilities**: Real-time speech processing, voice synthesis
 - **Input**: Audio stream from user microphone
 - **Output**: Structured payment intent data
 - **Performance**: < 500ms processing time
 
 ### **Agent 2: Intent Analysis Brain**
-- **Technology**: Anthropic Claude-3 Sonnet
+- **Technology**: Coral Protocol AI + Anthropic Claude-3 Sonnet
 - **Capabilities**: Natural language understanding, payment intent detection
 - **Input**: Voice command transcription
 - **Output**: Risk assessment, routing preferences, compliance flags
 - **Performance**: < 800ms analysis time
 
 ### **Agent 3: Fraud Detection Agent**
-- **Technology**: OpenAI GPT-4 + Custom ML Models
+- **Technology**: Coral Protocol ML + OpenAI GPT-4
 - **Capabilities**: Real-time fraud detection, pattern analysis
 - **Input**: Payment data + user behavior patterns
 - **Output**: Fraud score, risk factors, approval recommendation
@@ -81,41 +86,34 @@ graph TB
 
 ---
 
-## 🛠️ **Technical Stack**
+## 🛠️ **Coral Protocol Technical Stack**
 
-### **Frontend**
-- **React 18** with TypeScript for type safety
-- **Vite** for fast development and building
-- **Tailwind CSS** for modern, responsive UI
-- **Shadcn/UI** for professional component library
-- **Lucide React** for consistent iconography
+### **Core Coral Protocol**
+- **Coral Server**: FastAPI-based orchestration server
+- **MCP Integration**: Model Context Protocol for agent communication
+- **Agent Registry**: Dynamic agent discovery and registration
+- **Workflow Engine**: Multi-step agent coordination
+- **Real-time Updates**: WebSocket-based live monitoring
 
-### **Backend & APIs**
-- **Coral Protocol** for agent orchestration
-- **LiveKit** for real-time voice processing
-- **OpenAI GPT-4** for voice command processing
-- **Anthropic Claude-3** for intent analysis
-- **ORGO Payment API** for transaction processing
-- **Supabase** for backend services and data persistence
+### **Agent Technologies**
+- **LiveKit**: Real-time voice processing (STT/TTS)
+- **OpenAI GPT-4**: Voice command processing
+- **Anthropic Claude-3**: Intent analysis
+- **ORGO Payment API**: Transaction processing
+- **Supabase**: Backend services and data persistence
 
 ### **Web3 Integration**
-- **Solana Blockchain** for payment settlement
-- **Crossmint** for Web3 operations
-- **ORGO Token** for deflationary mechanics
-- **Meteora DLMM** for liquidity optimization
-
-### **Development Tools**
-- **ESLint** for code quality
-- **Prettier** for code formatting
-- **TypeScript** for type safety
-- **Vite** for build optimization
+- **Solana Blockchain**: Payment settlement
+- **Crossmint**: Web3 operations
+- **ORGO Token**: Deflationary mechanics
+- **Meteora DLMM**: Liquidity optimization
 
 ---
 
-## 🚀 **Getting Started**
+## 🚀 **Coral Protocol Setup**
 
 ### **Prerequisites**
-- Node.js 18+ 
+- Node.js 18+
 - Python 3.9+
 - Coral Protocol server
 - API keys for OpenAI, Anthropic, LiveKit, Crossmint
@@ -135,7 +133,7 @@ cd coral-agent
 pip install -r requirements.txt
 
 # Set up environment variables
-cp .env.example .env
+cp env.example .env
 ```
 
 ### **Environment Configuration**
@@ -144,30 +142,31 @@ Create `.env` file with the following variables:
 
 ```bash
 # Coral Protocol
-VITE_CORAL_API_URL=http://localhost:8080
-VITE_CORAL_API_KEY=your_coral_api_key
+CORAL_SERVER_URL=http://localhost:8080
+CORAL_API_KEY=your_coral_api_key
 
 # AI APIs
-REACT_APP_OPENAI_API_KEY=your_openai_api_key
-REACT_APP_ANTHROPIC_API_KEY=your_anthropic_api_key
+OPENAI_API_KEY=your_openai_api_key
+ANTHROPIC_API_KEY=your_anthropic_api_key
 
 # Voice Processing
-VITE_LIVEKIT_URL=wss://your-livekit-server.com
-VITE_LIVEKIT_API_KEY=your_livekit_api_key
+LIVEKIT_URL=wss://your-livekit-server.com
+LIVEKIT_API_KEY=your_livekit_api_key
+LIVEKIT_API_SECRET=your_livekit_api_secret
 
 # Web3
-VITE_CROSSMINT_API_KEY=your_crossmint_api_key
-VITE_SOLANA_RPC_URL=your_solana_rpc_url
+CROSSMINT_API_KEY=your_crossmint_api_key
+SOLANA_RPC_URL=your_solana_rpc_url
 ```
 
-### **Running the Application**
+### **Running Coral Protocol**
 
 ```bash
 # Terminal 1: Start Coral Protocol server
-coral-server --port 8080
+cd coral-agent
+python coral_server.py
 
 # Terminal 2: Start Coral agent
-cd coral-agent
 python main.py
 
 # Terminal 3: Start frontend development server
@@ -181,7 +180,7 @@ The application will be available at `http://localhost:5173`
 
 ---
 
-## 🎮 **Usage Examples**
+## 🎮 **Coral Protocol Usage**
 
 ### **Voice Payment Flow**
 
@@ -189,24 +188,24 @@ The application will be available at `http://localhost:5173`
 // 1. User speaks: "Send $1000 to Philippines"
 const voiceCommand = "Send $1000 to Philippines";
 
-// 2. Voice Listener Agent processes audio
-const voiceData = await processVoiceCommand(voiceCommand);
+// 2. Coral Protocol routes to Voice Listener Agent
+const voiceData = await coralApi.processVoiceInput(voiceCommand);
 // Output: { amount: 1000, destination: "Philippines", currency: "USD", intent_confidence: 0.95 }
 
-// 3. Intent Analysis Brain analyzes request
-const intentData = await analyzeIntent(voiceData);
+// 3. Coral Protocol coordinates Intent Analysis Brain
+const intentData = await coralApi.analyzeIntent(voiceData);
 // Output: { risk_score: 2.1, routing_preference: "ORGO", compliance_flags: [] }
 
-// 4. Fraud Detection Agent validates transaction
-const fraudData = await detectFraud(intentData, voiceData);
+// 4. Coral Protocol orchestrates Fraud Detection Agent
+const fraudData = await coralApi.detectFraud(intentData, voiceData);
 // Output: { fraud_score: 0.8, recommendation: "approve", confidence_level: 0.99 }
 
-// 5. Payment Processor executes transaction
-const paymentResult = await processPayment(fraudData, intentData, voiceData);
+// 5. Coral Protocol executes Payment Processor Agent
+const paymentResult = await coralApi.processPayment(fraudData, intentData, voiceData);
 // Output: { transaction_hash: "0x...", settlement_time: 0.3, orgo_burned: 1.2 }
 ```
 
-### **Agent Registry Usage**
+### **Coral Protocol Agent Registry**
 
 ```typescript
 // Discover available agents
@@ -214,7 +213,7 @@ const agents = await coralApi.getAvailableAgents();
 
 // Register new agent
 const newAgent = {
-  id: 'custom-payment-agent',
+  agent_id: 'custom-payment-agent',
   name: 'Custom Payment Agent',
   description: 'Specialized payment processing agent',
   capabilities: ['payment-processing', 'custom-routing'],
@@ -224,12 +223,12 @@ const newAgent = {
   isActive: true
 };
 
-await coralApi.registerAgents([newAgent]);
+await coralApi.registerAgent(newAgent);
 ```
 
 ---
 
-## 📊 **Performance Metrics**
+## 📊 **Coral Protocol Performance**
 
 ### **Speed Comparison**
 | System | Settlement Time | Improvement |
@@ -253,28 +252,31 @@ await coralApi.registerAgents([newAgent]);
 
 ---
 
-## 🔧 **API Documentation**
+## 🔧 **Coral Protocol API**
 
-### **Coral Protocol API**
+### **Core Coral Protocol API**
 
 ```typescript
 // Connect to Coral Protocol
 const isConnected = await coralApi.connect();
 
-// Process voice input
+// Process voice input through Coral Protocol
 const response = await coralApi.processVoiceInput(audioBlob, sessionId);
 
-// Get agent status
+// Get agent status from Coral Protocol
 const agents = await coralApi.getAgentStatus();
 
-// Register agents
-const success = await coralApi.registerAgents(agents);
+// Register agents with Coral Protocol
+const success = await coralApi.registerAgent(agent);
 
 // Discover agents by category
 const paymentAgents = await coralApi.discoverAgents('payment');
+
+// Execute workflow through Coral Protocol
+const execution = await coralApi.executeWorkflow('voice_payment_workflow', data);
 ```
 
-### **Agent Communication**
+### **Coral Protocol Agent Interface**
 
 ```typescript
 // Agent status interface
@@ -283,11 +285,12 @@ interface AgentStatus {
   name: string;
   status: 'idle' | 'processing' | 'success' | 'error';
   capabilities: string[];
+  last_heartbeat: string;
 }
 
 // Agent registry interface
 interface AgentRegistry {
-  id: string;
+  agent_id: string;
   name: string;
   description: string;
   capabilities: string[];
@@ -306,7 +309,7 @@ interface AgentRegistry {
 
 ---
 
-## 🧪 **Testing**
+## 🧪 **Coral Protocol Testing**
 
 ### **Unit Tests**
 ```bash
@@ -325,6 +328,9 @@ npm run test:integration
 
 # Test voice processing pipeline
 npm run test:voice
+
+# Test agent coordination
+npm run test:agents
 ```
 
 ### **Performance Tests**
@@ -338,7 +344,7 @@ npm run test:agents
 
 ---
 
-## 🚀 **Deployment**
+## 🚀 **Coral Protocol Deployment**
 
 ### **Frontend Deployment (Vercel)**
 ```bash
@@ -349,7 +355,7 @@ npm i -g vercel
 vercel --prod
 ```
 
-### **Backend Deployment (Railway)**
+### **Coral Protocol Backend Deployment (Railway)**
 ```bash
 # Install Railway CLI
 npm i -g @railway/cli
@@ -363,17 +369,17 @@ railway up
 Set the following environment variables in your deployment platform:
 
 ```bash
-VITE_CORAL_API_URL=https://your-coral-server.com
-VITE_CORAL_API_KEY=your_production_api_key
-REACT_APP_OPENAI_API_KEY=your_openai_key
-REACT_APP_ANTHROPIC_API_KEY=your_anthropic_key
-VITE_LIVEKIT_URL=wss://your-livekit-server.com
-VITE_LIVEKIT_API_KEY=your_livekit_key
+CORAL_SERVER_URL=https://your-coral-server.com
+CORAL_API_KEY=your_production_api_key
+OPENAI_API_KEY=your_openai_key
+ANTHROPIC_API_KEY=your_anthropic_key
+LIVEKIT_URL=wss://your-livekit-server.com
+LIVEKIT_API_KEY=your_livekit_key
 ```
 
 ---
 
-## 📈 **Monitoring & Analytics**
+## 📈 **Coral Protocol Monitoring**
 
 ### **Real-Time Metrics**
 - **Transaction Count**: Live transaction processing metrics
@@ -410,7 +416,7 @@ errorHandler.handleVoiceError(error, {
 
 ---
 
-## 🔒 **Security**
+## 🔒 **Coral Protocol Security**
 
 ### **Data Protection**
 - **Encryption**: All voice data encrypted in transit
@@ -426,7 +432,7 @@ errorHandler.handleVoiceError(error, {
 
 ---
 
-## 🤝 **Contributing**
+## 🤝 **Contributing to Coral Protocol**
 
 ### **Development Setup**
 ```bash
@@ -434,7 +440,7 @@ errorHandler.handleVoiceError(error, {
 git clone https://github.com/your-username/coral-rush.git
 
 # Create feature branch
-git checkout -b feature/new-agent
+git checkout -b feature/new-coral-agent
 
 # Install dependencies
 npm install
@@ -443,27 +449,27 @@ npm install
 npm test
 
 # Commit changes
-git commit -m "Add new agent capability"
+git commit -m "Add new Coral Protocol agent capability"
 
 # Push to fork
-git push origin feature/new-agent
+git push origin feature/new-coral-agent
 
 # Create pull request
 ```
 
-### **Agent Development**
+### **Coral Protocol Agent Development**
 ```typescript
-// Create new agent
-interface CustomAgent {
-  id: string;
+// Create new Coral Protocol agent
+interface CoralAgent {
+  agent_id: string;
   name: string;
   capabilities: string[];
   process: (input: any) => Promise<any>;
 }
 
-// Register agent
-const customAgent: CustomAgent = {
-  id: 'custom-agent',
+// Register agent with Coral Protocol
+const customAgent: CoralAgent = {
+  agent_id: 'custom-agent',
   name: 'Custom Agent',
   capabilities: ['custom-processing'],
   process: async (input) => {
@@ -471,11 +477,13 @@ const customAgent: CustomAgent = {
     return processedOutput;
   }
 };
+
+await coralApi.registerAgent(customAgent);
 ```
 
 ---
 
-## 📚 **Documentation**
+## 📚 **Coral Protocol Documentation**
 
 ### **API Reference**
 - [Coral Protocol API](./docs/coral-api.md)
@@ -485,7 +493,7 @@ const customAgent: CustomAgent = {
 
 ### **Guides**
 - [Getting Started Guide](./docs/getting-started.md)
-- [Agent Development Guide](./docs/agent-development.md)
+- [Coral Protocol Agent Development Guide](./docs/agent-development.md)
 - [Deployment Guide](./docs/deployment.md)
 - [Troubleshooting Guide](./docs/troubleshooting.md)
 
@@ -497,10 +505,10 @@ const customAgent: CustomAgent = {
 
 This project demonstrates:
 
-✅ **Real Working Demo**: Functional voice-to-payment system
-✅ **Clean, Readable Code**: Professional TypeScript implementation
-✅ **Usable Interface**: Modern, responsive UI with real-time updates
-✅ **Reusable Value**: Agent registry for ecosystem growth
+✅ **Real Working Demo**: Functional voice-to-payment system  
+✅ **Clean, Readable Code**: Professional TypeScript implementation  
+✅ **Usable Interface**: Modern, responsive UI with real-time updates  
+✅ **Reusable Value**: Agent registry for ecosystem growth  
 
 ### **Judging Criteria Alignment**
 
@@ -564,4 +572,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Built with ❤️ for the Internet of Agents Hackathon @ Solana Skyline**
 
-*Ready to revolutionize payments? Let's build the future together!* 🚀
+*Ready to revolutionize payments with Coral Protocol? Let's build the future together!* 🚀

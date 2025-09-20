@@ -118,7 +118,7 @@ const App: React.FC = () => {
                         {/* Main Layout Routes */}
                         <Route path="/" element={<MainLayout />}>
                           {/* Home Page */}
-                          <Route index element={<HomePage />} />
+                          <Route index element={<RushLandingPage />} />
                           
                           {/* Voice Support Routes */}
                           <Route path="voice-support" element={<VoiceInterface />} />
