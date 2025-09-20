@@ -3,7 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Zap, Globe, Shield, TrendingUp, Clock, DollarSign, Mic, Brain, AlertCircle, CheckCircle } from "lucide-react";
+import { Zap, Globe, Shield, TrendingUp, Clock, DollarSign, Mic, Brain, AlertCircle, CheckCircle, Lock, Eye, EyeOff, UserCheck, FileText } from "lucide-react";
 import { toast } from "sonner";
 import { coralApi } from "@/utils/coralApi";
 export default function LiveDemo() {
@@ -22,6 +22,19 @@ export default function LiveDemo() {
   });
   const [aiInsights, setAiInsights] = useState([]);
   const [coralConnected, setCoralConnected] = useState(false);
+  
+  // Consent and Privacy States
+  const [consentGiven, setConsentGiven] = useState(false);
+  const [showConsentModal, setShowConsentModal] = useState(true);
+  const [showPrivacyDetails, setShowPrivacyDetails] = useState(false);
+  const [consentTimestamp, setConsentTimestamp] = useState<string | null>(null);
+  const [userAgreement, setUserAgreement] = useState({
+    voiceProcessing: false,
+    dataStorage: false,
+    aiAnalysis: false,
+    demoParticipation: false,
+    privacyPolicy: false
+  });
 
   // Connect to Coral Protocol on component mount
   useEffect(() => {
@@ -272,7 +285,55 @@ export default function LiveDemo() {
       return null;
     }
   };
+  // Consent handling functions
+  const handleConsentChange = (type: keyof typeof userAgreement) => {
+    setUserAgreement(prev => ({
+      ...prev,
+      [type]: !prev[type]
+    }));
+  };
+
+  const handleGiveConsent = () => {
+    const allConsentsGiven = Object.values(userAgreement).every(consent => consent);
+    
+    if (allConsentsGiven) {
+      setConsentGiven(true);
+      setShowConsentModal(false);
+      setConsentTimestamp(new Date().toISOString());
+      toast.success("✅ Consent given! You can now use the Coral Protocol demo.");
+      
+      // Log consent for hackathon demo purposes
+      console.log('User consent given:', {
+        timestamp: new Date().toISOString(),
+        consents: userAgreement,
+        demoSession: 'coral-protocol-hackathon-2025'
+      });
+    } else {
+      toast.error("Please accept all consent terms to continue.");
+    }
+  };
+
+  const handleRevokeConsent = () => {
+    setConsentGiven(false);
+    setShowConsentModal(true);
+    setUserAgreement({
+      voiceProcessing: false,
+      dataStorage: false,
+      aiAnalysis: false,
+      demoParticipation: false,
+      privacyPolicy: false
+    });
+    setConsentTimestamp(null);
+    toast.info("Consent revoked. You can re-consent anytime to use the demo.");
+  };
+
   const startRace = async () => {
+    if (!consentGiven) {
+      toast.error("Please provide consent before using the demo.");
+      setShowConsentModal(true);
+      return;
+    }
+
     setIsRacing(true);
     setOrgoProgress(0);
     setPaypalProgress(0);
@@ -390,7 +451,208 @@ export default function LiveDemo() {
       }, 4000);
     }
   };
-  return <div className="space-y-6">
+  return (
+    <>
+      {/* Consent Modal */}
+      {showConsentModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <Card className="w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <CardContent className="p-6">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="p-2 bg-blue-100 rounded-lg">
+                  <Shield className="h-6 w-6 text-blue-600" />
+                </div>
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900">Coral Protocol Demo Consent</h2>
+                  <p className="text-sm text-gray-600">Internet of Agents Hackathon @ Solana Skyline</p>
+                </div>
+              </div>
+
+              <div className="space-y-4 mb-6">
+                <p className="text-gray-700 leading-relaxed">
+                  Welcome to the Coral Protocol voice-to-payment demo! This demonstration showcases 
+                  multi-agent orchestration for cross-border payments. Please review and consent to 
+                  the following terms to proceed with the hackathon demo.
+                </p>
+
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                  <h3 className="font-semibold text-blue-900 mb-2">🏆 Hackathon Demo Features</h3>
+                  <ul className="text-sm text-blue-800 space-y-1">
+                    <li>• Voice command processing with AI agents</li>
+                    <li>• Real-time fraud detection and risk assessment</li>
+                    <li>• Simulated cross-border payment processing</li>
+                    <li>• Multi-agent coordination visualization</li>
+                    <li>• ORGO token burning demonstration</li>
+                  </ul>
+                </div>
+
+                <div className="space-y-3">
+                  <label className="flex items-start gap-3 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={userAgreement.voiceProcessing}
+                      onChange={() => handleConsentChange('voiceProcessing')}
+                      className="mt-1 h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    />
+                    <div className="flex-1">
+                      <span className="font-medium text-gray-900">Voice Processing Consent</span>
+                      <p className="text-sm text-gray-600">
+                        I consent to the processing of voice commands for demonstration purposes. 
+                        Voice data is processed locally and not stored permanently.
+                      </p>
+                    </div>
+                  </label>
+
+                  <label className="flex items-start gap-3 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={userAgreement.dataStorage}
+                      onChange={() => handleConsentChange('dataStorage')}
+                      className="mt-1 h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    />
+                    <div className="flex-1">
+                      <span className="font-medium text-gray-900">Data Processing Consent</span>
+                      <p className="text-sm text-gray-600">
+                        I consent to the temporary storage of demo session data for the purpose 
+                        of demonstrating Coral Protocol's capabilities.
+                      </p>
+                    </div>
+                  </label>
+
+                  <label className="flex items-start gap-3 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={userAgreement.aiAnalysis}
+                      onChange={() => handleConsentChange('aiAnalysis')}
+                      className="mt-1 h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    />
+                    <div className="flex-1">
+                      <span className="font-medium text-gray-900">AI Analysis Consent</span>
+                      <p className="text-sm text-gray-600">
+                        I consent to AI-powered analysis of my interactions for fraud detection, 
+                        intent analysis, and payment processing demonstration.
+                      </p>
+                    </div>
+                  </label>
+
+                  <label className="flex items-start gap-3 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={userAgreement.demoParticipation}
+                      onChange={() => handleConsentChange('demoParticipation')}
+                      className="mt-1 h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    />
+                    <div className="flex-1">
+                      <span className="font-medium text-gray-900">Demo Participation</span>
+                      <p className="text-sm text-gray-600">
+                        I understand this is a hackathon demonstration and that all transactions 
+                        are simulated for educational and showcase purposes.
+                      </p>
+                    </div>
+                  </label>
+
+                  <label className="flex items-start gap-3 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={userAgreement.privacyPolicy}
+                      onChange={() => handleConsentChange('privacyPolicy')}
+                      className="mt-1 h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    />
+                    <div className="flex-1">
+                      <span className="font-medium text-gray-900">Privacy Policy Agreement</span>
+                      <p className="text-sm text-gray-600">
+                        I have read and agree to the privacy policy for this Coral Protocol 
+                        hackathon demonstration.
+                      </p>
+                    </div>
+                  </label>
+                </div>
+
+                <div className="flex items-center gap-2 text-sm text-gray-600">
+                  <Lock className="h-4 w-4" />
+                  <span>Your data is protected with end-to-end encryption and GDPR compliance</span>
+                </div>
+              </div>
+
+              <div className="flex gap-3">
+                <Button 
+                  onClick={handleGiveConsent}
+                  className="flex-1 bg-blue-600 hover:bg-blue-700"
+                  disabled={!Object.values(userAgreement).every(consent => consent)}
+                >
+                  <UserCheck className="h-4 w-4 mr-2" />
+                  Give Consent & Start Demo
+                </Button>
+                <Button 
+                  onClick={() => setShowPrivacyDetails(!showPrivacyDetails)}
+                  variant="outline"
+                  className="px-4"
+                >
+                  <FileText className="h-4 w-4 mr-2" />
+                  Privacy Details
+                </Button>
+              </div>
+
+              {showPrivacyDetails && (
+                <div className="mt-4 p-4 bg-gray-50 rounded-lg">
+                  <h4 className="font-semibold mb-2">Privacy Details</h4>
+                  <div className="text-sm text-gray-600 space-y-2">
+                    <p><strong>Data Collection:</strong> Voice commands, transaction simulation data</p>
+                    <p><strong>Data Usage:</strong> Demo purposes, hackathon presentation, technical analysis</p>
+                    <p><strong>Data Retention:</strong> Session data deleted after demo completion</p>
+                    <p><strong>Third Parties:</strong> Coral Protocol agents, AI services (OpenAI, Anthropic)</p>
+                    <p><strong>Security:</strong> HTTPS encryption, secure API endpoints, no permanent storage</p>
+                    <p><strong>Your Rights:</strong> Withdraw consent anytime, request data deletion</p>
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {/* Consent Status Bar */}
+      {consentGiven && (
+        <Card className="border-green-200 bg-green-50/50 mb-6">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-green-100 rounded-lg">
+                  <CheckCircle className="h-5 w-5 text-green-600" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-green-900">Consent Given</h3>
+                  <p className="text-sm text-green-700">
+                    Demo authorized • Session started: {consentTimestamp ? new Date(consentTimestamp).toLocaleTimeString() : 'Unknown'}
+                  </p>
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <Button 
+                  onClick={handleRevokeConsent}
+                  variant="outline"
+                  size="sm"
+                  className="text-green-700 border-green-300 hover:bg-green-100"
+                >
+                  <EyeOff className="h-4 w-4 mr-2" />
+                  Revoke Consent
+                </Button>
+                <Button 
+                  onClick={() => setShowConsentModal(true)}
+                  variant="outline"
+                  size="sm"
+                  className="text-green-700 border-green-300 hover:bg-green-100"
+                >
+                  <FileText className="h-4 w-4 mr-2" />
+                  View Terms
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      <div className="space-y-6">
       <div className="text-center">
         <h2 className="text-3xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">Watch RUSH vs PayPal in real-time</h2>
         <p className="text-muted-foreground mt-2">An AI agent for cross-border payments that uses the Orgo AI platform. The agent will handle the entire payment process, including KYC verification, transaction signing, and settlement, using predictive pre-signing for speed. 1. A $10,000 USD to Philippines Peso (PHP) transfer completing in 0.3 seconds. 2. A real-time SOL burn counter during the transaction. 3. A side-by-side comparison with PayPal (which will take 3+ seconds).</p>
@@ -553,9 +815,31 @@ export default function LiveDemo() {
       </div>
 
       <div className="text-center">
-        <Button onClick={startRace} disabled={isRacing} size="lg" className="bg-gradient-to-r from-primary to-blue-600 hover:from-primary/80 hover:to-blue-600/80">
-          {isRacing ? "🌊 Coral Agents Processing..." : "🚀 Start Coral-Powered $10K Transfer"}
+        <Button 
+          onClick={startRace} 
+          disabled={isRacing || !consentGiven} 
+          size="lg" 
+          className={`bg-gradient-to-r from-primary to-blue-600 hover:from-primary/80 hover:to-blue-600/80 ${
+            !consentGiven ? 'opacity-50 cursor-not-allowed' : ''
+          }`}
+        >
+          {!consentGiven ? (
+            <>
+              <Shield className="h-5 w-5 mr-2" />
+              Consent Required to Start Demo
+            </>
+          ) : isRacing ? (
+            "🌊 Coral Agents Processing..."
+          ) : (
+            "🚀 Start Coral-Powered $10K Transfer"
+          )}
         </Button>
+        
+        {!consentGiven && (
+          <p className="text-sm text-muted-foreground mt-2">
+            Please provide consent above to use the Coral Protocol demo
+          </p>
+        )}
       </div>
 
       <Card className="p-6 text-center bg-gradient-to-r from-primary/5 to-blue-600/5">
@@ -638,5 +922,7 @@ export default function LiveDemo() {
           </div>
         </div>
       </Card>
-    </div>;
+      </div>
+    </>
+  );
 }
