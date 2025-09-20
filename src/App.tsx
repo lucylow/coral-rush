@@ -106,8 +106,8 @@ const App: React.FC = () => {
   }
 
   return (
-  <ErrorBoundary>
-    <QueryClientProvider client={queryClient}>
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
         <ConnectionProvider endpoint={endpoint}>
           <WalletProvider wallets={wallets} autoConnect>
             <WalletModalProvider>
@@ -116,63 +116,63 @@ const App: React.FC = () => {
                   <VoiceProvider>
                     <Router>
                       <div className="App">
-        <Routes>
-                        {/* Main Layout Routes */}
-                        <Route path="/" element={<MainLayout />}>
-                          {/* Home Page */}
-                          <Route index element={<RushLandingPage />} />
-                          
-                          {/* Voice Support Routes */}
-                          <Route path="voice-support" element={<VoiceInterface />} />
-                          <Route path="voice-agent" element={<VoiceAgentPage />} />
-                          
-                          {/* Payment Routes */}
-                          <Route path="payments" element={<PaymentRace />} />
-                          <Route path="payment" element={<PaymentPage />} />
-                          <Route path="orgo-demo" element={<LiveDemoPage />} />
-                          
-                          {/* Dashboard Routes */}
-                          <Route path="dashboard" element={<DashboardOverview />} />
-                          <Route path="analytics" element={<AnalyticsPage />} />
-                          <Route path="vm-dashboard" element={<VMDashboardPage />} />
-                          
-                          {/* Wallet Routes */}
-                          <Route path="wallet" element={<WalletBalance />} />
-                          <Route path="wallet-legacy" element={<WalletPage />} />
-                          
-                          {/* Coral Protocol Routes */}
-                          <Route path="coral-hackathon" element={<CoralHackathonDemo />} />
-                          <Route path="coral-orchestrator" element={<RealCoralOrchestrator />} />
-                          <Route path="agent-registry" element={<AgentRegistry />} />
-                          
-                          {/* Legacy Routes */}
-                          <Route path="history" element={<SupportHistoryPage />} />
-                          <Route path="marketplace" element={<AgentMarketplacePage />} />
-                          <Route path="docs" element={<DocumentationPage />} />
-                          <Route path="api-health" element={<ApiHealthPage />} />
-                          <Route path="orgo-utility" element={<OrgoUtilityPage />} />
-                          <Route path="fraud-detection" element={<FraudDetectionPage />} />
-                          <Route path="token-info" element={<TokenInfoPage />} />
-                          <Route path="orgo-history" element={<HistoryPage />} />
-                        </Route>
+                        <Routes>
+                          {/* Main Layout Routes */}
+                          <Route path="/" element={<MainLayout />}>
+                            {/* Home Page */}
+                            <Route index element={<RushLandingPage />} />
+                            
+                            {/* Voice Support Routes */}
+                            <Route path="voice-support" element={<VoiceInterface />} />
+                            <Route path="voice-agent" element={<VoiceAgentPage />} />
+                            
+                            {/* Payment Routes */}
+                            <Route path="payments" element={<PaymentRace />} />
+                            <Route path="payment" element={<PaymentPage />} />
+                            <Route path="orgo-demo" element={<LiveDemoPage />} />
+                            
+                            {/* Dashboard Routes */}
+                            <Route path="dashboard" element={<DashboardOverview />} />
+                            <Route path="analytics" element={<AnalyticsPage />} />
+                            <Route path="vm-dashboard" element={<VMDashboardPage />} />
+                            
+                            {/* Wallet Routes */}
+                            <Route path="wallet" element={<WalletBalance />} />
+                            <Route path="wallet-legacy" element={<WalletPage />} />
+                            
+                            {/* Coral Protocol Routes */}
+                            <Route path="coral-hackathon" element={<CoralHackathonDemo />} />
+                            <Route path="coral-orchestrator" element={<RealCoralOrchestrator />} />
+                            <Route path="agent-registry" element={<AgentRegistry />} />
+                            
+                            {/* Legacy Routes */}
+                            <Route path="history" element={<SupportHistoryPage />} />
+                            <Route path="marketplace" element={<AgentMarketplacePage />} />
+                            <Route path="docs" element={<DocumentationPage />} />
+                            <Route path="api-health" element={<ApiHealthPage />} />
+                            <Route path="orgo-utility" element={<OrgoUtilityPage />} />
+                            <Route path="fraud-detection" element={<FraudDetectionPage />} />
+                            <Route path="token-info" element={<TokenInfoPage />} />
+                            <Route path="orgo-history" element={<HistoryPage />} />
+                          </Route>
 
-                        {/* Legacy standalone routes */}
-                        <Route path="/rush-landing" element={<RushLandingPage />} />
+                          {/* Legacy standalone routes */}
+                          <Route path="/rush-landing" element={<RushLandingPage />} />
 
-                        {/* Catch-all redirect */}
-                        <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-                    </div>
-                  </Router>
-                </VoiceProvider>
-              </AppStateProvider>
-            </ThemeProvider>
-          </WalletModalProvider>
-        </WalletProvider>
-      </ConnectionProvider>
-    </QueryClientProvider>
-  </ErrorBoundary>
-);
+                          {/* Catch-all redirect */}
+                          <Route path="*" element={<Navigate to="/" replace />} />
+                        </Routes>
+                      </div>
+                    </Router>
+                  </VoiceProvider>
+                </AppStateProvider>
+              </ThemeProvider>
+            </WalletModalProvider>
+          </WalletProvider>
+        </ConnectionProvider>
+      </QueryClientProvider>
+    </ErrorBoundary>
+  );
 };
 
 export default App;
