@@ -11,6 +11,7 @@ const RushLandingPage = () => {
   const [demoStep, setDemoStep] = useState(0);
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
 
+
   const testimonials = [
     {
       name: "Sarah Chen",

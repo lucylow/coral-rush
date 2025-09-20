@@ -73,7 +73,8 @@ const queryClient = new QueryClient({
 });
 
 const App: React.FC = () => {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false); // Set to false to skip loading screen
+  
 
   useEffect(() => {
     // Initialize app
@@ -98,6 +99,7 @@ const App: React.FC = () => {
           <div className="w-16 h-16 border-4 border-purple-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
           <h2 className="text-2xl font-bold text-white mb-2">RUSH</h2>
           <p className="text-slate-400">Initializing Voice-First Web3 Agent...</p>
+          <p className="text-red-400 mt-4">Debug: Loading state active</p>
         </div>
       </div>
     );

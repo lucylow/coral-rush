@@ -12,6 +12,7 @@ const MainLayout: React.FC = () => {
   
   // Hide sidebar on landing page
   const isLandingPage = location.pathname === '/';
+  
 
   return (
     <div className={`min-h-screen ${isLandingPage ? 'bg-gradient-to-br from-gray-900 via-gray-950 to-black' : 'bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900'}`}>
