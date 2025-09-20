@@ -411,7 +411,8 @@ export default function LiveDemo() {
       }, Math.max(paypalLatency, 4000));
     } catch (error) {
       console.error('AI API Error:', error);
-      toast.error(`AI processing failed: ${error.message}. Falling back to demo mode.`);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+      toast.error(`AI processing failed: ${errorMessage}. Falling back to demo mode.`);
       
       // Fallback to demo simulation
       setVoiceCommand('Demo Mode: Simulating payment processing...');
@@ -757,7 +758,7 @@ export default function LiveDemo() {
                 <div className="space-y-1 max-h-32 overflow-y-auto">
                   {aiInsights.map((insight, index) => (
                     <div key={index} className="text-xs text-gray-400 bg-black/20 p-2 rounded">
-                      <span className="font-medium">{insight.agent}:</span> {JSON.stringify(insight.data, null, 2).substring(0, 100)}...
+                      <span className="font-medium">{insight.agent}:</span> {JSON.stringify(insight.data || {}, null, 2).substring(0, 100)}...
                     </div>
                   ))}
                 </div>
@@ -853,7 +854,7 @@ export default function LiveDemo() {
         </p>
         {burnData && (
           <div className="mt-3 text-xs text-gray-500">
-            📊 {burnData.transactions_count} transactions • Last updated: {new Date(burnData.last_updated).toLocaleTimeString()}
+            📊 {burnData.transactions_count} transactions • Last updated: {burnData.last_updated ? new Date(burnData.last_updated).toLocaleTimeString() : 'Unknown'}
           </div>
         )}
       </Card>
