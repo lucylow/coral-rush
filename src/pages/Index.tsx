@@ -45,9 +45,9 @@ const Index = () => {
         <Tabs defaultValue="vm" className="w-full">
           <TabsList className="grid w-full grid-cols-4 lg:grid-cols-8 mb-8">
             <TabsTrigger value="vm">VM Dashboard</TabsTrigger>
+            <TabsTrigger value="fraud">Fraud Detection</TabsTrigger>
             <TabsTrigger value="payment">Payment</TabsTrigger>
             <TabsTrigger value="orgo">SOL Utility</TabsTrigger>
-            <TabsTrigger value="fraud">Fraud Detection</TabsTrigger>
             <TabsTrigger value="voice">Voice Agent</TabsTrigger>
             <TabsTrigger value="token">Token Info</TabsTrigger>
             <TabsTrigger value="wallet">Wallet</TabsTrigger>
@@ -58,16 +58,16 @@ const Index = () => {
             <VMDashboard />
           </TabsContent>
 
+          <TabsContent value="fraud">
+            <VisualFraudDashboard />
+          </TabsContent>
+
           <TabsContent value="payment">
             <PaymentForm />
           </TabsContent>
 
           <TabsContent value="orgo">
             <OrgoTokenPanel />
-          </TabsContent>
-
-          <TabsContent value="fraud">
-            <VisualFraudDashboard />
           </TabsContent>
 
           <TabsContent value="voice">
