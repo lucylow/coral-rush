@@ -6,7 +6,18 @@ import { Progress } from "@/components/ui/progress";
 import { Zap, Globe, Shield, TrendingUp, Clock, DollarSign, Mic, Brain, AlertCircle, CheckCircle, Lock, Eye, EyeOff, UserCheck, FileText } from "lucide-react";
 import { toast } from "sonner";
 import { coralApi } from "@/utils/coralApi";
+import { CoralRegistryShowcase } from "./coral/CoralRegistryShowcase";
+import { CoralWorkflowVisualizer } from "./coral/CoralWorkflowVisualizer";
+import { CoralOrchestrationDashboard } from "./coral/CoralOrchestrationDashboard";
+import BusinessImpactCalculator from "./BusinessImpactCalculator";
+import EmotionalDemoScript from "./EmotionalDemoScript";
+import PredictiveSupportAI from "./PredictiveSupportAI";
+import PerformanceMetrics from "./PerformanceMetrics";
+import RevenueProjections from "./RevenueProjections";
+import "./AgentCoordination.css";
+
 export default function LiveDemo() {
+  const [activeTab, setActiveTab] = useState('demo');
   const [isRacing, setIsRacing] = useState(false);
   const [orgoProgress, setOrgoProgress] = useState(0);
   const [paypalProgress, setPaypalProgress] = useState(0);
@@ -660,8 +671,71 @@ export default function LiveDemo() {
         <p className="text-muted-foreground mt-2">Experience instant AI-powered customer support for Web3 transactions. Our voice-first platform handles cross-border payments, fraud detection, and transaction processing through natural language commands. Watch our Coral Protocol agents process a $10,000 USD to Philippines Peso (PHP) transfer in real-time.</p>
       </div>
 
-      {/* Coral Protocol Agent Status */}
-      {coralAgentsActive && (
+      {/* Tab Navigation */}
+      <div className="flex flex-wrap gap-2 justify-center mb-6">
+        <Button
+          variant={activeTab === 'demo' ? 'default' : 'outline'}
+          onClick={() => setActiveTab('demo')}
+          className={activeTab === 'demo' ? 'bg-blue-600 text-white' : ''}
+        >
+          🎤 Live Demo
+        </Button>
+        <Button
+          variant={activeTab === 'coral' ? 'default' : 'outline'}
+          onClick={() => setActiveTab('coral')}
+          className={activeTab === 'coral' ? 'bg-blue-600 text-white' : ''}
+        >
+          🌊 Coral Protocol
+        </Button>
+        <Button
+          variant={activeTab === 'orchestration' ? 'default' : 'outline'}
+          onClick={() => setActiveTab('orchestration')}
+          className={activeTab === 'orchestration' ? 'bg-blue-600 text-white' : ''}
+        >
+          🎭 Live Orchestration
+        </Button>
+        <Button
+          variant={activeTab === 'business' ? 'default' : 'outline'}
+          onClick={() => setActiveTab('business')}
+          className={activeTab === 'business' ? 'bg-blue-600 text-white' : ''}
+        >
+          💰 Business Impact
+        </Button>
+        <Button
+          variant={activeTab === 'story' ? 'default' : 'outline'}
+          onClick={() => setActiveTab('story')}
+          className={activeTab === 'story' ? 'bg-blue-600 text-white' : ''}
+        >
+          🎭 Demo Story
+        </Button>
+        <Button
+          variant={activeTab === 'predictive' ? 'default' : 'outline'}
+          onClick={() => setActiveTab('predictive')}
+          className={activeTab === 'predictive' ? 'bg-blue-600 text-white' : ''}
+        >
+          🔮 Predictive AI
+        </Button>
+        <Button
+          variant={activeTab === 'performance' ? 'default' : 'outline'}
+          onClick={() => setActiveTab('performance')}
+          className={activeTab === 'performance' ? 'bg-blue-600 text-white' : ''}
+        >
+          ⚡ Performance
+        </Button>
+        <Button
+          variant={activeTab === 'revenue' ? 'default' : 'outline'}
+          onClick={() => setActiveTab('revenue')}
+          className={activeTab === 'revenue' ? 'bg-blue-600 text-white' : ''}
+        >
+          📈 Revenue
+        </Button>
+      </div>
+
+      {/* Tab Content */}
+      {activeTab === 'demo' && (
+        <>
+          {/* Coral Protocol Agent Status */}
+          {coralAgentsActive && (
         <Card className="bg-gradient-to-r from-blue-900/20 to-purple-900/20 border-blue-700 backdrop-blur-sm">
           <CardContent className="p-4">
             <div className="flex items-center justify-between mb-4">
@@ -682,7 +756,12 @@ export default function LiveDemo() {
             
             {/* Agent Status Grid */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              <div className="flex items-center gap-2 p-2 bg-blue-500/20 rounded-lg">
+              <div className={`flex items-center gap-2 p-2 rounded-lg transition-all duration-300 ${
+                agentStatus.voiceListener === 'completed' ? 'agent-status-complete' :
+                agentStatus.voiceListener === 'error' ? 'agent-status-error' :
+                agentStatus.voiceListener === 'processing' ? 'agent-status-processing' :
+                'agent-status-idle'
+              }`}>
                 <Mic className="h-4 w-4 text-blue-300" />
                 <div className="flex-1">
                   <div className="text-xs text-gray-300">Voice Listener</div>
@@ -691,15 +770,22 @@ export default function LiveDemo() {
                       <CheckCircle className="h-3 w-3 text-green-400" />
                     ) : agentStatus.voiceListener === 'error' ? (
                       <AlertCircle className="h-3 w-3 text-red-400" />
+                    ) : agentStatus.voiceListener === 'processing' ? (
+                      <div className="coral-spinner h-3 w-3" />
                     ) : (
-                      <div className="h-3 w-3 rounded-full bg-yellow-400 animate-pulse" />
+                      <div className="h-3 w-3 rounded-full bg-gray-400" />
                     )}
                     <span className="text-xs text-gray-300 capitalize">{agentStatus.voiceListener}</span>
                   </div>
                 </div>
               </div>
               
-              <div className="flex items-center gap-2 p-2 bg-purple-500/20 rounded-lg">
+              <div className={`flex items-center gap-2 p-2 rounded-lg transition-all duration-300 ${
+                agentStatus.intentAnalysis === 'completed' ? 'agent-status-complete' :
+                agentStatus.intentAnalysis === 'error' ? 'agent-status-error' :
+                agentStatus.intentAnalysis === 'processing' ? 'agent-status-processing' :
+                'agent-status-idle'
+              }`}>
                 <Brain className="h-4 w-4 text-purple-300" />
                 <div className="flex-1">
                   <div className="text-xs text-gray-300">Intent Analysis</div>
@@ -708,15 +794,22 @@ export default function LiveDemo() {
                       <CheckCircle className="h-3 w-3 text-green-400" />
                     ) : agentStatus.intentAnalysis === 'error' ? (
                       <AlertCircle className="h-3 w-3 text-red-400" />
+                    ) : agentStatus.intentAnalysis === 'processing' ? (
+                      <div className="coral-spinner h-3 w-3" />
                     ) : (
-                      <div className="h-3 w-3 rounded-full bg-yellow-400 animate-pulse" />
+                      <div className="h-3 w-3 rounded-full bg-gray-400" />
                     )}
                     <span className="text-xs text-gray-300 capitalize">{agentStatus.intentAnalysis}</span>
                   </div>
                 </div>
               </div>
               
-              <div className="flex items-center gap-2 p-2 bg-red-500/20 rounded-lg">
+              <div className={`flex items-center gap-2 p-2 rounded-lg transition-all duration-300 ${
+                agentStatus.fraudDetection === 'completed' ? 'agent-status-complete' :
+                agentStatus.fraudDetection === 'error' ? 'agent-status-error' :
+                agentStatus.fraudDetection === 'processing' ? 'agent-status-processing' :
+                'agent-status-idle'
+              }`}>
                 <Shield className="h-4 w-4 text-red-300" />
                 <div className="flex-1">
                   <div className="text-xs text-gray-300">Fraud Detection</div>
@@ -725,15 +818,22 @@ export default function LiveDemo() {
                       <CheckCircle className="h-3 w-3 text-green-400" />
                     ) : agentStatus.fraudDetection === 'error' ? (
                       <AlertCircle className="h-3 w-3 text-red-400" />
+                    ) : agentStatus.fraudDetection === 'processing' ? (
+                      <div className="coral-spinner h-3 w-3" />
                     ) : (
-                      <div className="h-3 w-3 rounded-full bg-yellow-400 animate-pulse" />
+                      <div className="h-3 w-3 rounded-full bg-gray-400" />
                     )}
                     <span className="text-xs text-gray-300 capitalize">{agentStatus.fraudDetection}</span>
                   </div>
                 </div>
               </div>
               
-              <div className="flex items-center gap-2 p-2 bg-green-500/20 rounded-lg">
+              <div className={`flex items-center gap-2 p-2 rounded-lg transition-all duration-300 ${
+                agentStatus.paymentProcessor === 'completed' ? 'agent-status-complete' :
+                agentStatus.paymentProcessor === 'error' ? 'agent-status-error' :
+                agentStatus.paymentProcessor === 'processing' ? 'agent-status-processing' :
+                'agent-status-idle'
+              }`}>
                 <Zap className="h-4 w-4 text-green-300" />
                 <div className="flex-1">
                   <div className="text-xs text-gray-300">Payment Processor</div>
@@ -742,8 +842,10 @@ export default function LiveDemo() {
                       <CheckCircle className="h-3 w-3 text-green-400" />
                     ) : agentStatus.paymentProcessor === 'error' ? (
                       <AlertCircle className="h-3 w-3 text-red-400" />
+                    ) : agentStatus.paymentProcessor === 'processing' ? (
+                      <div className="coral-spinner h-3 w-3" />
                     ) : (
-                      <div className="h-3 w-3 rounded-full bg-yellow-400 animate-pulse" />
+                      <div className="h-3 w-3 rounded-full bg-gray-400" />
                     )}
                     <span className="text-xs text-gray-300 capitalize">{agentStatus.paymentProcessor}</span>
                   </div>
@@ -924,6 +1026,46 @@ export default function LiveDemo() {
           </div>
         </div>
       </Card>
+        </>
+      )}
+
+      {/* Coral Protocol Tab */}
+      {activeTab === 'coral' && (
+        <div className="space-y-6">
+          <CoralRegistryShowcase />
+          <CoralWorkflowVisualizer />
+        </div>
+      )}
+
+      {/* Live Orchestration Tab */}
+      {activeTab === 'orchestration' && (
+        <CoralOrchestrationDashboard />
+      )}
+
+      {/* Business Impact Tab */}
+      {activeTab === 'business' && (
+        <BusinessImpactCalculator />
+      )}
+
+      {/* Demo Story Tab */}
+      {activeTab === 'story' && (
+        <EmotionalDemoScript />
+      )}
+
+      {/* Predictive AI Tab */}
+      {activeTab === 'predictive' && (
+        <PredictiveSupportAI />
+      )}
+
+      {/* Performance Tab */}
+      {activeTab === 'performance' && (
+        <PerformanceMetrics />
+      )}
+
+      {/* Revenue Tab */}
+      {activeTab === 'revenue' && (
+        <RevenueProjections />
+      )}
       </div>
     </>
   );
