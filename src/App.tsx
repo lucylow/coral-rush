@@ -87,7 +87,7 @@ const App: React.FC = () => {
     const initializeApp = async () => {
       try {
         // Add any initialization logic here
-        await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate loading
+        await new Promise(resolve => setTimeout(resolve, 100)); // Simulate loading
         setIsLoading(false);
       } catch (error) {
         console.error('Failed to initialize app:', error);
@@ -113,23 +113,9 @@ const App: React.FC = () => {
         textAlign: 'center'
       }}>
         <div>
-          <h1>🌊 RUSH Coral Protocol</h1>
+          <h1>🚀 RUSH</h1>
           <p>Voice-First Web3 Customer Support Agent</p>
-          <p>Error occurred during initialization</p>
-          <button 
-            onClick={() => window.location.reload()} 
-            style={{ 
-              marginTop: '20px', 
-              padding: '10px 20px', 
-              backgroundColor: '#3b82f6', 
-              color: 'white', 
-              border: 'none', 
-              borderRadius: '5px',
-              cursor: 'pointer'
-            }}
-          >
-            Reload Page
-          </button>
+          <p>Loading...</p>
         </div>
       </div>
     );
@@ -140,9 +126,9 @@ const App: React.FC = () => {
       <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-purple-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <h2 className="text-2xl font-bold text-white mb-2">🌊 RUSH Coral Protocol</h2>
+          <h2 className="text-2xl font-bold text-white mb-2">RUSH</h2>
           <p className="text-slate-400">Initializing Voice-First Web3 Agent...</p>
-          <p className="text-blue-400 mt-4">Loading Coral Protocol integration...</p>
+          <p className="text-red-400 mt-4">Debug: Loading state active</p>
         </div>
       </div>
     );
@@ -187,7 +173,10 @@ const App: React.FC = () => {
                             <Route path="coral-hackathon" element={<CoralHackathonDemo />} />
                             <Route path="coral-orchestrator" element={<RealCoralOrchestrator />} />
                             <Route path="agent-registry" element={<AgentRegistry />} />
+<<<<<<< HEAD
                             <Route path="winning-demo" element={<WinningHackathonDemo />} />
+=======
+>>>>>>> 2425dab44bc5294a7f17e648d2a3288fecfcdc8b
                             
                             {/* Legacy Routes */}
                             <Route path="history" element={<SupportHistoryPage />} />

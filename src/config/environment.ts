@@ -33,13 +33,6 @@ export const environment = {
     endpoint: process.env.CORAL_PROTOCOL_ENDPOINT || "https://api.coral-protocol.com"
   },
 
-  // LiveKit Configuration
-  livekit: {
-    url: process.env.LIVEKIT_URL || "wss://raise-your-hack-9k3tuu5l.livekit.cloud",
-    apiKey: process.env.LIVEKIT_API_KEY || "APIcANBcgWHCySX",
-    apiSecret: process.env.LIVEKIT_API_SECRET || "0z18eeeT8GZNWebcLtHkp5Rz7cKpMY1ntd3DRUjMNXUB"
-  },
-
   // Application Configuration
   app: {
     nodeEnv: process.env.NODE_ENV || "development",
@@ -69,13 +62,6 @@ export function validateEnvironment(): { isValid: boolean; missingVars: string[]
     'MISTRAL_API_KEY',
     'CROSSMINT_API_KEY',
     'CROSSMINT_PROJECT_ID'
-  ];
-
-  // Optional vars with defaults (LiveKit has defaults provided)
-  const optionalVars = [
-    'LIVEKIT_URL',
-    'LIVEKIT_API_KEY', 
-    'LIVEKIT_API_SECRET'
   ];
 
   const missingVars: string[] = [];
@@ -110,13 +96,4 @@ export function getNumberEnvVar(key: string, defaultValue: number = 0): number {
   if (!value) return defaultValue;
   const parsed = parseInt(value, 10);
   return isNaN(parsed) ? defaultValue : parsed;
-}
-
-// Helper function to get LiveKit configuration
-export function getLiveKitConfig() {
-  return {
-    url: getEnvVar('LIVEKIT_URL', 'wss://raise-your-hack-9k3tuu5l.livekit.cloud'),
-    apiKey: getEnvVar('LIVEKIT_API_KEY', 'APIcANBcgWHCySX'),
-    apiSecret: getEnvVar('LIVEKIT_API_SECRET', '0z18eeeT8GZNWebcLtHkp5Rz7cKpMY1ntd3DRUjMNXUB')
-  };
 }
