@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Import Coral Protocol Components Styles */
+@import './components/coral/CoralComponents.css';
+
 /* Voice-First Web3 Agent Theater Design System */
 
 /* Agent-Specific Color Palette */

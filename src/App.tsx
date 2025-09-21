@@ -23,6 +23,7 @@ import WalletBalance from './pages/WalletBalance';
 import CoralHackathonDemo from './components/CoralHackathonDemo';
 import RealCoralOrchestrator from './components/coral/RealCoralOrchestrator';
 import AgentRegistry from './components/coral/AgentRegistry';
+import WinningHackathonDemo from './pages/WinningHackathonDemo';
 
 // Legacy Pages (for backward compatibility)
 import RushLandingPage from './pages/RushLandingPage';
@@ -148,135 +149,73 @@ const App: React.FC = () => {
   }
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      background: 'linear-gradient(135deg, #1e1b4b 0%, #312e81 100%)',
-      color: 'white',
-      fontFamily: 'system-ui, -apple-system, sans-serif'
-    }}>
-      <div style={{
-        padding: '40px 20px',
-        textAlign: 'center',
-        maxWidth: '800px',
-        margin: '0 auto'
-      }}>
-        <h1 style={{
-          fontSize: '3rem',
-          marginBottom: '20px',
-          background: 'linear-gradient(45deg, #3b82f6, #8b5cf6)',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-          backgroundClip: 'text'
-        }}>
-          🌊 RUSH Coral Protocol
-        </h1>
-        
-        <p style={{
-          fontSize: '1.2rem',
-          marginBottom: '40px',
-          color: '#cbd5e1'
-        }}>
-          Voice-First Web3 Customer Support Agent
-        </p>
-        
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-          gap: '20px',
-          marginBottom: '40px'
-        }}>
-          <div style={{
-            background: 'rgba(59, 130, 246, 0.1)',
-            border: '1px solid rgba(59, 130, 246, 0.3)',
-            borderRadius: '12px',
-            padding: '20px'
-          }}>
-            <h3 style={{ color: '#3b82f6', marginBottom: '10px' }}>🔗 MCP-Native Architecture</h3>
-            <p style={{ fontSize: '0.9rem', color: '#cbd5e1' }}>True Coral Protocol v1 integration with standardized agent communication</p>
-          </div>
-          
-          <div style={{
-            background: 'rgba(139, 92, 246, 0.1)',
-            border: '1px solid rgba(139, 92, 246, 0.3)',
-            borderRadius: '12px',
-            padding: '20px'
-          }}>
-            <h3 style={{ color: '#8b5cf6', marginBottom: '10px' }}>💰 Agent Registry</h3>
-            <p style={{ fontSize: '0.9rem', color: '#cbd5e1' }}>Real revenue generation through agent rental and monetization</p>
-          </div>
-          
-          <div style={{
-            background: 'rgba(16, 185, 129, 0.1)',
-            border: '1px solid rgba(16, 185, 129, 0.3)',
-            borderRadius: '12px',
-            padding: '20px'
-          }}>
-            <h3 style={{ color: '#10b981', marginBottom: '10px' }}>🧵 Thread Orchestration</h3>
-            <p style={{ fontSize: '0.9rem', color: '#cbd5e1' }}>Structured multi-agent coordination with real-time visualization</p>
-          </div>
-        </div>
-        
-        <div style={{
-          background: 'rgba(0, 0, 0, 0.3)',
-          borderRadius: '12px',
-          padding: '30px',
-          marginBottom: '30px'
-        }}>
-          <h2 style={{ marginBottom: '20px', color: '#fbbf24' }}>🚀 Ready for Internet of Agents Hackathon</h2>
-          <p style={{ marginBottom: '20px', color: '#cbd5e1' }}>
-            This implementation demonstrates RUSH as the definitive example of what's possible with Coral Protocol v1
-          </p>
-          <div style={{
-            display: 'flex',
-            justifyContent: 'center',
-            gap: '20px',
-            flexWrap: 'wrap'
-          }}>
-            <button 
-              onClick={() => window.location.href = '/coral-hackathon'}
-              style={{
-                padding: '12px 24px',
-                background: 'linear-gradient(45deg, #3b82f6, #8b5cf6)',
-                color: 'white',
-                border: 'none',
-                borderRadius: '8px',
-                cursor: 'pointer',
-                fontSize: '1rem',
-                fontWeight: '600'
-              }}
-            >
-              🌊 Coral Protocol Demo
-            </button>
-            <button 
-              onClick={() => window.location.href = '/coral-orchestrator'}
-              style={{
-                padding: '12px 24px',
-                background: 'linear-gradient(45deg, #10b981, #059669)',
-                color: 'white',
-                border: 'none',
-                borderRadius: '8px',
-                cursor: 'pointer',
-                fontSize: '1rem',
-                fontWeight: '600'
-              }}
-            >
-              🎭 Live Orchestration
-            </button>
-          </div>
-        </div>
-        
-        <p style={{
-          fontSize: '0.9rem',
-          color: '#64748b',
-          marginTop: '20px'
-        }}>
-          ✅ Coral Protocol v1 Integration Complete<br/>
-          ✅ MCP-Native Architecture Implemented<br/>
-          ✅ Agent Registry & Monetization Ready<br/>
-          ✅ Thread-Based Orchestration Active
-        </p>
-      </div>
-    </div>
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <ConnectionProvider endpoint={endpoint}>
+          <WalletProvider wallets={wallets} autoConnect>
+            <WalletModalProvider>
+              <ThemeProvider>
+                <AppStateProvider>
+                  <VoiceProvider>
+                    <Router>
+                      <div className="App">
+                        <Routes>
+                          {/* Main Layout Routes */}
+                          <Route path="/" element={<MainLayout />}>
+                            {/* Home Page */}
+                            <Route index element={<RushLandingPage />} />
+                            
+                            {/* Voice Support Routes */}
+                            <Route path="voice-support" element={<VoiceInterface />} />
+                            <Route path="voice-agent" element={<VoiceAgentPage />} />
+                            
+                            {/* Payment Routes */}
+                            <Route path="payments" element={<PaymentRace />} />
+                            <Route path="payment" element={<PaymentPage />} />
+                            <Route path="orgo-demo" element={<LiveDemoPage />} />
+                            
+                            {/* Dashboard Routes */}
+                            <Route path="dashboard" element={<DashboardOverview />} />
+                            <Route path="analytics" element={<AnalyticsPage />} />
+                            <Route path="vm-dashboard" element={<VMDashboardPage />} />
+                            
+                            {/* Wallet Routes */}
+                            <Route path="wallet" element={<WalletBalance />} />
+                            <Route path="wallet-legacy" element={<WalletPage />} />
+                            
+                            {/* Coral Protocol Routes */}
+                            <Route path="coral-hackathon" element={<CoralHackathonDemo />} />
+                            <Route path="coral-orchestrator" element={<RealCoralOrchestrator />} />
+                            <Route path="agent-registry" element={<AgentRegistry />} />
+                            <Route path="winning-demo" element={<WinningHackathonDemo />} />
+                            
+                            {/* Legacy Routes */}
+                            <Route path="history" element={<SupportHistoryPage />} />
+                            <Route path="marketplace" element={<AgentMarketplacePage />} />
+                            <Route path="docs" element={<DocumentationPage />} />
+                            <Route path="api-health" element={<ApiHealthPage />} />
+                            <Route path="orgo-utility" element={<OrgoUtilityPage />} />
+                            <Route path="fraud-detection" element={<FraudDetectionPage />} />
+                            <Route path="token-info" element={<TokenInfoPage />} />
+                            <Route path="orgo-history" element={<HistoryPage />} />
+                          </Route>
+
+                          {/* Legacy standalone routes */}
+                          <Route path="/rush-landing" element={<RushLandingPage />} />
+
+                          {/* Catch-all redirect */}
+                          <Route path="*" element={<Navigate to="/" replace />} />
+                        </Routes>
+                      </div>
+                    </Router>
+                  </VoiceProvider>
+                </AppStateProvider>
+              </ThemeProvider>
+            </WalletModalProvider>
+          </WalletProvider>
+        </ConnectionProvider>
+      </QueryClientProvider>
+    </ErrorBoundary>
   );
 };
 
