@@ -148,135 +148,57 @@ const App: React.FC = () => {
   }
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      background: 'linear-gradient(135deg, #1e1b4b 0%, #312e81 100%)',
-      color: 'white',
-      fontFamily: 'system-ui, -apple-system, sans-serif'
-    }}>
-      <div style={{
-        padding: '40px 20px',
-        textAlign: 'center',
-        maxWidth: '800px',
-        margin: '0 auto'
-      }}>
-        <h1 style={{
-          fontSize: '3rem',
-          marginBottom: '20px',
-          background: 'linear-gradient(45deg, #3b82f6, #8b5cf6)',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-          backgroundClip: 'text'
-        }}>
-          🌊 RUSH Coral Protocol
-        </h1>
-        
-        <p style={{
-          fontSize: '1.2rem',
-          marginBottom: '40px',
-          color: '#cbd5e1'
-        }}>
-          Voice-First Web3 Customer Support Agent
-        </p>
-        
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-          gap: '20px',
-          marginBottom: '40px'
-        }}>
-          <div style={{
-            background: 'rgba(59, 130, 246, 0.1)',
-            border: '1px solid rgba(59, 130, 246, 0.3)',
-            borderRadius: '12px',
-            padding: '20px'
-          }}>
-            <h3 style={{ color: '#3b82f6', marginBottom: '10px' }}>🔗 MCP-Native Architecture</h3>
-            <p style={{ fontSize: '0.9rem', color: '#cbd5e1' }}>True Coral Protocol v1 integration with standardized agent communication</p>
-          </div>
-          
-          <div style={{
-            background: 'rgba(139, 92, 246, 0.1)',
-            border: '1px solid rgba(139, 92, 246, 0.3)',
-            borderRadius: '12px',
-            padding: '20px'
-          }}>
-            <h3 style={{ color: '#8b5cf6', marginBottom: '10px' }}>💰 Agent Registry</h3>
-            <p style={{ fontSize: '0.9rem', color: '#cbd5e1' }}>Real revenue generation through agent rental and monetization</p>
-          </div>
-          
-          <div style={{
-            background: 'rgba(16, 185, 129, 0.1)',
-            border: '1px solid rgba(16, 185, 129, 0.3)',
-            borderRadius: '12px',
-            padding: '20px'
-          }}>
-            <h3 style={{ color: '#10b981', marginBottom: '10px' }}>🧵 Thread Orchestration</h3>
-            <p style={{ fontSize: '0.9rem', color: '#cbd5e1' }}>Structured multi-agent coordination with real-time visualization</p>
-          </div>
-        </div>
-        
-        <div style={{
-          background: 'rgba(0, 0, 0, 0.3)',
-          borderRadius: '12px',
-          padding: '30px',
-          marginBottom: '30px'
-        }}>
-          <h2 style={{ marginBottom: '20px', color: '#fbbf24' }}>🚀 Ready for Internet of Agents Hackathon</h2>
-          <p style={{ marginBottom: '20px', color: '#cbd5e1' }}>
-            This implementation demonstrates RUSH as the definitive example of what's possible with Coral Protocol v1
-          </p>
-          <div style={{
-            display: 'flex',
-            justifyContent: 'center',
-            gap: '20px',
-            flexWrap: 'wrap'
-          }}>
-            <button 
-              onClick={() => window.location.href = '/coral-hackathon'}
-              style={{
-                padding: '12px 24px',
-                background: 'linear-gradient(45deg, #3b82f6, #8b5cf6)',
-                color: 'white',
-                border: 'none',
-                borderRadius: '8px',
-                cursor: 'pointer',
-                fontSize: '1rem',
-                fontWeight: '600'
-              }}
-            >
-              🌊 Coral Protocol Demo
-            </button>
-            <button 
-              onClick={() => window.location.href = '/coral-orchestrator'}
-              style={{
-                padding: '12px 24px',
-                background: 'linear-gradient(45deg, #10b981, #059669)',
-                color: 'white',
-                border: 'none',
-                borderRadius: '8px',
-                cursor: 'pointer',
-                fontSize: '1rem',
-                fontWeight: '600'
-              }}
-            >
-              🎭 Live Orchestration
-            </button>
-          </div>
-        </div>
-        
-        <p style={{
-          fontSize: '0.9rem',
-          color: '#64748b',
-          marginTop: '20px'
-        }}>
-          ✅ Coral Protocol v1 Integration Complete<br/>
-          ✅ MCP-Native Architecture Implemented<br/>
-          ✅ Agent Registry & Monetization Ready<br/>
-          ✅ Thread-Based Orchestration Active
-        </p>
-      </div>
-    </div>
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <ConnectionProvider endpoint={endpoint}>
+          <WalletProvider wallets={wallets} autoConnect>
+            <WalletModalProvider>
+              <ThemeProvider>
+                <AppStateProvider>
+                  <VoiceProvider>
+                    <Router>
+                      <Routes>
+                        {/* Main Application Routes */}
+                        <Route path="/" element={<HomePage />} />
+                        <Route path="/voice" element={<VoiceInterface />} />
+                        <Route path="/payment-race" element={<PaymentRace />} />
+                        <Route path="/dashboard" element={<DashboardOverview />} />
+                        <Route path="/wallet-balance" element={<WalletBalance />} />
+                        
+                        {/* Coral Protocol Routes */}
+                        <Route path="/coral-hackathon" element={<CoralHackathonDemo />} />
+                        <Route path="/coral-orchestrator" element={<RealCoralOrchestrator />} />
+                        <Route path="/agent-registry" element={<AgentRegistry />} />
+                        
+                        {/* Legacy Routes */}
+                        <Route path="/rush-landing" element={<RushLandingPage />} />
+                        <Route path="/voice-agent" element={<VoiceAgentPage />} />
+                        <Route path="/support-history" element={<SupportHistoryPage />} />
+                        <Route path="/agent-marketplace" element={<AgentMarketplacePage />} />
+                        <Route path="/analytics" element={<AnalyticsPage />} />
+                        <Route path="/docs" element={<DocumentationPage />} />
+                        <Route path="/live-demo" element={<LiveDemoPage />} />
+                        <Route path="/vm-dashboard" element={<VMDashboardPage />} />
+                        <Route path="/payment" element={<PaymentPage />} />
+                        <Route path="/orgo-utility" element={<OrgoUtilityPage />} />
+                        <Route path="/fraud-detection" element={<FraudDetectionPage />} />
+                        <Route path="/token-info" element={<TokenInfoPage />} />
+                        <Route path="/wallet" element={<WalletPage />} />
+                        <Route path="/history" element={<HistoryPage />} />
+                        <Route path="/api-health" element={<ApiHealthPage />} />
+                        
+                        {/* Catch-all route */}
+                        <Route path="*" element={<NotFound />} />
+                      </Routes>
+                    </Router>
+                  </VoiceProvider>
+                </AppStateProvider>
+              </ThemeProvider>
+            </WalletModalProvider>
+          </WalletProvider>
+        </ConnectionProvider>
+      </QueryClientProvider>
+    </ErrorBoundary>
   );
 };
 
