@@ -6,7 +6,7 @@ import {
   ListToolsRequestSchema,
   McpError,
 } from "@modelcontextprotocol/sdk/types.js";
-import MistralClient from '@mistralai/mistralai';
+import { Mistral } from '@mistralai/mistralai';
 
 interface AnalysisContext {
   user_wallet?: string;
@@ -47,7 +47,7 @@ interface AnalysisResult {
 
 class BrainAgent {
   private server: Server;
-  private mistralClient: MistralClient;
+  private mistralClient: Mistral;
   private defaultModel: string = "mistral-large-latest";
   private contextMemory: Map<string, AnalysisContext> = new Map();
 
@@ -57,7 +57,7 @@ class BrainAgent {
       throw new Error("MISTRAL_API_KEY environment variable is required");
     }
 
-    this.mistralClient = new MistralClient(apiKey);
+    this.mistralClient = new Mistral({ apiKey });
 
     this.server = new Server(
       {
@@ -224,7 +224,8 @@ class BrainAgent {
         throw new Error("No response content received from Mistral AI");
       }
 
-      const analysisResult: AnalysisResult = JSON.parse(responseContent);
+      const contentString = typeof responseContent === 'string' ? responseContent : JSON.stringify(responseContent);
+      const analysisResult: AnalysisResult = JSON.parse(contentString);
 
       // Validate and enhance the response
       const enhancedResult = await this.enhanceAnalysisResult(
@@ -517,7 +518,9 @@ title, summary, key_points (array), tips (array), resources (array)`;
         maxTokens: 1000
       });
 
-      const educationalContent = JSON.parse(response.choices[0]?.message?.content || "{}");
+      const responseContent = response.choices[0]?.message?.content;
+      const contentString = typeof responseContent === 'string' ? responseContent : JSON.stringify(responseContent);
+      const educationalContent = JSON.parse(contentString || "{}");
 
       return {
         content: [

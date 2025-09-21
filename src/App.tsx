@@ -78,7 +78,7 @@ const queryClient = new QueryClient({
 });
 
 const App: React.FC = () => {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
