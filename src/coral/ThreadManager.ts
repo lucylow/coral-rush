@@ -382,5 +382,43 @@ export class CoralThreadManager {
   }
 }
 
-// Export singleton instance
-export const threadManager = new CoralThreadManager(coralServerClient);
+// Export singleton instance with lazy initialization
+let _threadManager: CoralThreadManager | null = null;
+
+export const threadManager = {
+  get instance() {
+    if (!_threadManager) {
+      _threadManager = new CoralThreadManager(coralServerClient);
+    }
+    return _threadManager;
+  },
+  
+  // Proxy methods to the instance
+  async startSupportSession(userQuery: string, sessionId: string) {
+    return this.instance.startSupportSession(userQuery, sessionId);
+  },
+  
+  getSessionMetrics(sessionId: string) {
+    return this.instance.getSessionMetrics(sessionId);
+  },
+  
+  getActiveSessions() {
+    return this.instance.getActiveSessions();
+  },
+  
+  getSessionHistory(limit = 10) {
+    return this.instance.getSessionHistory(limit);
+  },
+  
+  async cancelSession(sessionId: string) {
+    return this.instance.cancelSession(sessionId);
+  },
+  
+  async addParticipant(sessionId: string, agentId: string) {
+    return this.instance.addParticipant(sessionId, agentId);
+  },
+  
+  getAnalytics() {
+    return this.instance.getAnalytics();
+  }
+};

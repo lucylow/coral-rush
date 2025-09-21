@@ -233,12 +233,12 @@ export const CoralOrchestrationDashboard: React.FC = () => {
     try {
       setLoading(true);
       
-      // Load live Coral Protocol data
+      // Load live Coral Protocol data with error handling
       const [agentsData, threadsData, registryData, revenueData] = await Promise.all([
-        coralServerClient.listAgents(),
-        Promise.resolve(threadManager.getActiveSessions()),
-        coralRegistry.getRegistryStats(),
-        coralRegistry.getRevenueMetrics()
+        coralServerClient.listAgents().catch(() => []),
+        Promise.resolve(threadManager.getActiveSessions()).catch(() => []),
+        coralRegistry.getRegistryStats().catch(() => null),
+        coralRegistry.getRevenueMetrics().catch(() => null)
       ]);
 
       setAgents(agentsData);
@@ -249,6 +249,12 @@ export const CoralOrchestrationDashboard: React.FC = () => {
       
     } catch (error) {
       console.error('Failed to load Coral data:', error);
+      // Set fallback data
+      setAgents([]);
+      setActiveThreads([]);
+      setRegistryStats(null);
+      setRevenueMetrics(null);
+      setCoralConnected(false);
     } finally {
       setLoading(false);
     }
@@ -262,6 +268,8 @@ export const CoralOrchestrationDashboard: React.FC = () => {
       loadCoralData();
     } catch (error) {
       console.error('Failed to rent agent:', error);
+      // Show user-friendly error message
+      alert('Failed to rent agent. Please try again.');
     }
   };
 
@@ -275,6 +283,8 @@ export const CoralOrchestrationDashboard: React.FC = () => {
       loadCoralData();
     } catch (error) {
       console.error('Failed to start demo session:', error);
+      // Show user-friendly error message
+      alert('Failed to start demo session. Please try again.');
     }
   };
 

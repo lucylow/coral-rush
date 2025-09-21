@@ -298,5 +298,47 @@ export class CoralServerClient {
   }
 }
 
-// Export singleton instance
-export const coralServerClient = new CoralServerClient();
+// Export singleton instance with lazy initialization
+let _coralServerClient: CoralServerClient | null = null;
+
+export const coralServerClient = {
+  get instance() {
+    if (!_coralServerClient) {
+      _coralServerClient = new CoralServerClient();
+    }
+    return _coralServerClient;
+  },
+  
+  // Proxy methods to the instance
+  async listAgents() {
+    return this.instance.listAgents();
+  },
+  
+  async createThread(threadName: string, participants: string[]) {
+    return this.instance.createThread(threadName, participants);
+  },
+  
+  async sendMessage(threadId: string, message: string, mentions?: string[]) {
+    return this.instance.sendMessage(threadId, message, mentions);
+  },
+  
+  async waitForMentions(threadId: string, timeoutMs = 30000) {
+    return this.instance.waitForMentions(threadId, timeoutMs);
+  },
+  
+  async addParticipant(threadId: string, agentId: string) {
+    return this.instance.addParticipant(threadId, agentId);
+  },
+  
+  async getAvailableTools() {
+    return this.instance.getAvailableTools();
+  },
+  
+  isConnected() {
+    return this.instance.isConnected();
+  },
+  
+  async disconnect() {
+    return this.instance.disconnect();
+  }
+};

@@ -388,5 +388,43 @@ export class CoralRegistryService {
   }
 }
 
-// Export singleton instance
-export const coralRegistry = new CoralRegistryService();
+// Export singleton instance with lazy initialization
+let _coralRegistry: CoralRegistryService | null = null;
+
+export const coralRegistry = {
+  get instance() {
+    if (!_coralRegistry) {
+      _coralRegistry = new CoralRegistryService();
+    }
+    return _coralRegistry;
+  },
+  
+  // Proxy methods to the instance
+  async publishAgent(agentMetadata: AgentMetadata) {
+    return this.instance.publishAgent(agentMetadata);
+  },
+  
+  async discoverAgents(category?: string, capabilities?: string[]) {
+    return this.instance.discoverAgents(category, capabilities);
+  },
+  
+  async rentAgent(agentId: string, sessionDuration: number) {
+    return this.instance.rentAgent(agentId, sessionDuration);
+  },
+  
+  async getAgentMetrics(agentId: string) {
+    return this.instance.getAgentMetrics(agentId);
+  },
+  
+  async getRegistryStats() {
+    return this.instance.getRegistryStats();
+  },
+  
+  async getRevenueMetrics() {
+    return this.instance.getRevenueMetrics();
+  },
+  
+  async cancelRental(rentalId: string) {
+    return this.instance.cancelRental(rentalId);
+  }
+};
