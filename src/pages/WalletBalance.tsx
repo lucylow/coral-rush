@@ -37,7 +37,7 @@ const WalletBalance: React.FC = () => {
     <div className="space-y-8">
       {/* Header */}
       <div className="text-center">
-        <h1 className="text-3xl font-bold text-white mb-2">Wallet Balance</h1>
+        <h1 className="text-3xl font-bold text-white mb-2">🌊 Coral Protocol Wallet Balance</h1>
         <p className="text-slate-400">Manage your tokens and view transaction history</p>
         <p className="text-sm text-slate-500 mt-2">
           Connected: {publicKey?.toBase58().slice(0, 8)}...{publicKey?.toBase58().slice(-8)}

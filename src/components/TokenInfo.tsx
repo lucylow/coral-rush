@@ -5,15 +5,15 @@ import { TrendingUp, TrendingDown, Users, Coins, BarChart3, Flame } from "lucide
 
 export default function TokenInfo() {
   const tokenStats = {
-    price: 4.73,
-    priceChange24h: 8.42,
-    marketCap: 47300000,
-    volume24h: 2847392,
-    totalSupply: 10000000,
-    circulatingSupply: 8750000,
-    holders: 12847,
-    burnedTokens: 2847.39,
-    stakingAPY: 22.3
+    price: 237.46,
+    priceChange24h: -0.91,
+    marketCap: 109500000000,
+    volume24h: 2847392000,
+    totalSupply: 500000000,
+    circulatingSupply: 461000000,
+    holders: 1284700,
+    burnedTokens: 28473.9,
+    stakingAPY: 5.8
   };
 
   const formatNumber = (num: number) => {
@@ -26,9 +26,9 @@ export default function TokenInfo() {
     <div className="space-y-6">
       <div className="text-center">
         <h2 className="text-3xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
-          ORGO Token Analytics
+          🌊 Coral Protocol SOL Token Analytics
         </h2>
-        <p className="text-muted-foreground mt-2">Real-time deflationary tokenomics</p>
+        <p className="text-muted-foreground mt-2">Solana native token with high-performance blockchain</p>
       </div>
 
       {/* Main Price Card */}
@@ -51,8 +51,8 @@ export default function TokenInfo() {
             </div>
           </div>
           <div className="text-right">
-            <Badge variant="secondary" className="mb-2">ORGO/USD</Badge>
-            <div className="text-sm text-muted-foreground">Solana SPL Token</div>
+            <Badge variant="secondary" className="mb-2">SOL/USD</Badge>
+            <div className="text-sm text-muted-foreground">Solana Native Token</div>
           </div>
         </div>
       </Card>
@@ -65,7 +65,7 @@ export default function TokenInfo() {
             <span className="text-sm font-medium">Market Cap</span>
           </div>
           <div className="text-xl font-bold">{formatNumber(tokenStats.marketCap)}</div>
-          <div className="text-xs text-muted-foreground">Rank #247</div>
+          <div className="text-xs text-muted-foreground">Rank #5</div>
         </Card>
 
         <Card className="p-4">
@@ -91,8 +91,8 @@ export default function TokenInfo() {
             <Flame className="h-4 w-4 text-orange-500" />
             <span className="text-sm font-medium">Burned</span>
           </div>
-          <div className="text-xl font-bold">{tokenStats.burnedTokens}</div>
-          <div className="text-xs text-muted-foreground">ORGO removed forever</div>
+          <div className="text-xl font-bold">{tokenStats.burnedTokens.toLocaleString()}</div>
+          <div className="text-xs text-muted-foreground">SOL burned in fees</div>
         </Card>
       </div>
 
@@ -103,15 +103,15 @@ export default function TokenInfo() {
           <div className="space-y-3">
             <div className="flex justify-between">
               <span>Circulating Supply</span>
-              <span className="font-medium">{tokenStats.circulatingSupply.toLocaleString()} ORGO</span>
+              <span className="font-medium">{tokenStats.circulatingSupply.toLocaleString()} SOL</span>
             </div>
             <div className="flex justify-between">
               <span>Total Supply</span>
-              <span className="font-medium">{tokenStats.totalSupply.toLocaleString()} ORGO</span>
+              <span className="font-medium">{tokenStats.totalSupply.toLocaleString()} SOL</span>
             </div>
             <div className="flex justify-between">
               <span>Burned Tokens</span>
-              <span className="font-medium text-orange-500">{tokenStats.burnedTokens} ORGO</span>
+              <span className="font-medium text-orange-500">{tokenStats.burnedTokens.toLocaleString()} SOL</span>
             </div>
             <Separator />
             <div className="flex justify-between text-sm">
@@ -122,15 +122,15 @@ export default function TokenInfo() {
         </Card>
 
         <Card className="p-6">
-          <h3 className="text-lg font-semibold mb-4">Deflationary Mechanics</h3>
+          <h3 className="text-lg font-semibold mb-4">Solana Network Mechanics</h3>
           <div className="space-y-3">
             <div className="flex justify-between">
-              <span>Burn Rate</span>
-              <span className="font-medium">0.1% per transaction</span>
+              <span>Transaction Fees</span>
+              <span className="font-medium">~0.00025 SOL per tx</span>
             </div>
             <div className="flex justify-between">
               <span>Daily Burns</span>
-              <span className="font-medium">~625 ORGO</span>
+              <span className="font-medium">~{Math.floor(tokenStats.burnedTokens / 365).toLocaleString()} SOL</span>
             </div>
             <div className="flex justify-between">
               <span>Staking APY</span>
@@ -138,7 +138,7 @@ export default function TokenInfo() {
             </div>
             <Separator />
             <div className="text-xs text-muted-foreground">
-              Every transaction permanently removes ORGO from circulation, creating deflationary pressure
+              SOL is used for transaction fees and staking. Portion of fees are burned, creating deflationary pressure
             </div>
           </div>
         </Card>
@@ -146,19 +146,19 @@ export default function TokenInfo() {
 
       {/* Recent Activity */}
       <Card className="p-6">
-        <h3 className="text-lg font-semibold mb-4">Recent Token Burns</h3>
+        <h3 className="text-lg font-semibold mb-4">Recent Fee Burns</h3>
         <div className="space-y-3">
           {[
-            { time: "2 min ago", amount: 2.47, tx: "3x8m...9fR2" },
-            { time: "5 min ago", amount: 1.23, tx: "9mK3...7nL1" },
-            { time: "8 min ago", amount: 5.67, tx: "2qW5...4tY8" },
-            { time: "12 min ago", amount: 3.14, tx: "7jH9...1mP6" },
+            { time: "2 min ago", amount: 0.00025, tx: "3x8m...9fR2" },
+            { time: "5 min ago", amount: 0.00025, tx: "9mK3...7nL1" },
+            { time: "8 min ago", amount: 0.00025, tx: "2qW5...4tY8" },
+            { time: "12 min ago", amount: 0.00025, tx: "7jH9...1mP6" },
           ].map((burn, index) => (
             <div key={index} className="flex items-center justify-between p-3 bg-muted/50 rounded">
               <div className="flex items-center gap-3">
                 <Flame className="h-4 w-4 text-orange-500" />
                 <div>
-                  <div className="font-medium">{burn.amount} ORGO Burned</div>
+                  <div className="font-medium">{burn.amount} SOL Burned</div>
                   <div className="text-sm text-muted-foreground">{burn.time}</div>
                 </div>
               </div>

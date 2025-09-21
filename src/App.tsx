@@ -41,6 +41,9 @@ import WalletPage from './pages/WalletPage';
 import HistoryPage from './pages/HistoryPage';
 import CoralOrchestratorPage from './pages/CoralOrchestratorPage';
 import ApiHealthPage from './pages/ApiHealthPage';
+import NFTRefundsPage from './pages/NFTRefundsPage';
+import CustomerSupportPage from './pages/CustomerSupportPage';
+import SupportDashboardPage from './pages/SupportDashboardPage';
 import NotFound from './pages/NotFound';
 
 // Providers
@@ -182,6 +185,11 @@ const App: React.FC = () => {
                             <Route path="fraud-detection" element={<FraudDetectionPage />} />
                             <Route path="token-info" element={<TokenInfoPage />} />
                             <Route path="orgo-history" element={<HistoryPage />} />
+                            
+                            {/* New Support Routes */}
+                            <Route path="support-dashboard" element={<SupportDashboardPage />} />
+                            <Route path="nft-refunds" element={<NFTRefundsPage />} />
+                            <Route path="customer-support" element={<CustomerSupportPage />} />
                           </Route>
 
                           {/* Legacy standalone routes */}

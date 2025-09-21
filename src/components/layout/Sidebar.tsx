@@ -16,7 +16,9 @@ import {
   InformationCircleIcon,
   ClockIcon,
   GlobeAltIcon,
-  Cog6ToothIcon
+  Cog6ToothIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon
 } from '@heroicons/react/24/outline';
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { useAppState } from '../../contexts/AppStateContext';
@@ -54,9 +56,20 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, onToggle }) => {
         />
       )}
 
+      {/* Floating toggle button when sidebar is closed */}
+      {!isOpen && (
+        <button
+          onClick={onToggle}
+          className="fixed top-4 left-4 z-50 p-2 bg-slate-800/90 backdrop-blur-sm border border-slate-600 rounded-lg hover:bg-slate-700 transition-all duration-200 shadow-lg group animate-pulse hover:animate-none"
+          title="Show sidebar"
+        >
+          <ChevronRightIcon className="h-5 w-5 text-slate-300 group-hover:text-white transition-colors" />
+        </button>
+      )}
+
       {/* Sidebar */}
-      <div className={`fixed inset-y-0 left-0 z-50 w-64 bg-slate-900/95 backdrop-blur-sm border-r border-slate-700 transform transition-transform duration-300 ease-in-out ${
-        isOpen ? 'translate-x-0' : '-translate-x-full'
+      <div className={`fixed inset-y-0 left-0 z-50 w-64 bg-slate-900/95 backdrop-blur-sm border-r border-slate-700 transform transition-all duration-300 ease-in-out ${
+        isOpen ? 'translate-x-0 shadow-xl' : '-translate-x-full shadow-none'
       } md:translate-x-0`}>
         <div className="flex flex-col h-full">
           {/* Header */}
@@ -71,15 +84,20 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, onToggle }) => {
               {/* Desktop toggle button */}
               <button
                 onClick={onToggle}
-                className="hidden md:block p-1.5 rounded-lg hover:bg-slate-700 transition-colors"
-                title="Toggle sidebar"
+                className="hidden md:block p-1.5 rounded-lg hover:bg-slate-700 transition-colors group"
+                title={isOpen ? "Hide sidebar" : "Show sidebar"}
               >
-                <Bars3Icon className="h-4 w-4 text-slate-300" />
+                {isOpen ? (
+                  <ChevronLeftIcon className="h-4 w-4 text-slate-300 group-hover:text-white transition-colors" />
+                ) : (
+                  <ChevronRightIcon className="h-4 w-4 text-slate-300 group-hover:text-white transition-colors" />
+                )}
               </button>
               {/* Mobile close button */}
               <button
                 onClick={onClose}
                 className="md:hidden p-1.5 rounded-lg hover:bg-slate-700 transition-colors"
+                title="Close sidebar"
               >
                 <XMarkIcon className="h-5 w-5 text-slate-300" />
               </button>

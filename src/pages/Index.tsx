@@ -25,7 +25,7 @@ const Index = () => {
           <div className="flex items-center justify-between">
             <div className="text-center flex-1">
               <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
-                RUSH Payment Agent
+                🌊 Coral Protocol Payment Agent
               </h1>
               <p className="text-muted-foreground mt-2">
               </p>

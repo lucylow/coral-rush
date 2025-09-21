@@ -510,7 +510,7 @@ export default function LiveDemo() {
 
               <div className="space-y-4 mb-6">
                 <p className="text-gray-700 leading-relaxed">
-                  Coral Protocol Voice Support provides instant AI-powered assistance for Solana transactions and cross-border payments. Please review and consent to access our voice-first platform.
+                  Coral Protocol Voice Support provides instant AI-powered assistance for Solana transactions. Please review and consent to access our voice-first platform.
                 </p>
 
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
@@ -688,8 +688,18 @@ export default function LiveDemo() {
 
       <div className="space-y-6">
       <div className="text-center">
-        <h2 className="text-3xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">Voice-First Solana Support</h2>
-        <p className="text-muted-foreground mt-2">AI-powered Solana transaction support. Voice commands handle cross-border payments and fraud detection. Watch Coral Protocol agents process a $10,000 USD to PHP transfer in real-time.</p>
+        <h2 className="text-3xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">🌊 Coral Protocol Voice-First Support</h2>
+        <p className="text-muted-foreground mt-2">Multi-agent AI orchestration for Solana transactions. Voice commands coordinate specialized agents for payments, fraud detection, and customer support. Watch Coral Protocol's agent coordination in real-time.</p>
+        <div className="mt-4 bg-gradient-to-r from-blue-900/20 to-purple-900/20 backdrop-blur-sm rounded-lg p-4 border border-blue-700/30">
+          <div className="flex items-center justify-center gap-3 mb-2">
+            <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
+            <span className="text-sm font-medium text-blue-300">Coral Protocol Multi-Agent System</span>
+          </div>
+          <p className="text-sm text-gray-300">
+            Experience the power of agentic software with Coral Protocol's orchestration framework. 
+            Four specialized agents work together seamlessly to process your voice commands and execute complex Web3 operations.
+          </p>
+        </div>
       </div>
 
       {/* Coral Protocol Agent Status */}
@@ -915,24 +925,32 @@ export default function LiveDemo() {
         </Card>
       </div>
 
-      {/* Technical Features */}
+      {/* Coral Protocol Technical Features */}
       <Card className="p-6">
-        <h3 className="text-xl font-semibold mb-4 text-center">Why Coral Protocol</h3>
+        <h3 className="text-xl font-semibold mb-4 text-center">🌊 Why Coral Protocol Multi-Agent Orchestration</h3>
         <div className="grid md:grid-cols-2 gap-6">
           <div className="space-y-4">
             <div className="flex items-start gap-3">
               <Shield className="h-5 w-5 text-primary mt-1" />
               <div>
-                <h4 className="font-medium">ZK-Proof Identity</h4>
-                <p className="text-sm text-muted-foreground">Privacy-preserving authentication with 99.5% fraud detection</p>
+                <h4 className="font-medium">Multi-Agent Security</h4>
+                <p className="text-sm text-muted-foreground">Specialized fraud detection agents with 99.5% accuracy through Coral Protocol coordination</p>
               </div>
             </div>
             
             <div className="flex items-start gap-3">
               <Clock className="h-5 w-5 text-primary mt-1" />
               <div>
-                <h4 className="font-medium">Pre-signed Transactions</h4>
-                <p className="text-sm text-muted-foreground">Instant execution without delays</p>
+                <h4 className="font-medium">Agent Coordination</h4>
+                <p className="text-sm text-muted-foreground">Real-time agent communication and handoffs via Coral Protocol orchestration</p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3">
+              <Brain className="h-5 w-5 text-primary mt-1" />
+              <div>
+                <h4 className="font-medium">Intelligent Routing</h4>
+                <p className="text-sm text-muted-foreground">Coral Protocol automatically routes tasks to the most capable agent</p>
               </div>
             </div>
           </div>
@@ -941,16 +959,60 @@ export default function LiveDemo() {
             <div className="flex items-start gap-3">
               <Globe className="h-5 w-5 text-primary mt-1" />
               <div>
-                <h4 className="font-medium">Atomic Cross-chain Swaps</h4>
-                <p className="text-sm text-muted-foreground">USD → USDC → PHP in single Solana transaction</p>
+                <h4 className="font-medium">Cross-Chain Agent Network</h4>
+                <p className="text-sm text-muted-foreground">Agents coordinate across multiple blockchains via Coral Protocol infrastructure</p>
               </div>
             </div>
             
             <div className="flex items-start gap-3">
               <Zap className="h-5 w-5 text-primary mt-1" />
               <div>
-                <h4 className="font-medium">VM Orchestration</h4>
-                <p className="text-sm text-muted-foreground">4 VMs managing Solana payment infrastructure</p>
+                <h4 className="font-medium">Scalable Agent Orchestration</h4>
+                <p className="text-sm text-muted-foreground">Coral Protocol manages agent lifecycle, scaling, and resource allocation</p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3">
+              <Mic className="h-5 w-5 text-primary mt-1" />
+              <div>
+                <h4 className="font-medium">Voice-First Agent Interface</h4>
+                <p className="text-sm text-muted-foreground">Natural language commands orchestrate complex multi-agent workflows</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div className="mt-6 p-4 bg-gradient-to-r from-blue-900/10 to-purple-900/10 rounded-lg border border-blue-500/20">
+          <div className="text-center">
+            <h4 className="font-medium text-blue-300 mb-2">Coral Protocol Agent Ecosystem</h4>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+              <div className="text-center">
+                <div className="w-8 h-8 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-1">
+                  <Mic className="w-4 h-4 text-green-400" />
+                </div>
+                <div className="text-green-400 font-medium">Voice Listener</div>
+                <div className="text-gray-400 text-xs">Speech Processing</div>
+              </div>
+              <div className="text-center">
+                <div className="w-8 h-8 bg-blue-500/20 rounded-full flex items-center justify-center mx-auto mb-1">
+                  <Brain className="w-4 h-4 text-blue-400" />
+                </div>
+                <div className="text-blue-400 font-medium">Intent Analysis</div>
+                <div className="text-gray-400 text-xs">Understanding</div>
+              </div>
+              <div className="text-center">
+                <div className="w-8 h-8 bg-purple-500/20 rounded-full flex items-center justify-center mx-auto mb-1">
+                  <Shield className="w-4 h-4 text-purple-400" />
+                </div>
+                <div className="text-purple-400 font-medium">Fraud Detection</div>
+                <div className="text-gray-400 text-xs">Security</div>
+              </div>
+              <div className="text-center">
+                <div className="w-8 h-8 bg-orange-500/20 rounded-full flex items-center justify-center mx-auto mb-1">
+                  <Zap className="w-4 h-4 text-orange-400" />
+                </div>
+                <div className="text-orange-400 font-medium">Payment Processor</div>
+                <div className="text-gray-400 text-xs">Execution</div>
               </div>
             </div>
           </div>

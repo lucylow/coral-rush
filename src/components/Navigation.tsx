@@ -14,7 +14,10 @@ import {
   Mic,
   Network,
   Settings,
-  ChevronUp
+  ChevronUp,
+  RefreshCw,
+  Headphones,
+  MessageSquare
 } from "lucide-react";
 
 const Navigation = () => {
@@ -27,6 +30,9 @@ const Navigation = () => {
     { path: "/coral-orchestrator", label: "Coral Protocol", icon: Network },
     { path: "/vm-dashboard", label: "VM Dashboard", icon: Monitor },
     { path: "/payment", label: "Payment", icon: CreditCard },
+    { path: "/support-dashboard", label: "Support Hub", icon: Headphones },
+    { path: "/nft-refunds", label: "NFT Refunds", icon: RefreshCw },
+    { path: "/customer-support", label: "Support", icon: MessageSquare },
     { path: "/orgo-utility", label: "SOL Utility", icon: Coins },
     { path: "/fraud-detection", label: "Fraud Detection", icon: Shield },
     { path: "/token-info", label: "Token Info", icon: Info },

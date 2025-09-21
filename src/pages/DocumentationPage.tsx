@@ -370,7 +370,7 @@ Content-Type: multipart/form-data
         return (
           <div className="space-y-8">
             <div>
-              <h1 className="text-4xl font-bold mb-4">Documentation</h1>
+              <h1 className="text-4xl font-bold mb-4">🌊 Coral Protocol Documentation</h1>
               <p className="text-lg text-gray-300 leading-relaxed">
                 Select a section from the navigation to view detailed documentation.
               </p>

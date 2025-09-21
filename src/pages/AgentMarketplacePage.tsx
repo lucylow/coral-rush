@@ -225,7 +225,7 @@ const AgentMarketplacePage = () => {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-            Agent Marketplace
+            🌊 Coral Protocol Agent Marketplace
           </h1>
           <p className="text-gray-400">
             Discover specialized AI agents for your Web3 support needs

@@ -48,7 +48,7 @@ const DashboardOverview: React.FC = () => {
     <div className="space-y-8">
       {/* Header */}
       <div className="text-center">
-        <h1 className="text-3xl font-bold text-white mb-2">Dashboard Overview</h1>
+        <h1 className="text-3xl font-bold text-white mb-2">🌊 Coral Protocol Dashboard Overview</h1>
         <p className="text-slate-400">Real-time system monitoring and analytics</p>
       </div>
 

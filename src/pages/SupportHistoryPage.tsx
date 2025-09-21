@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import { Button } from "@/components/ui/button";
@@ -8,7 +8,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import { CalendarDays, Search, Filter, Download, ExternalLink, PlayCircle, CheckCircle, Clock, AlertCircle, Mic, Brain, Zap } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { CalendarDays, Search, Filter, Download, ExternalLink, PlayCircle, CheckCircle, Clock, AlertCircle, Mic, Brain, Zap, Pause, Volume2, FileText } from "lucide-react";
 
 interface SupportSession {
   id: string;
@@ -21,6 +22,7 @@ interface SupportSession {
   nftMinted?: boolean;
   transcriptUrl?: string;
   audioUrl?: string;
+  transcript?: string;
   agents: Array<{
     type: 'listener' | 'brain' | 'executor';
     actions: string[];
@@ -31,6 +33,9 @@ const SupportHistoryPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [dateFilter, setDateFilter] = useState("all");
+  const [playingAudio, setPlayingAudio] = useState<string | null>(null);
+  const [transcriptOpen, setTranscriptOpen] = useState<string | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   // Mock support history data
   const [supportHistory] = useState<SupportSession[]>([
@@ -45,10 +50,23 @@ const SupportHistoryPage = () => {
       nftMinted: true,
       transcriptUrl: "/transcripts/session-001.txt",
       audioUrl: "/audio/session-001.mp3",
+      transcript: `[00:00:00] User: "Hi, I'm having an issue with my NFT minting transaction. It failed but I was still charged gas fees. Can you help me?"
+
+[00:00:05] Coral Listener Agent: Processing voice command... Speech-to-text conversion complete. Intent extracted: Transaction failure complaint.
+
+[00:00:08] Coral Brain Agent: Analyzing transaction data... Checking blockchain records... Issue classified as failed transaction with gas fee charge.
+
+[00:00:15] Coral Executor Agent: Verifying transaction on-chain... Confirming no NFT was minted... Preparing compensation solution.
+
+[00:00:25] Coral Brain Agent: Orchestrating multi-agent response... Solution: Mint compensation NFT to user's wallet.
+
+[00:00:30] Coral Executor Agent: Executing NFT minting... Transaction submitted... Wallet notification sent.
+
+[00:00:45] System: Support Resolution NFT successfully minted to user wallet. Transaction hash: 0x1234...abcd`,
       agents: [
-        { type: 'listener', actions: ['Speech to text conversion', 'Natural language processing'] },
-        { type: 'brain', actions: ['Transaction analysis', 'Issue classification', 'Solution planning'] },
-        { type: 'executor', actions: ['Blockchain verification', 'NFT minting', 'Wallet notification'] }
+        { type: 'listener', actions: ['Voice command processing via Coral Protocol', 'Speech-to-text conversion', 'Intent extraction'] },
+        { type: 'brain', actions: ['Coral Protocol orchestration', 'Transaction analysis', 'Issue classification', 'Multi-agent solution planning'] },
+        { type: 'executor', actions: ['Blockchain verification', 'Coral Protocol agent coordination', 'NFT minting', 'Wallet notification'] }
       ]
     },
     {
@@ -62,10 +80,23 @@ const SupportHistoryPage = () => {
       nftMinted: false,
       transcriptUrl: "/transcripts/session-002.txt",
       audioUrl: "/audio/session-002.mp3",
+      transcript: `[00:00:00] User: "I'm new to this platform and I want to connect my Phantom wallet. Can you help me with that?"
+
+[00:00:03] Coral Listener Agent: Processing voice command... Natural language understanding complete. Intent: Wallet connection tutorial request.
+
+[00:00:06] Coral Brain Agent: Analyzing user intent... Selecting appropriate tutorial flow... Routing to wallet connection guidance.
+
+[00:00:10] Coral Executor Agent: Initiating UI guidance sequence... Highlighting connect wallet button... Preparing step-by-step instructions.
+
+[00:00:15] Coral Brain Agent: Monitoring user interaction... Detecting wallet connection attempt... Verifying connection status.
+
+[00:00:20] Coral Executor Agent: Wallet connection detected... Verifying connection... Confirming successful connection.
+
+[00:00:28] System: Phantom wallet successfully connected. User can now proceed with platform features.`,
       agents: [
-        { type: 'listener', actions: ['Voice input processing'] },
-        { type: 'brain', actions: ['Intent recognition', 'Tutorial selection'] },
-        { type: 'executor', actions: ['UI guidance', 'Connection verification'] }
+        { type: 'listener', actions: ['Coral Protocol voice processing', 'Natural language understanding'] },
+        { type: 'brain', actions: ['Coral Protocol intent analysis', 'Multi-agent routing', 'Tutorial selection'] },
+        { type: 'executor', actions: ['Coral Protocol coordination', 'UI guidance', 'Wallet connection verification'] }
       ]
     },
     {
@@ -79,10 +110,25 @@ const SupportHistoryPage = () => {
       nftMinted: false,
       transcriptUrl: "/transcripts/session-003.txt",
       audioUrl: "/audio/session-003.mp3",
+      transcript: `[00:00:00] User: "My swap transaction has been stuck in pending for over 2 hours now. This is really frustrating!"
+
+[00:00:05] Coral Listener Agent: Processing voice command... Emotional tone analysis: High stress detected. Urgency level: Critical.
+
+[00:00:08] Coral Brain Agent: Analyzing transaction status... Checking blockchain for pending transaction... Gas analysis in progress.
+
+[00:00:15] Coral Executor Agent: Transaction found on blockchain... Gas price too low for current network conditions... Preparing replacement transaction.
+
+[00:00:25] Coral Brain Agent: Multi-agent coordination... Calculating optimal gas price... Formulating acceleration solution.
+
+[00:00:35] Coral Executor Agent: Submitting replacement transaction with higher gas... Monitoring confirmation status... Tracking progress.
+
+[00:00:50] Coral Brain Agent: Transaction acceleration successful... Confirming replacement transaction... Notifying user of resolution.
+
+[00:00:67] System: Transaction successfully accelerated. New transaction hash: 0x5678...efgh. Estimated confirmation: 2-3 minutes.`,
       agents: [
-        { type: 'listener', actions: ['Audio transcription', 'Emotional analysis'] },
-        { type: 'brain', actions: ['Transaction tracking', 'Gas analysis', 'Solution formulation'] },
-        { type: 'executor', actions: ['Gas estimation', 'Transaction replacement', 'Confirmation tracking'] }
+        { type: 'listener', actions: ['Coral Protocol voice processing', 'Emotional tone analysis', 'Urgency detection'] },
+        { type: 'brain', actions: ['Coral Protocol multi-agent coordination', 'Transaction tracking', 'Gas analysis', 'Solution formulation'] },
+        { type: 'executor', actions: ['Coral Protocol execution', 'Gas estimation', 'Transaction replacement', 'Confirmation tracking'] }
       ]
     },
     {
@@ -92,10 +138,25 @@ const SupportHistoryPage = () => {
       status: 'in-progress',
       response: "Investigating wallet sync issues and checking metadata refresh",
       duration: "ongoing",
+      transcriptUrl: "/transcripts/session-004.txt",
+      audioUrl: "/audio/session-004.mp3",
+      transcript: `[00:00:00] User: "I just bought an NFT about 30 minutes ago but I can't see it in my wallet. The transaction went through successfully."
+
+[00:00:03] Coral Listener Agent: Processing voice command... Coral Protocol voice processing complete. Intent: NFT visibility issue.
+
+[00:00:06] Coral Brain Agent: Coral Protocol orchestration initiated... Wallet analysis in progress... Checking transaction history.
+
+[00:00:12] Coral Executor Agent: Coral Protocol coordination active... Verifying transaction on blockchain... Checking wallet sync status.
+
+[00:00:20] Coral Brain Agent: Transaction confirmed on-chain... NFT metadata refresh required... Initiating metadata sync.
+
+[00:00:30] Coral Executor Agent: Metadata refresh pending... Wallet sync in progress... Estimated completion: 2-3 minutes.
+
+[00:00:45] System: Investigation ongoing. Wallet sync and metadata refresh in progress. User will be notified when complete.`,
       agents: [
-        { type: 'listener', actions: ['Voice processing complete'] },
-        { type: 'brain', actions: ['Wallet analysis in progress'] },
-        { type: 'executor', actions: ['Metadata refresh pending'] }
+        { type: 'listener', actions: ['Coral Protocol voice processing complete'] },
+        { type: 'brain', actions: ['Coral Protocol orchestration', 'Wallet analysis in progress'] },
+        { type: 'executor', actions: ['Coral Protocol coordination', 'Metadata refresh pending'] }
       ]
     }
   ]);
@@ -153,6 +214,35 @@ const SupportHistoryPage = () => {
     linkElement.click();
   };
 
+  const handlePlayAudio = (sessionId: string) => {
+    if (playingAudio === sessionId) {
+      // Stop current audio
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+      }
+      setPlayingAudio(null);
+    } else {
+      // Stop any currently playing audio
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+      }
+      
+      // Start new audio (mock - in real implementation, this would load actual audio)
+      setPlayingAudio(sessionId);
+      
+      // Simulate audio playback with a timeout
+      setTimeout(() => {
+        setPlayingAudio(null);
+      }, 5000); // Mock 5-second audio
+    }
+  };
+
+  const handleShowTranscript = (sessionId: string) => {
+    setTranscriptOpen(sessionId);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-950 to-black text-white">
       <Navigation />
@@ -161,11 +251,22 @@ const SupportHistoryPage = () => {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-            Support History
+            🌊 Coral Protocol Support History
           </h1>
-          <p className="text-gray-400">
-            Review your past voice interactions and their resolutions
+          <p className="text-gray-400 mb-4">
+            Review your past voice interactions powered by Coral Protocol's multi-agent orchestration system
           </p>
+          <div className="bg-gradient-to-r from-blue-900/20 to-purple-900/20 backdrop-blur-sm rounded-lg p-4 border border-blue-700/30">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
+              <span className="text-sm font-medium text-blue-300">Coral Protocol Agent Activity</span>
+            </div>
+            <p className="text-sm text-gray-300">
+              Each support session showcases our specialized AI agents working together through Coral Protocol's 
+              orchestration framework. See how Voice Listener, Intent Analysis, Fraud Detection, and Payment Processor 
+              agents collaborate to solve your Web3 challenges.
+            </p>
+          </div>
         </div>
 
         {/* Filters and Search */}
@@ -262,16 +363,57 @@ const SupportHistoryPage = () => {
                   
                   <div className="flex gap-2">
                     {session.audioUrl && (
-                      <Button variant="outline" size="sm" className="border-gray-600">
-                        <PlayCircle className="w-4 h-4 mr-1" />
-                        Play Audio
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="border-gray-600 hover:bg-gray-700"
+                        onClick={() => handlePlayAudio(session.id)}
+                      >
+                        {playingAudio === session.id ? (
+                          <>
+                            <Pause className="w-4 h-4 mr-1" />
+                            Stop Audio
+                          </>
+                        ) : (
+                          <>
+                            <PlayCircle className="w-4 h-4 mr-1" />
+                            Play Audio
+                          </>
+                        )}
                       </Button>
                     )}
-                    {session.transcriptUrl && (
-                      <Button variant="outline" size="sm" className="border-gray-600">
-                        <ExternalLink className="w-4 h-4 mr-1" />
-                        Transcript
-                      </Button>
+                    {session.transcript && (
+                      <Dialog open={transcriptOpen === session.id} onOpenChange={() => setTranscriptOpen(null)}>
+                        <DialogTrigger asChild>
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="border-gray-600 hover:bg-gray-700"
+                            onClick={() => handleShowTranscript(session.id)}
+                          >
+                            <FileText className="w-4 h-4 mr-1" />
+                            Transcript
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="max-w-4xl max-h-[80vh] bg-gray-900 border-gray-700">
+                          <DialogHeader>
+                            <DialogTitle className="text-white flex items-center gap-2">
+                              <FileText className="w-5 h-5" />
+                              Session #{session.id.split('-')[1]} Transcript
+                            </DialogTitle>
+                          </DialogHeader>
+                          <ScrollArea className="max-h-[60vh] pr-4">
+                            <div className="space-y-4">
+                              <div className="text-sm text-gray-400 mb-4">
+                                Session Date: {session.timestamp.toLocaleDateString()} at {session.timestamp.toLocaleTimeString()}
+                              </div>
+                              <pre className="whitespace-pre-wrap text-gray-200 font-mono text-sm leading-relaxed bg-gray-800/50 p-4 rounded-lg border border-gray-600/50">
+                                {session.transcript}
+                              </pre>
+                            </div>
+                          </ScrollArea>
+                        </DialogContent>
+                      </Dialog>
                     )}
                   </div>
                 </div>

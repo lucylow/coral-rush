@@ -7,13 +7,22 @@ import MobileNav from '../components/MobileNav';
 import { useMediaQuery } from '../hooks/useMediaQuery';
 
 const MainLayout: React.FC = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(true); // Default to open for better UX
+  // Initialize sidebar state from localStorage or default to true
+  const [sidebarOpen, setSidebarOpen] = useState(() => {
+    const saved = localStorage.getItem('sidebarOpen');
+    return saved !== null ? JSON.parse(saved) : true;
+  });
   const [isScrolled, setIsScrolled] = useState(false);
   const isMobile = useMediaQuery('(max-width: 768px)');
   const location = useLocation();
   
   // Hide sidebar on landing page
   const isLandingPage = location.pathname === '/';
+
+  // Save sidebar state to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('sidebarOpen', JSON.stringify(sidebarOpen));
+  }, [sidebarOpen]);
 
   // Handle scroll events for responsive behavior
   useEffect(() => {

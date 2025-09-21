@@ -9,7 +9,7 @@ const ApiHealthPage: React.FC = () => {
       <div className="flex items-center gap-3 mb-6">
         <Settings className="h-8 w-8 text-blue-600" />
         <div>
-          <h1 className="text-3xl font-bold">API Health & Configuration</h1>
+          <h1 className="text-3xl font-bold">🌊 Coral Protocol API Health & Configuration</h1>
           <p className="text-muted-foreground">
             Monitor and test all API integrations for your voice agents system
           </p>

@@ -19,11 +19,20 @@ const VoiceAgentLayout = () => {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 via-orange-400 to-green-400 bg-clip-text text-transparent">
-                Voice-First Web3 Support Agent
+                🌊 Coral Protocol Voice Support
               </h1>
               <p className="text-gray-400 mt-1">
-                Multi-Agent AI Orchestration for Web3 Customer Support
+                Multi-Agent AI Orchestration powered by Coral Protocol for Web3 Customer Support
               </p>
+              <div className="mt-2 flex items-center gap-3">
+                <Badge variant="outline" className="border-blue-500/50 text-blue-400">
+                  <div className="w-2 h-2 bg-blue-400 rounded-full mr-2 animate-pulse" />
+                  Coral Protocol v2.1
+                </Badge>
+                <Badge variant="outline" className="border-green-500/50 text-green-400">
+                  4 Active Agents
+                </Badge>
+              </div>
             </div>
             <div className="flex items-center gap-4">
               <Button variant="outline" size="sm" className="border-gray-700 hover:border-gray-600">
@@ -66,9 +75,13 @@ const VoiceAgentLayout = () => {
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between text-sm text-gray-400">
             <div>
-              Powered by ElevenLabs • Mistral AI • Crossmint
+              Powered by <span className="text-blue-400 font-medium">Coral Protocol</span> • ElevenLabs • Claude 3.5 Sonnet • Solana
             </div>
             <div className="flex items-center gap-4">
+              <Badge variant="outline" className="border-blue-500/50 text-blue-400">
+                <div className="w-2 h-2 bg-blue-400 rounded-full mr-2 animate-pulse" />
+                Coral Protocol Active
+              </Badge>
               <Badge variant="outline" className="border-green-500/50 text-green-400">
                 <div className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse" />
                 All Agents Online

@@ -224,6 +224,92 @@ class ExecutorAgent {
             },
             required: ["transaction_hash"]
           }
+        },
+        {
+          name: "process_nft_refund",
+          description: "Process NFT refunds using Crossmint API",
+          inputSchema: {
+            type: "object",
+            properties: {
+              nft_id: {
+                type: "string",
+                description: "Crossmint NFT ID to refund"
+              },
+              refund_method: {
+                type: "string",
+                enum: ["nft_replacement", "sol_refund", "token_refund"],
+                description: "Method of refund processing"
+              },
+              recipient: {
+                type: "string",
+                description: "Recipient wallet address or email"
+              },
+              reason: {
+                type: "string",
+                description: "Reason for refund request"
+              },
+              original_transaction_hash: {
+                type: "string",
+                description: "Original failed transaction hash"
+              }
+            },
+            required: ["nft_id", "refund_method", "recipient", "reason"]
+          }
+        },
+        {
+          name: "get_nft_refund_status",
+          description: "Check the status of an NFT refund request",
+          inputSchema: {
+            type: "object",
+            properties: {
+              refund_request_id: {
+                type: "string",
+                description: "Refund request ID to check"
+              }
+            },
+            required: ["refund_request_id"]
+          }
+        },
+        {
+          name: "list_nft_refunds",
+          description: "List all NFT refund requests with filtering options",
+          inputSchema: {
+            type: "object",
+            properties: {
+              status: {
+                type: "string",
+                enum: ["pending", "processing", "completed", "failed"],
+                description: "Filter by refund status"
+              },
+              user_id: {
+                type: "string",
+                description: "Filter by user ID"
+              },
+              limit: {
+                type: "number",
+                description: "Maximum number of results to return",
+                default: 50
+              }
+            }
+          }
+        },
+        {
+          name: "validate_nft_ownership",
+          description: "Validate NFT ownership before processing refund",
+          inputSchema: {
+            type: "object",
+            properties: {
+              nft_id: {
+                type: "string",
+                description: "Crossmint NFT ID"
+              },
+              owner_wallet: {
+                type: "string",
+                description: "Claimed owner wallet address"
+              }
+            },
+            required: ["nft_id", "owner_wallet"]
+          }
         }
       ]
     }));
@@ -253,6 +339,18 @@ class ExecutorAgent {
           
           case "troubleshoot_failed_transaction":
             return await this.handleTroubleshootFailedTransaction(args as any);
+          
+          case "process_nft_refund":
+            return await this.handleProcessNFTRefund(args as any);
+          
+          case "get_nft_refund_status":
+            return await this.handleGetNFTRefundStatus(args as any);
+          
+          case "list_nft_refunds":
+            return await this.handleListNFTRefunds(args as any);
+          
+          case "validate_nft_ownership":
+            return await this.handleValidateNFTOwnership(args as any);
           
           default:
             throw new McpError(
@@ -829,6 +927,355 @@ class ExecutorAgent {
     }
     
     return actions;
+  }
+
+  private async handleProcessNFTRefund(args: {
+    nft_id: string;
+    refund_method: 'nft_replacement' | 'sol_refund' | 'token_refund';
+    recipient: string;
+    reason: string;
+    original_transaction_hash?: string;
+  }) {
+    try {
+      // First validate NFT ownership if we have the original transaction
+      if (args.original_transaction_hash) {
+        const txStatus = await this.checkSolanaTransaction(args.original_transaction_hash);
+        if (txStatus.status !== 'failed') {
+          throw new Error('Original transaction was not failed - refund not applicable');
+        }
+      }
+
+      const refundRequestId = `REF-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`;
+      
+      let refundResult: any;
+
+      switch (args.refund_method) {
+        case 'nft_replacement':
+          // Mint a replacement NFT using Crossmint
+          const replacementNFT = await this.handleMintCompensationNFT({
+            recipient: args.recipient,
+            issue_type: 'nft_replacement_refund',
+            custom_metadata: {
+              name: "RUSH NFT Replacement",
+              description: `Replacement NFT for refund request ${refundRequestId}. Reason: ${args.reason}`,
+              image: "https://ipfs.io/ipfs/QmRUSHReplacementNFT",
+              attributes: [
+                { trait_type: "Refund Type", value: "NFT Replacement" },
+                { trait_type: "Original NFT ID", value: args.nft_id },
+                { trait_type: "Refund Request ID", value: refundRequestId }
+              ]
+            }
+          });
+          refundResult = {
+            refund_request_id: refundRequestId,
+            refund_method: args.refund_method,
+            status: 'processing',
+            nft_replacement: JSON.parse(replacementNFT.content[0].text),
+            estimated_completion: new Date(Date.now() + 5 * 60 * 1000).toISOString() // 5 minutes
+          };
+          break;
+
+        case 'sol_refund':
+          // Process SOL refund (would integrate with actual payment system)
+          refundResult = {
+            refund_request_id: refundRequestId,
+            refund_method: args.refund_method,
+            status: 'processing',
+            refund_amount: '0.5', // Would be calculated based on NFT price
+            recipient: args.recipient,
+            estimated_completion: new Date(Date.now() + 2 * 60 * 1000).toISOString() // 2 minutes
+          };
+          break;
+
+        case 'token_refund':
+          // Process token refund
+          refundResult = {
+            refund_request_id: refundRequestId,
+            refund_method: args.refund_method,
+            status: 'processing',
+            refund_amount: '1.0', // Would be calculated based on NFT price in tokens
+            token_type: 'ORGO',
+            recipient: args.recipient,
+            estimated_completion: new Date(Date.now() + 3 * 60 * 1000).toISOString() // 3 minutes
+          };
+          break;
+
+        default:
+          throw new Error(`Unsupported refund method: ${args.refund_method}`);
+      }
+
+      // Store refund request for tracking
+      await this.storeRefundRequest(refundRequestId, {
+        nft_id: args.nft_id,
+        refund_method: args.refund_method,
+        recipient: args.recipient,
+        reason: args.reason,
+        original_transaction_hash: args.original_transaction_hash,
+        created_at: new Date().toISOString()
+      });
+
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify({
+              success: true,
+              refund_result: refundResult,
+              agent_type: "executor",
+              timestamp: new Date().toISOString(),
+              operation: "process_nft_refund"
+            }, null, 2)
+          }
+        ]
+      };
+    } catch (error) {
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify({
+              success: false,
+              error: `NFT refund processing failed: ${error.message}`,
+              agent_type: "executor",
+              timestamp: new Date().toISOString(),
+              operation: "process_nft_refund"
+            }, null, 2)
+          }
+        ]
+      };
+    }
+  }
+
+  private async handleGetNFTRefundStatus(args: { refund_request_id: string }) {
+    try {
+      // In a real implementation, this would query a database
+      // For now, we'll simulate different statuses
+      const refundStatus = await this.getRefundRequest(args.refund_request_id);
+      
+      if (!refundStatus) {
+        throw new Error('Refund request not found');
+      }
+
+      // Simulate processing status based on time elapsed
+      const createdAt = new Date(refundStatus.created_at);
+      const elapsed = Date.now() - createdAt.getTime();
+      let status = 'pending';
+
+      if (elapsed > 5 * 60 * 1000) { // 5 minutes
+        status = 'completed';
+      } else if (elapsed > 2 * 60 * 1000) { // 2 minutes
+        status = 'processing';
+      }
+
+      const statusResult = {
+        refund_request_id: args.refund_request_id,
+        status: status,
+        refund_method: refundStatus.refund_method,
+        nft_id: refundStatus.nft_id,
+        recipient: refundStatus.recipient,
+        reason: refundStatus.reason,
+        created_at: refundStatus.created_at,
+        updated_at: new Date().toISOString(),
+        estimated_completion: status === 'completed' ? null : new Date(createdAt.getTime() + 5 * 60 * 1000).toISOString()
+      };
+
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify({
+              success: true,
+              refund_status: statusResult,
+              agent_type: "executor",
+              timestamp: new Date().toISOString(),
+              operation: "get_nft_refund_status"
+            }, null, 2)
+          }
+        ]
+      };
+    } catch (error) {
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify({
+              success: false,
+              error: `Failed to get refund status: ${error.message}`,
+              agent_type: "executor",
+              timestamp: new Date().toISOString(),
+              operation: "get_nft_refund_status"
+            }, null, 2)
+          }
+        ]
+      };
+    }
+  }
+
+  private async handleListNFTRefunds(args: {
+    status?: string;
+    user_id?: string;
+    limit?: number;
+  }) {
+    try {
+      // In a real implementation, this would query a database
+      // For now, we'll return mock data
+      const mockRefunds = [
+        {
+          refund_request_id: 'REF-1704067200000-abc123',
+          nft_id: 'NFT-456',
+          refund_method: 'nft_replacement',
+          recipient: 'user@example.com',
+          reason: 'Failed mint transaction',
+          status: 'completed',
+          created_at: '2024-01-15T10:30:00Z',
+          completed_at: '2024-01-15T10:35:00Z'
+        },
+        {
+          refund_request_id: 'REF-1704067800000-def456',
+          nft_id: 'NFT-789',
+          refund_method: 'sol_refund',
+          recipient: 'wallet123...abc',
+          reason: 'Double payment due to UI glitch',
+          status: 'processing',
+          created_at: '2024-01-15T14:22:00Z'
+        }
+      ];
+
+      let filteredRefunds = mockRefunds;
+
+      if (args.status) {
+        filteredRefunds = filteredRefunds.filter(refund => refund.status === args.status);
+      }
+
+      if (args.limit) {
+        filteredRefunds = filteredRefunds.slice(0, args.limit);
+      }
+
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify({
+              success: true,
+              refunds: filteredRefunds,
+              total_count: filteredRefunds.length,
+              filters_applied: {
+                status: args.status,
+                user_id: args.user_id,
+                limit: args.limit
+              },
+              agent_type: "executor",
+              timestamp: new Date().toISOString(),
+              operation: "list_nft_refunds"
+            }, null, 2)
+          }
+        ]
+      };
+    } catch (error) {
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify({
+              success: false,
+              error: `Failed to list refunds: ${error.message}`,
+              agent_type: "executor",
+              timestamp: new Date().toISOString(),
+              operation: "list_nft_refunds"
+            }, null, 2)
+          }
+        ]
+      };
+    }
+  }
+
+  private async handleValidateNFTOwnership(args: {
+    nft_id: string;
+    owner_wallet: string;
+  }) {
+    try {
+      // Use Crossmint API to check NFT ownership
+      const response = await axios.get(
+        `${this.crossmintBaseUrl}/2022-06-09/nfts/${args.nft_id}`,
+        {
+          headers: {
+            'X-API-KEY': this.crossmintApiKey,
+            'X-PROJECT-ID': this.crossmintProjectId
+          }
+        }
+      );
+
+      const nftData = response.data;
+      const actualOwner = nftData.owner || nftData.recipient;
+      
+      const isOwner = actualOwner === args.owner_wallet || 
+                     actualOwner?.toLowerCase() === args.owner_wallet?.toLowerCase();
+
+      const validationResult = {
+        nft_id: args.nft_id,
+        claimed_owner: args.owner_wallet,
+        actual_owner: actualOwner,
+        is_valid_owner: isOwner,
+        nft_metadata: {
+          name: nftData.metadata?.name,
+          description: nftData.metadata?.description,
+          image: nftData.metadata?.image
+        },
+        validation_timestamp: new Date().toISOString()
+      };
+
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify({
+              success: true,
+              ownership_validation: validationResult,
+              agent_type: "executor",
+              timestamp: new Date().toISOString(),
+              operation: "validate_nft_ownership"
+            }, null, 2)
+          }
+        ]
+      };
+    } catch (error) {
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify({
+              success: false,
+              error: `NFT ownership validation failed: ${error.message}`,
+              nft_id: args.nft_id,
+              agent_type: "executor",
+              timestamp: new Date().toISOString(),
+              operation: "validate_nft_ownership"
+            }, null, 2)
+          }
+        ]
+      };
+    }
+  }
+
+  // Helper methods for refund management
+  private async storeRefundRequest(refundRequestId: string, refundData: any): Promise<void> {
+    // In a real implementation, this would store in a database
+    // For now, we'll just log it
+    console.log(`Stored refund request ${refundRequestId}:`, refundData);
+  }
+
+  private async getRefundRequest(refundRequestId: string): Promise<any> {
+    // In a real implementation, this would query a database
+    // For now, we'll return mock data
+    return {
+      refund_request_id: refundRequestId,
+      nft_id: 'NFT-123',
+      refund_method: 'nft_replacement',
+      recipient: 'user@example.com',
+      reason: 'Failed transaction',
+      original_transaction_hash: '0x123...abc',
+      created_at: new Date(Date.now() - 3 * 60 * 1000).toISOString() // 3 minutes ago
+    };
   }
 
   async run() {

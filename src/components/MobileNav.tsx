@@ -12,7 +12,10 @@ import {
   History,
   Mic,
   Network,
-  Settings
+  Settings,
+  RefreshCw,
+  Headphones,
+  MessageSquare
 } from 'lucide-react';
 
 const MobileNav: React.FC = () => {
@@ -23,6 +26,9 @@ const MobileNav: React.FC = () => {
     { path: "/coral-orchestrator", label: "Coral", icon: Network },
     { path: "/vm-dashboard", label: "VM", icon: Monitor },
     { path: "/payment", label: "Pay", icon: CreditCard },
+    { path: "/support-dashboard", label: "Support", icon: Headphones },
+    { path: "/nft-refunds", label: "Refunds", icon: RefreshCw },
+    { path: "/customer-support", label: "Chat", icon: MessageSquare },
     { path: "/orgo-utility", label: "SOL", icon: Coins },
     { path: "/fraud-detection", label: "Fraud", icon: Shield },
     { path: "/token-info", label: "Token", icon: Info },

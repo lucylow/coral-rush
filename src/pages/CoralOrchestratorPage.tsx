@@ -7,7 +7,7 @@ const CoralOrchestratorPage = () => {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-8">
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-              Coral Protocol
+              🌊 Coral Protocol
               <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
                 {" "}Multi-Agent Orchestrator
               </span>
