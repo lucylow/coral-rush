@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Zap, Globe, Shield, TrendingUp, Clock, DollarSign, Mic, Brain, AlertCircle, CheckCircle, Lock, Eye, EyeOff, UserCheck, FileText } from "lucide-react";
+import { Zap, Globe, Shield, TrendingUp, Clock, DollarSign, Mic, MicOff, Brain, AlertCircle, CheckCircle, Lock, Eye, EyeOff, UserCheck, FileText } from "lucide-react";
 import { toast } from "sonner";
 import { coralApi } from "@/utils/coralApi";
 
@@ -62,6 +62,11 @@ export default function LiveDemo() {
   const [aiInsights, setAiInsights] = useState<AIInsight[]>([]);
   const [coralConnected, setCoralConnected] = useState(false);
   
+  // Voice recording states (for future implementation)
+  const [isRecording, setIsRecording] = useState(false);
+  const [isProcessingVoice, setIsProcessingVoice] = useState(false);
+  const [transcript, setTranscript] = useState('');
+  
   // Consent and Privacy States
   const [consentGiven, setConsentGiven] = useState(false);
   const [showConsentModal, setShowConsentModal] = useState(true);
@@ -99,7 +104,7 @@ export default function LiveDemo() {
   useEffect(() => {
     const fetchBurnData = async () => {
       try {
-        const response = await fetch('http://localhost:5001/api/payment/burn-tracker');
+        const response = await fetch(import.meta.env.VITE_API_URL + '/api/payment/burn-tracker' || 'http://localhost:5001/api/payment/burn-tracker');
         if (response.ok) {
           const data = await response.json();
           setBurnData(data.data);
@@ -117,8 +122,8 @@ export default function LiveDemo() {
   }, []);
 
   // AI API Configuration
-  const OPENAI_API_KEY = process.env.REACT_APP_OPENAI_API_KEY || "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";
-  const ANTHROPIC_API_KEY = process.env.REACT_APP_ANTHROPIC_API_KEY || "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";
+  const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY || "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";
+  const ANTHROPIC_API_KEY = import.meta.env.VITE_ANTHROPIC_API_KEY || "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";
 
   // AI Agent Functions
   const processVoiceCommand = async (command: string): Promise<VoiceData | null> => {
@@ -127,11 +132,11 @@ export default function LiveDemo() {
     
     try {
       // Use Coral Protocol API for voice processing
-      const response = await fetch('http://localhost:8080/api/coral/message', {
+      const response = await fetch((import.meta.env.VITE_CORAL_API_URL || 'http://localhost:8080') + '/api/coral/message', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${process.env.REACT_APP_CORAL_API_KEY || 'demo_key'}`
+          'Authorization': `Bearer ${import.meta.env.VITE_CORAL_API_KEY || 'demo_key'}`
         },
         body: JSON.stringify({
           message: command,
@@ -226,7 +231,7 @@ export default function LiveDemo() {
     
     try {
       // Use real fraud detection API from ORGO backend
-      const response = await fetch('http://localhost:5001/api/payment/compliance/screen', {
+      const response = await fetch((import.meta.env.VITE_API_URL || 'http://localhost:5001') + '/api/payment/compliance/screen', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -282,7 +287,7 @@ export default function LiveDemo() {
     
     try {
       // Use real Solana backend API for payment processing
-      const response = await fetch('http://localhost:5001/api/payment', {
+      const response = await fetch((import.meta.env.VITE_API_URL || 'http://localhost:5001') + '/api/payment', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -324,6 +329,88 @@ export default function LiveDemo() {
       return null;
     }
   };
+
+  // Voice recording functions
+  const startVoiceRecording = async () => {
+    if (!consentGiven) {
+      toast.error("Please accept terms before accessing voice support services.");
+      setShowConsentModal(true);
+      return;
+    }
+
+    try {
+      // Check if browser supports speech recognition
+      if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+        await startSpeechRecognition();
+      } else {
+        // Fallback to MediaRecorder API
+        await startMediaRecorder();
+      }
+    } catch (error) {
+      console.error('Error starting voice recording:', error);
+      toast.error("Failed to start voice recording. Please check microphone permissions.");
+    }
+  };
+
+  const startSpeechRecognition = async () => {
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    const recognition = new SpeechRecognition();
+    
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.lang = 'en-US';
+    recognition.maxAlternatives = 1;
+
+    recognition.onstart = () => {
+      setIsRecording(true);
+      setTranscript('');
+      setVoiceCommand('🎤 Listening... Speak now');
+      toast.info("🎤 Listening... Please speak now");
+    };
+
+    recognition.onresult = (event: any) => {
+      const transcript = event.results[0][0].transcript;
+      setTranscript(transcript);
+      setVoiceCommand(`Voice detected: "${transcript}"`);
+      toast.success(`Voice captured: "${transcript}"`);
+    };
+
+    recognition.onerror = (event: any) => {
+      console.error('Speech recognition error:', event.error);
+      setIsRecording(false);
+      setVoiceCommand('Voice recognition error');
+      toast.error(`Speech recognition error: ${event.error}`);
+    };
+
+    recognition.onend = () => {
+      setIsRecording(false);
+      if (transcript) {
+        startDemoRace(transcript);
+      }
+    };
+
+    // Voice recognition will be implemented in future version
+    console.log('Voice recognition feature coming soon!');
+  };
+
+  // Media recorder functionality will be implemented in future version
+  const startMediaRecorder = async () => {
+    toast.info("🎤 Media recording feature coming soon!");
+    // For now, start the demo directly
+    await startDemoRace();
+  };
+
+  const stopVoiceRecording = () => {
+    // Voice recording functionality will be implemented in future version
+    toast.info("🎤 Voice recording feature coming soon!");
+  };
+
+  const processAudioBlob = async (audioBlob: Blob) => {
+    // Voice processing functionality will be implemented in future version
+    toast.info("🎤 Voice processing feature coming soon!");
+    await startDemoRace();
+  };
+
   // Consent handling functions
   const handleConsentChange = (type: keyof typeof userAgreement) => {
     setUserAgreement(prev => ({
@@ -373,6 +460,11 @@ export default function LiveDemo() {
       return;
     }
 
+    // Start the demo race with a default command
+    await startDemoRace();
+  };
+
+  const startDemoRace = async (command?: string) => {
     setIsRacing(true);
     setOrgoProgress(0);
     setPaypalProgress(0);
@@ -385,7 +477,7 @@ export default function LiveDemo() {
       paymentProcessor: 'idle'
     });
     
-    const voiceCommand = 'Send $10,000 to Philippines';
+    const voiceCommand = command || 'Send $10,000 to Philippines';
     setVoiceCommand(voiceCommand);
     
     try {
@@ -858,7 +950,75 @@ export default function LiveDemo() {
         </Card>
       </div>
 
-      <div className="text-center">
+      <div className="text-center space-y-4">
+        {/* Voice Recording Section */}
+        {consentGiven && (
+          <div className="space-y-4">
+            {/* Voice Recording Button */}
+            <div className="flex items-center justify-center gap-4">
+              <Button 
+                onClick={isRecording ? stopVoiceRecording : startSpeechRecognition}
+                disabled={isRacing || isProcessingVoice}
+                size="lg"
+                className={`bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 ${
+                  isRecording ? 'animate-pulse' : ''
+                }`}
+              >
+                {isRecording ? (
+                  <>
+                    <MicOff className="h-5 w-5 mr-2" />
+                    Stop Recording
+                  </>
+                ) : (
+                  <>
+                    <Mic className="h-5 w-5 mr-2" />
+                    Start Voice Recording
+                  </>
+                )}
+              </Button>
+              
+              <Button 
+                onClick={startRace} 
+                disabled={isRacing || !consentGiven} 
+                size="lg" 
+                variant="outline"
+                className="border-primary text-primary hover:bg-primary hover:text-white"
+              >
+                {isRacing ? (
+                  "🌊 Support Agents Processing..."
+                ) : (
+                  "🚀 Start Demo Race"
+                )}
+              </Button>
+            </div>
+            
+            {/* Voice Status and Transcript */}
+            <div className="space-y-2">
+              {isRecording && (
+                <div className="flex items-center justify-center gap-2 text-green-600">
+                  <div className="w-2 h-2 bg-green-600 rounded-full animate-pulse"></div>
+                  <span className="text-sm font-medium">Recording... Speak now</span>
+                </div>
+              )}
+              
+              {isProcessingVoice && (
+                <div className="flex items-center justify-center gap-2 text-blue-600">
+                  <div className="w-2 h-2 bg-blue-600 rounded-full animate-pulse"></div>
+                  <span className="text-sm font-medium">Processing voice input...</span>
+                </div>
+              )}
+              
+              {transcript && (
+                <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-4 max-w-2xl mx-auto">
+                  <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Your Voice Input:</h4>
+                  <p className="text-gray-900 dark:text-gray-100 italic">"{transcript}"</p>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+        
+        {!consentGiven && (
         <Button 
           onClick={startRace} 
           disabled={isRacing || !consentGiven} 
@@ -867,17 +1027,10 @@ export default function LiveDemo() {
             !consentGiven ? 'opacity-50 cursor-not-allowed' : ''
           }`}
         >
-          {!consentGiven ? (
-            <>
               <Shield className="h-5 w-5 mr-2" />
               Accept Terms to Access Support
-            </>
-          ) : isRacing ? (
-            "🌊 Support Agents Processing..."
-          ) : (
-            "🎤 Start Voice Support Session"
-          )}
         </Button>
+        )}
         
         {!consentGiven && (
           <p className="text-sm text-muted-foreground mt-2">

@@ -45,23 +45,27 @@ export const coralConfig: CoralConfig = {
       steps: [
         {
           agent: "brain-agent",
-          action: "analyze_refund_request",
-          description: "Analyze refund request and determine processing method"
+          tool: "analyze_refund_request",
+          inputs: ["refund_request"],
+          outputs: ["analysis", "method"]
         },
         {
           agent: "executor-agent", 
-          action: "validate_nft_ownership",
-          description: "Validate NFT ownership and transaction history"
+          tool: "validate_nft_ownership",
+          inputs: ["nft_id", "wallet_address"],
+          outputs: ["validation_result", "ownership_status"]
         },
         {
           agent: "executor-agent",
-          action: "process_nft_refund", 
-          description: "Process refund using Crossmint API"
+          tool: "process_nft_refund", 
+          inputs: ["nft_id", "refund_amount"],
+          outputs: ["refund_result", "transaction_hash"]
         },
         {
           agent: "brain-agent",
-          action: "generate_refund_confirmation",
-          description: "Generate refund confirmation and user notification"
+          tool: "generate_refund_confirmation",
+          inputs: ["refund_result"],
+          outputs: ["confirmation_message", "user_notification"]
         }
       ],
       timeout: 300000, // 5 minutes

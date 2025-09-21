@@ -153,11 +153,11 @@ const NFTRefunds: React.FC = () => {
     
     try {
       // Call Coral Protocol executor agent for NFT refund processing
-      const response = await fetch('http://localhost:8080/api/coral/message', {
+      const response = await fetch((import.meta.env.VITE_CORAL_API_URL || 'http://localhost:8080') + '/api/coral/message', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${process.env.REACT_APP_CORAL_API_KEY || 'demo_key'}`
+          'Authorization': `Bearer ${import.meta.env.VITE_CORAL_API_KEY || 'demo_key'}`
         },
         body: JSON.stringify({
           message: `Process NFT refund for ${newRequest.nftId} using ${newRequest.refundMethod}`,

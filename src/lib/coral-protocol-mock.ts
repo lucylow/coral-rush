@@ -12,6 +12,7 @@ export interface CoralConfig {
     description: string;
   }>;
   workflows: Record<string, {
+    name?: string;
     description: string;
     steps: Array<{
       agent: string;
@@ -19,6 +20,11 @@ export interface CoralConfig {
       inputs: string[];
       outputs: string[];
     }>;
+    timeout?: number;
+    retryPolicy?: {
+      maxRetries: number;
+      backoffMultiplier: number;
+    };
   }>;
   security: {
     require_authentication: boolean;
