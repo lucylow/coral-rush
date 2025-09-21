@@ -42,6 +42,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, onToggle }) => {
     { name: 'Wallet', href: '/wallet', icon: WalletIcon },
     { name: 'History', href: '/history', icon: ClockIcon },
     { name: 'Voice Agent', href: '/voice-agent', icon: MicrophoneIcon },
+    { name: 'Coral Protocol', href: '/coral-orchestrator', icon: GlobeAltIcon },
     { name: 'API Health', href: '/api-health', icon: Cog6ToothIcon },
   ];
 

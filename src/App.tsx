@@ -78,7 +78,7 @@ const queryClient = new QueryClient({
 });
 
 const App: React.FC = () => {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
@@ -86,7 +86,7 @@ const App: React.FC = () => {
     const initializeApp = async () => {
       try {
         // Add any initialization logic here
-        await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate loading
+        await new Promise(resolve => setTimeout(resolve, 100)); // Simulate loading
         setIsLoading(false);
       } catch (error) {
         console.error('Failed to initialize app:', error);
@@ -112,23 +112,9 @@ const App: React.FC = () => {
         textAlign: 'center'
       }}>
         <div>
-          <h1>🌊 RUSH Coral Protocol</h1>
+          <h1>🚀 RUSH</h1>
           <p>Voice-First Web3 Customer Support Agent</p>
-          <p>Error occurred during initialization</p>
-          <button 
-            onClick={() => window.location.reload()} 
-            style={{ 
-              marginTop: '20px', 
-              padding: '10px 20px', 
-              backgroundColor: '#3b82f6', 
-              color: 'white', 
-              border: 'none', 
-              borderRadius: '5px',
-              cursor: 'pointer'
-            }}
-          >
-            Reload Page
-          </button>
+          <p>Loading...</p>
         </div>
       </div>
     );
@@ -139,9 +125,9 @@ const App: React.FC = () => {
       <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-purple-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <h2 className="text-2xl font-bold text-white mb-2">🌊 RUSH Coral Protocol</h2>
+          <h2 className="text-2xl font-bold text-white mb-2">RUSH</h2>
           <p className="text-slate-400">Initializing Voice-First Web3 Agent...</p>
-          <p className="text-blue-400 mt-4">Loading Coral Protocol integration...</p>
+          <p className="text-red-400 mt-4">Debug: Loading state active</p>
         </div>
       </div>
     );
@@ -157,39 +143,54 @@ const App: React.FC = () => {
                 <AppStateProvider>
                   <VoiceProvider>
                     <Router>
-                      <Routes>
-                        {/* Main Application Routes */}
-                        <Route path="/" element={<HomePage />} />
-                        <Route path="/voice" element={<VoiceInterface />} />
-                        <Route path="/payment-race" element={<PaymentRace />} />
-                        <Route path="/dashboard" element={<DashboardOverview />} />
-                        <Route path="/wallet-balance" element={<WalletBalance />} />
-                        
-                        {/* Coral Protocol Routes */}
-                        <Route path="/coral-hackathon" element={<CoralHackathonDemo />} />
-                        <Route path="/coral-orchestrator" element={<RealCoralOrchestrator />} />
-                        <Route path="/agent-registry" element={<AgentRegistry />} />
-                        
-                        {/* Legacy Routes */}
-                        <Route path="/rush-landing" element={<RushLandingPage />} />
-                        <Route path="/voice-agent" element={<VoiceAgentPage />} />
-                        <Route path="/support-history" element={<SupportHistoryPage />} />
-                        <Route path="/agent-marketplace" element={<AgentMarketplacePage />} />
-                        <Route path="/analytics" element={<AnalyticsPage />} />
-                        <Route path="/docs" element={<DocumentationPage />} />
-                        <Route path="/live-demo" element={<LiveDemoPage />} />
-                        <Route path="/vm-dashboard" element={<VMDashboardPage />} />
-                        <Route path="/payment" element={<PaymentPage />} />
-                        <Route path="/orgo-utility" element={<OrgoUtilityPage />} />
-                        <Route path="/fraud-detection" element={<FraudDetectionPage />} />
-                        <Route path="/token-info" element={<TokenInfoPage />} />
-                        <Route path="/wallet" element={<WalletPage />} />
-                        <Route path="/history" element={<HistoryPage />} />
-                        <Route path="/api-health" element={<ApiHealthPage />} />
-                        
-                        {/* Catch-all route */}
-                        <Route path="*" element={<NotFound />} />
-                      </Routes>
+                      <div className="App">
+                        <Routes>
+                          {/* Main Layout Routes */}
+                          <Route path="/" element={<MainLayout />}>
+                            {/* Home Page */}
+                            <Route index element={<RushLandingPage />} />
+                            
+                            {/* Voice Support Routes */}
+                            <Route path="voice-support" element={<VoiceInterface />} />
+                            <Route path="voice-agent" element={<VoiceAgentPage />} />
+                            
+                            {/* Payment Routes */}
+                            <Route path="payments" element={<PaymentRace />} />
+                            <Route path="payment" element={<PaymentPage />} />
+                            <Route path="orgo-demo" element={<LiveDemoPage />} />
+                            
+                            {/* Dashboard Routes */}
+                            <Route path="dashboard" element={<DashboardOverview />} />
+                            <Route path="analytics" element={<AnalyticsPage />} />
+                            <Route path="vm-dashboard" element={<VMDashboardPage />} />
+                            
+                            {/* Wallet Routes */}
+                            <Route path="wallet" element={<WalletBalance />} />
+                            <Route path="wallet-legacy" element={<WalletPage />} />
+                            
+                            {/* Coral Protocol Routes */}
+                            <Route path="coral-hackathon" element={<CoralHackathonDemo />} />
+                            <Route path="coral-orchestrator" element={<RealCoralOrchestrator />} />
+                            <Route path="agent-registry" element={<AgentRegistry />} />
+                            
+                            {/* Legacy Routes */}
+                            <Route path="history" element={<SupportHistoryPage />} />
+                            <Route path="marketplace" element={<AgentMarketplacePage />} />
+                            <Route path="docs" element={<DocumentationPage />} />
+                            <Route path="api-health" element={<ApiHealthPage />} />
+                            <Route path="orgo-utility" element={<OrgoUtilityPage />} />
+                            <Route path="fraud-detection" element={<FraudDetectionPage />} />
+                            <Route path="token-info" element={<TokenInfoPage />} />
+                            <Route path="orgo-history" element={<HistoryPage />} />
+                          </Route>
+
+                          {/* Legacy standalone routes */}
+                          <Route path="/rush-landing" element={<RushLandingPage />} />
+
+                          {/* Catch-all redirect */}
+                          <Route path="*" element={<Navigate to="/" replace />} />
+                        </Routes>
+                      </div>
                     </Router>
                   </VoiceProvider>
                 </AppStateProvider>
