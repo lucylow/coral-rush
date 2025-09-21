@@ -29,7 +29,8 @@ import {
   Headphones,
   FileText,
   CreditCard,
-  Wallet
+  Wallet,
+  RefreshCw
 } from 'lucide-react';
 
 interface SupportTicket {

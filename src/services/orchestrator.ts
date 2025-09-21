@@ -109,7 +109,7 @@ export class RUSHOrchestrator {
         execution_results: executionResults,
         voice_response: voiceResponse.audio_data,
         session_id: session.id,
-        processing_time,
+        processing_time: processingTime,
         agents_active: 5 // Mock active agents count
       };
 

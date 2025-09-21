@@ -10,9 +10,14 @@ import OrgoTokenPanel from "@/components/OrgoTokenPanel";
 import VisualFraudDashboard from "@/components/VisualFraudDashboard";
 import VoiceAgentTheater from "@/components/VoiceAgentTheater";
 import VoiceAgentLayout from "@/components/VoiceAgentLayout";
+import LandingPage from "@/components/LandingPage";
 
 const Index = () => {
-  const [viewMode, setViewMode] = useState<'rush' | 'voice-agent'>('voice-agent');
+  const [viewMode, setViewMode] = useState<'rush' | 'voice-agent' | 'landing'>('landing');
+
+  if (viewMode === 'landing') {
+    return <LandingPage />;
+  }
 
   if (viewMode === 'voice-agent') {
     return <VoiceAgentLayout />;

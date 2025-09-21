@@ -260,8 +260,8 @@ export default function VMDashboard() {
     }
   };
   const generateInsightFromResult = (vmId: string, result: Record<string, unknown>): string => {
-    const orgoResult = result.orgo?.result;
-    const claudeResult = result.claude?.result;
+    const orgoResult = (result as any).orgo?.result;
+    const claudeResult = (result as any).claude?.result;
     switch (vmId) {
       case 'routing-optimizer':
         return `ORGO Computer optimized routing: ${orgoResult?.recommendedRoute} network saves ${orgoResult?.estimatedSavings} with ${orgoResult?.processingTime} settlement time.`;
