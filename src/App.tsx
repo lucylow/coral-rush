@@ -23,7 +23,6 @@ import WalletBalance from './pages/WalletBalance';
 import CoralHackathonDemo from './components/CoralHackathonDemo';
 import RealCoralOrchestrator from './components/coral/RealCoralOrchestrator';
 import AgentRegistry from './components/coral/AgentRegistry';
-import WinningHackathonDemo from './pages/WinningHackathonDemo';
 
 // Legacy Pages (for backward compatibility)
 import RushLandingPage from './pages/RushLandingPage';
@@ -173,7 +172,6 @@ const App: React.FC = () => {
                             <Route path="coral-hackathon" element={<CoralHackathonDemo />} />
                             <Route path="coral-orchestrator" element={<RealCoralOrchestrator />} />
                             <Route path="agent-registry" element={<AgentRegistry />} />
-                            <Route path="winning-demo" element={<WinningHackathonDemo />} />
                             
                             {/* Legacy Routes */}
                             <Route path="history" element={<SupportHistoryPage />} />
