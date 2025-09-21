@@ -61,7 +61,7 @@ export default function PaymentForm() {
   };
   return <div className="max-w-md mx-auto space-y-6">
       <div className="text-center">
-        <h2 className="text-3xl font-bold">Send SOL Payment: Lightning-fast cross-border transfers</h2>
+        <h2 className="text-3xl font-bold">Send SOL Payment: Lightning-fast transfers</h2>
         <p className="text-muted-foreground mt-2 mx-0 px-0 text-left my-0">4 Core Agents Deployed:
 Payment Agent - Main orchestrator with ORGO API integration
 Identity verification via ZK-proofs

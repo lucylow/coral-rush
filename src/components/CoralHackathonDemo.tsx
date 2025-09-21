@@ -32,7 +32,7 @@ export default function CoralHackathonDemo() {
       { delay: 1000, message: "Initializing Coral Protocol..." },
       { delay: 1500, message: "Registering agents with Coral Registry..." },
       { delay: 2000, message: "Starting voice payment demo..." },
-      { delay: 3000, message: "Processing $10,000 cross-border payment..." },
+      { delay: 3000, message: "Processing $10,000 payment..." },
       { delay: 1000, message: "Demo completed successfully!" }
     ];
 
@@ -257,7 +257,7 @@ const result = await paymentAgent.call({
                         </div>
                         <div>
                           <h4 className="font-medium text-white">Payment Agent</h4>
-                          <p className="text-sm text-gray-400">Cross-border payments</p>
+                          <p className="text-sm text-gray-400">International payments</p>
                         </div>
                       </div>
                       <p className="text-sm text-gray-300">

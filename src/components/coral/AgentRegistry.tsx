@@ -20,9 +20,9 @@ const AgentRegistry = () => {
   const predefinedAgents: CoralAgentRegistry[] = [
     {
       id: 'coral-payment-agent-v1',
-      name: 'Cross-Border Payment Agent',
+      name: 'International Payment Agent',
       description: 'AI-powered payment processing with fraud detection and sub-second settlement. Built for Coral Protocol ecosystem.',
-      capabilities: ['cross-border-payments', 'fraud-detection', 'sub-second-settlement', 'multi-currency-support', 'orgo-token-burning'],
+      capabilities: ['international-payments', 'fraud-detection', 'sub-second-settlement', 'multi-currency-support', 'orgo-token-burning'],
       endpoint: '/api/agents/coral-payment-agent-v1',
       version: '1.0.0',
       category: 'payment',

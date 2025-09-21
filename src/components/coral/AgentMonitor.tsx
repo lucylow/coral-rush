@@ -121,7 +121,7 @@ const AgentMonitor: React.FC<AgentMonitorProps> = ({ className }) => {
         error_count: 5,
         uptime: 99.1
       },
-      capabilities: ['cross-border-payments', 'sub-second-settlement', 'multi-currency-support']
+      capabilities: ['international-payments', 'sub-second-settlement', 'multi-currency-support']
     },
     {
       agent_id: 'executor-agent',

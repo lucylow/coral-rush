@@ -26,7 +26,7 @@ const HomePage: React.FC = () => {
     },
     {
       name: 'Lightning Payments',
-      description: 'Sub-second cross-border payments with ORGO',
+      description: 'Sub-second international payments with ORGO',
       icon: CreditCardIcon,
       href: '/payments',
       color: 'from-green-500 to-emerald-500'

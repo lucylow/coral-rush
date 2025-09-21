@@ -45,6 +45,53 @@ interface AIInsight {
   data: VoiceData | IntentData | FraudData | PaymentData | Record<string, unknown>;
   timestamp: string;
 }
+
+// Enhanced interfaces for comprehensive customer support mock data
+interface CustomerSupportScenario {
+  id: string;
+  type: 'payment_issue' | 'wallet_problem' | 'defi_query' | 'transaction_help' | 'security_concern' | 'account_setup';
+  customer_id: string;
+  voice_transcript: string;
+  intent: string;
+  priority: 'low' | 'medium' | 'high' | 'urgent';
+  status: 'resolved' | 'in_progress' | 'escalated' | 'pending';
+  resolution_time: number; // in seconds
+  customer_satisfaction: number; // 1-5 scale
+  agents_involved: string[];
+  resolution_summary: string;
+  timestamp: string;
+}
+
+interface VoiceCommandExample {
+  command: string;
+  category: 'payment' | 'support' | 'wallet' | 'defi' | 'security' | 'general';
+  expected_response: string;
+  confidence_score: number;
+  entities_extracted: Record<string, string>;
+  agent_required: string[];
+}
+
+interface AgentPerformance {
+  agent_id: string;
+  agent_name: string;
+  total_interactions: number;
+  average_resolution_time: number;
+  customer_satisfaction_avg: number;
+  success_rate: number;
+  specializations: string[];
+  availability: 'online' | 'busy' | 'offline';
+}
+
+interface CustomerJourney {
+  customer_id: string;
+  session_id: string;
+  journey_type: 'first_time' | 'returning' | 'support_seeker' | 'power_user';
+  voice_commands: string[];
+  issues_resolved: string[];
+  total_session_time: number;
+  satisfaction_rating: number;
+  next_best_action: string;
+}
 export default function LiveDemo() {
   const [isRacing, setIsRacing] = useState(false);
   const [orgoProgress, setOrgoProgress] = useState(0);
@@ -79,6 +126,14 @@ export default function LiveDemo() {
     demoParticipation: false,
     privacyPolicy: false
   });
+
+  // Customer Support Mock Data States
+  const [supportScenarios, setSupportScenarios] = useState<CustomerSupportScenario[]>([]);
+  const [voiceCommandExamples, setVoiceCommandExamples] = useState<VoiceCommandExample[]>([]);
+  const [agentPerformance, setAgentPerformance] = useState<AgentPerformance[]>([]);
+  const [customerJourneys, setCustomerJourneys] = useState<CustomerJourney[]>([]);
+  const [activeSupportSession, setActiveSupportSession] = useState<CustomerSupportScenario | null>(null);
+  const [showSupportDashboard, setShowSupportDashboard] = useState(false);
 
   // Connect to Coral Protocol on component mount
   useEffect(() => {
@@ -121,9 +176,347 @@ export default function LiveDemo() {
     return () => clearInterval(interval);
   }, []);
 
+  // Initialize comprehensive customer support mock data
+  useEffect(() => {
+    // Mock customer support scenarios
+    const mockSupportScenarios: CustomerSupportScenario[] = [
+      {
+        id: 'scenario_001',
+        type: 'payment_issue',
+        customer_id: 'user_12345',
+        voice_transcript: "I tried to send 100 USDC to my friend but the transaction is stuck. Can you help me?",
+        intent: 'transaction_stuck',
+        priority: 'high',
+        status: 'resolved',
+        resolution_time: 45,
+        customer_satisfaction: 5,
+        agents_involved: ['voice_listener', 'payment_specialist', 'blockchain_agent'],
+        resolution_summary: 'Identified RPC node issue, switched to backup endpoint, transaction confirmed',
+        timestamp: new Date(Date.now() - 3600000).toISOString()
+      },
+      {
+        id: 'scenario_002',
+        type: 'wallet_problem',
+        customer_id: 'user_67890',
+        voice_transcript: "My wallet shows zero balance but I know I have SOL. What's wrong?",
+        intent: 'balance_discrepancy',
+        priority: 'urgent',
+        status: 'resolved',
+        resolution_time: 120,
+        customer_satisfaction: 4,
+        agents_involved: ['voice_listener', 'wallet_specialist', 'blockchain_agent'],
+        resolution_summary: 'Wallet was connected to testnet, switched to mainnet, balance restored',
+        timestamp: new Date(Date.now() - 7200000).toISOString()
+      },
+      {
+        id: 'scenario_003',
+        type: 'defi_query',
+        customer_id: 'user_11111',
+        voice_transcript: "How do I provide liquidity to the Solana DEX? I want to earn yield.",
+        intent: 'defi_liquidity',
+        priority: 'medium',
+        status: 'resolved',
+        resolution_time: 180,
+        customer_satisfaction: 5,
+        agents_involved: ['voice_listener', 'defi_specialist', 'education_agent'],
+        resolution_summary: 'Provided step-by-step LP guide, connected to Jupiter aggregator, successful deposit',
+        timestamp: new Date(Date.now() - 10800000).toISOString()
+      },
+      {
+        id: 'scenario_004',
+        type: 'security_concern',
+        customer_id: 'user_22222',
+        voice_transcript: "I think someone has access to my wallet. I see transactions I didn't make.",
+        intent: 'security_breach',
+        priority: 'urgent',
+        status: 'in_progress',
+        resolution_time: 0,
+        customer_satisfaction: 0,
+        agents_involved: ['voice_listener', 'security_specialist'],
+        resolution_summary: 'Investigating suspicious transactions, freezing compromised assets',
+        timestamp: new Date(Date.now() - 1800000).toISOString()
+      },
+      {
+        id: 'scenario_005',
+        type: 'transaction_help',
+        customer_id: 'user_33333',
+        voice_transcript: "What's the cheapest way to bridge my ETH to Solana?",
+        intent: 'cross_chain_bridge',
+        priority: 'low',
+        status: 'resolved',
+        resolution_time: 90,
+        customer_satisfaction: 4,
+        agents_involved: ['voice_listener', 'bridge_specialist'],
+        resolution_summary: 'Recommended Wormhole bridge with optimal route, saved 60% in fees',
+        timestamp: new Date(Date.now() - 14400000).toISOString()
+      },
+      {
+        id: 'scenario_006',
+        type: 'account_setup',
+        customer_id: 'user_44444',
+        voice_transcript: "This is my first time using crypto. How do I create a wallet?",
+        intent: 'wallet_creation',
+        priority: 'medium',
+        status: 'resolved',
+        resolution_time: 300,
+        customer_satisfaction: 5,
+        agents_involved: ['voice_listener', 'onboarding_agent', 'education_agent'],
+        resolution_summary: 'Created Phantom wallet, funded with test SOL, completed security tutorial',
+        timestamp: new Date(Date.now() - 21600000).toISOString()
+      }
+    ];
+
+    // Mock voice command examples
+    const mockVoiceCommands: VoiceCommandExample[] = [
+      {
+        command: "Send 50 USDC to 0x742d35Cc6634C0532925a3b8D8B4D1C4",
+        category: 'payment',
+        expected_response: "Processing payment of 50 USDC. Confirming recipient address and checking balance.",
+        confidence_score: 0.95,
+        entities_extracted: { amount: "50", currency: "USDC", recipient: "0x742d35Cc6634C0532925a3b8D8B4D1C4" },
+        agent_required: ['voice_listener', 'payment_processor']
+      },
+      {
+        command: "Why is my transaction taking so long?",
+        category: 'support',
+        expected_response: "Let me check your transaction status and network conditions for you.",
+        confidence_score: 0.88,
+        entities_extracted: { query_type: "transaction_status" },
+        agent_required: ['voice_listener', 'support_agent', 'blockchain_agent']
+      },
+      {
+        command: "Show me my wallet balance",
+        category: 'wallet',
+        expected_response: "Retrieving your current wallet balance across all supported tokens.",
+        confidence_score: 0.92,
+        entities_extracted: { action: "balance_check" },
+        agent_required: ['voice_listener', 'wallet_agent']
+      },
+      {
+        command: "What's the best yield farming strategy on Solana?",
+        category: 'defi',
+        expected_response: "Let me analyze current DeFi opportunities and suggest optimal strategies.",
+        confidence_score: 0.85,
+        entities_extracted: { strategy: "yield_farming", network: "Solana" },
+        agent_required: ['voice_listener', 'defi_specialist', 'analytics_agent']
+      },
+      {
+        command: "I think my wallet was compromised",
+        category: 'security',
+        expected_response: "This is urgent. Let me immediately secure your account and investigate.",
+        confidence_score: 0.98,
+        entities_extracted: { security_issue: "wallet_compromise" },
+        agent_required: ['voice_listener', 'security_specialist', 'incident_response']
+      },
+      {
+        command: "How do I stake my SOL tokens?",
+        category: 'defi',
+        expected_response: "I'll guide you through SOL staking options and help you choose the best validator.",
+        confidence_score: 0.90,
+        entities_extracted: { action: "staking", token: "SOL" },
+        agent_required: ['voice_listener', 'staking_specialist', 'education_agent']
+      },
+      {
+        command: "Cancel my pending transaction",
+        category: 'transaction',
+        expected_response: "Let me check your pending transactions and help you cancel them.",
+        confidence_score: 0.87,
+        entities_extracted: { action: "cancel_transaction" },
+        agent_required: ['voice_listener', 'transaction_manager']
+      },
+      {
+        command: "What's the gas fee for this transaction?",
+        category: 'transaction',
+        expected_response: "Calculating current network fees and optimizing your transaction cost.",
+        confidence_score: 0.91,
+        entities_extracted: { query: "gas_fee" },
+        agent_required: ['voice_listener', 'fee_calculator']
+      }
+    ];
+
+    // Mock agent performance data
+    const mockAgentPerformance: AgentPerformance[] = [
+      {
+        agent_id: 'voice_listener_001',
+        agent_name: 'Voice Listener Agent',
+        total_interactions: 2847,
+        average_resolution_time: 2.3,
+        customer_satisfaction_avg: 4.7,
+        success_rate: 98.5,
+        specializations: ['speech_recognition', 'intent_classification', 'entity_extraction'],
+        availability: 'online'
+      },
+      {
+        agent_id: 'payment_specialist_001',
+        agent_name: 'Payment Specialist',
+        total_interactions: 1923,
+        average_resolution_time: 45.2,
+        customer_satisfaction_avg: 4.8,
+        success_rate: 96.2,
+        specializations: ['payment_processing', 'transaction_optimization', 'fee_analysis'],
+        availability: 'online'
+      },
+      {
+        agent_id: 'wallet_specialist_001',
+        agent_name: 'Wallet Specialist',
+        total_interactions: 1567,
+        average_resolution_time: 78.5,
+        customer_satisfaction_avg: 4.6,
+        success_rate: 94.8,
+        specializations: ['wallet_troubleshooting', 'balance_verification', 'security_audit'],
+        availability: 'busy'
+      },
+      {
+        agent_id: 'defi_specialist_001',
+        agent_name: 'DeFi Specialist',
+        total_interactions: 893,
+        average_resolution_time: 120.7,
+        customer_satisfaction_avg: 4.9,
+        success_rate: 97.1,
+        specializations: ['yield_farming', 'liquidity_provision', 'strategy_optimization'],
+        availability: 'online'
+      },
+      {
+        agent_id: 'security_specialist_001',
+        agent_name: 'Security Specialist',
+        total_interactions: 234,
+        average_resolution_time: 180.3,
+        customer_satisfaction_avg: 4.8,
+        success_rate: 99.2,
+        specializations: ['threat_detection', 'incident_response', 'security_education'],
+        availability: 'online'
+      },
+      {
+        agent_id: 'blockchain_agent_001',
+        agent_name: 'Blockchain Agent',
+        total_interactions: 3421,
+        average_resolution_time: 15.8,
+        customer_satisfaction_avg: 4.5,
+        success_rate: 95.7,
+        specializations: ['network_monitoring', 'transaction_analysis', 'node_optimization'],
+        availability: 'online'
+      }
+    ];
+
+    // Mock customer journey data
+    const mockCustomerJourneys: CustomerJourney[] = [
+      {
+        customer_id: 'user_12345',
+        session_id: 'session_001',
+        journey_type: 'returning',
+        voice_commands: [
+          "Check my wallet balance",
+          "Send 25 USDC to my friend",
+          "What's my transaction history?"
+        ],
+        issues_resolved: ['balance_inquiry', 'payment_processing', 'transaction_history'],
+        total_session_time: 180,
+        satisfaction_rating: 5,
+        next_best_action: 'Consider setting up automated payments'
+      },
+      {
+        customer_id: 'user_67890',
+        session_id: 'session_002',
+        journey_type: 'first_time',
+        voice_commands: [
+          "How do I create a wallet?",
+          "What is Solana?",
+          "How do I buy SOL?",
+          "Show me how to send crypto"
+        ],
+        issues_resolved: ['wallet_creation', 'crypto_education', 'fiat_onramp', 'basic_transactions'],
+        total_session_time: 420,
+        satisfaction_rating: 4,
+        next_best_action: 'Explore DeFi opportunities'
+      },
+      {
+        customer_id: 'user_11111',
+        session_id: 'session_003',
+        journey_type: 'power_user',
+        voice_commands: [
+          "Show me current DeFi yields",
+          "Optimize my liquidity position",
+          "Calculate impermanent loss risk",
+          "Bridge assets to Polygon"
+        ],
+        issues_resolved: ['yield_analysis', 'position_optimization', 'risk_assessment', 'cross_chain_bridge'],
+        total_session_time: 300,
+        satisfaction_rating: 5,
+        next_best_action: 'Set up automated rebalancing'
+      },
+      {
+        customer_id: 'user_22222',
+        session_id: 'session_004',
+        journey_type: 'support_seeker',
+        voice_commands: [
+          "My transaction is stuck",
+          "Why did I lose money?",
+          "Can you help me recover funds?",
+          "How do I prevent this?"
+        ],
+        issues_resolved: ['transaction_recovery', 'loss_analysis', 'fund_recovery', 'security_education'],
+        total_session_time: 480,
+        satisfaction_rating: 4,
+        next_best_action: 'Enable transaction monitoring alerts'
+      }
+    ];
+
+    // Initialize mock data
+    setSupportScenarios(mockSupportScenarios);
+    setVoiceCommandExamples(mockVoiceCommands);
+    setAgentPerformance(mockAgentPerformance);
+    setCustomerJourneys(mockCustomerJourneys);
+  }, []);
+
   // AI API Configuration
   const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY || "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";
   const ANTHROPIC_API_KEY = import.meta.env.VITE_ANTHROPIC_API_KEY || "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";
+
+  // Customer Support Functions
+  const startSupportScenario = (scenario: CustomerSupportScenario) => {
+    setActiveSupportSession(scenario);
+    setVoiceCommand(`🎤 "${scenario.voice_transcript}"`);
+    toast.success(`Starting support scenario: ${scenario.type.replace('_', ' ')}`);
+  };
+
+  const getPriorityColor = (priority: string) => {
+    switch (priority) {
+      case 'urgent': return 'text-red-600 bg-red-100';
+      case 'high': return 'text-orange-600 bg-orange-100';
+      case 'medium': return 'text-yellow-600 bg-yellow-100';
+      case 'low': return 'text-green-600 bg-green-100';
+      default: return 'text-gray-600 bg-gray-100';
+    }
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'resolved': return 'text-green-600 bg-green-100';
+      case 'in_progress': return 'text-blue-600 bg-blue-100';
+      case 'escalated': return 'text-purple-600 bg-purple-100';
+      case 'pending': return 'text-yellow-600 bg-yellow-100';
+      default: return 'text-gray-600 bg-gray-100';
+    }
+  };
+
+  const getAvailabilityColor = (availability: string) => {
+    switch (availability) {
+      case 'online': return 'text-green-600 bg-green-100';
+      case 'busy': return 'text-yellow-600 bg-yellow-100';
+      case 'offline': return 'text-red-600 bg-red-100';
+      default: return 'text-gray-600 bg-gray-100';
+    }
+  };
+
+  const getJourneyTypeColor = (type: string) => {
+    switch (type) {
+      case 'first_time': return 'text-blue-600 bg-blue-100';
+      case 'returning': return 'text-green-600 bg-green-100';
+      case 'power_user': return 'text-purple-600 bg-purple-100';
+      case 'support_seeker': return 'text-orange-600 bg-orange-100';
+      default: return 'text-gray-600 bg-gray-100';
+    }
+  };
 
   // AI Agent Functions
   const processVoiceCommand = async (command: string): Promise<VoiceData | null> => {
@@ -1170,6 +1563,224 @@ export default function LiveDemo() {
             </div>
           </div>
         </div>
+      </Card>
+
+      {/* Customer Support Dashboard */}
+      <Card className="p-6">
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h3 className="text-xl font-semibold">🎤 Voice-First Customer Support Dashboard</h3>
+            <p className="text-sm text-muted-foreground">Real-time AI agent performance and customer interaction analytics</p>
+          </div>
+          <Button 
+            onClick={() => setShowSupportDashboard(!showSupportDashboard)}
+            variant="outline"
+            size="sm"
+          >
+            {showSupportDashboard ? 'Hide Dashboard' : 'Show Dashboard'}
+          </Button>
+        </div>
+
+        {showSupportDashboard && (
+          <div className="space-y-6">
+            {/* Support Scenarios */}
+            <div>
+              <h4 className="text-lg font-medium mb-4">Recent Support Scenarios</h4>
+              <div className="grid gap-3">
+                {supportScenarios.slice(0, 4).map((scenario) => (
+                  <Card key={scenario.id} className="p-4 cursor-pointer hover:bg-gray-50" onClick={() => startSupportScenario(scenario)}>
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-2">
+                          <Badge className={getPriorityColor(scenario.priority)}>
+                            {scenario.priority}
+                          </Badge>
+                          <Badge className={getStatusColor(scenario.status)}>
+                            {scenario.status}
+                          </Badge>
+                          <span className="text-sm text-gray-500">{scenario.type.replace('_', ' ')}</span>
+                        </div>
+                        <p className="text-sm text-gray-700 mb-2">"{scenario.voice_transcript}"</p>
+                        <div className="flex items-center gap-4 text-xs text-gray-500">
+                          <span>⏱️ {scenario.resolution_time}s</span>
+                          <span>😊 {scenario.customer_satisfaction}/5</span>
+                          <span>👥 {scenario.agents_involved.length} agents</span>
+                        </div>
+                      </div>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            </div>
+
+            {/* Voice Command Examples */}
+            <div>
+              <h4 className="text-lg font-medium mb-4">Voice Command Examples</h4>
+              <div className="grid md:grid-cols-2 gap-3">
+                {voiceCommandExamples.slice(0, 6).map((cmd, index) => (
+                  <Card key={index} className="p-4">
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <Badge variant="outline" className="text-xs">
+                          {cmd.category}
+                        </Badge>
+                        <span className="text-xs text-gray-500">
+                          {(cmd.confidence_score * 100).toFixed(0)}% confidence
+                        </span>
+                      </div>
+                      <p className="text-sm font-medium">"{cmd.command}"</p>
+                      <p className="text-xs text-gray-600">{cmd.expected_response}</p>
+                      <div className="flex flex-wrap gap-1">
+                        {cmd.agent_required.slice(0, 2).map((agent, i) => (
+                          <Badge key={i} variant="secondary" className="text-xs">
+                            {agent.replace('_', ' ')}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            </div>
+
+            {/* Agent Performance */}
+            <div>
+              <h4 className="text-lg font-medium mb-4">Agent Performance Metrics</h4>
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {agentPerformance.map((agent) => (
+                  <Card key={agent.agent_id} className="p-4">
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <h5 className="font-medium text-sm">{agent.agent_name}</h5>
+                        <Badge className={getAvailabilityColor(agent.availability)}>
+                          {agent.availability}
+                        </Badge>
+                      </div>
+                      <div className="space-y-2 text-xs">
+                        <div className="flex justify-between">
+                          <span>Interactions:</span>
+                          <span className="font-medium">{agent.total_interactions}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Avg Resolution:</span>
+                          <span className="font-medium">{agent.average_resolution_time}s</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Satisfaction:</span>
+                          <span className="font-medium">{agent.customer_satisfaction_avg}/5</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Success Rate:</span>
+                          <span className="font-medium">{agent.success_rate}%</span>
+                        </div>
+                      </div>
+                      <div className="flex flex-wrap gap-1">
+                        {agent.specializations.slice(0, 2).map((spec, i) => (
+                          <Badge key={i} variant="outline" className="text-xs">
+                            {spec.replace('_', ' ')}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            </div>
+
+            {/* Customer Journeys */}
+            <div>
+              <h4 className="text-lg font-medium mb-4">Customer Journey Analytics</h4>
+              <div className="grid gap-4">
+                {customerJourneys.map((journey) => (
+                  <Card key={journey.session_id} className="p-4">
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex items-center gap-2">
+                        <Badge className={getJourneyTypeColor(journey.journey_type)}>
+                          {journey.journey_type.replace('_', ' ')}
+                        </Badge>
+                        <span className="text-sm text-gray-600">Session: {journey.session_id}</span>
+                      </div>
+                      <div className="text-right text-sm">
+                        <div>😊 {journey.satisfaction_rating}/5</div>
+                        <div className="text-gray-500">{journey.total_session_time}s</div>
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <div>
+                        <h6 className="text-sm font-medium mb-1">Voice Commands:</h6>
+                        <div className="flex flex-wrap gap-1">
+                          {journey.voice_commands.map((cmd, i) => (
+                            <Badge key={i} variant="secondary" className="text-xs">
+                              "{cmd}"
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                      <div>
+                        <h6 className="text-sm font-medium mb-1">Issues Resolved:</h6>
+                        <div className="flex flex-wrap gap-1">
+                          {journey.issues_resolved.map((issue, i) => (
+                            <Badge key={i} variant="outline" className="text-xs">
+                              {issue.replace('_', ' ')}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="mt-2 p-2 bg-blue-50 rounded text-xs">
+                        <strong>Next Best Action:</strong> {journey.next_best_action}
+                      </div>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            </div>
+
+            {/* Active Support Session */}
+            {activeSupportSession && (
+              <Card className="p-6 border-blue-200 bg-blue-50">
+                <div className="flex items-center justify-between mb-4">
+                  <h4 className="text-lg font-medium text-blue-900">Active Support Session</h4>
+                  <Button 
+                    onClick={() => setActiveSupportSession(null)}
+                    variant="outline"
+                    size="sm"
+                  >
+                    Close
+                  </Button>
+                </div>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2">
+                    <Badge className={getPriorityColor(activeSupportSession.priority)}>
+                      {activeSupportSession.priority}
+                    </Badge>
+                    <Badge className={getStatusColor(activeSupportSession.status)}>
+                      {activeSupportSession.status}
+                    </Badge>
+                    <span className="text-sm text-blue-700">{activeSupportSession.type.replace('_', ' ')}</span>
+                  </div>
+                  <p className="text-blue-800">"{activeSupportSession.voice_transcript}"</p>
+                  <div className="grid md:grid-cols-2 gap-4 text-sm">
+                    <div>
+                      <strong>Intent:</strong> {activeSupportSession.intent}
+                    </div>
+                    <div>
+                      <strong>Agents Involved:</strong> {activeSupportSession.agents_involved.join(', ')}
+                    </div>
+                    <div>
+                      <strong>Resolution Time:</strong> {activeSupportSession.resolution_time}s
+                    </div>
+                    <div>
+                      <strong>Satisfaction:</strong> {activeSupportSession.customer_satisfaction}/5
+                    </div>
+                  </div>
+                  <div className="p-3 bg-white rounded border">
+                    <strong>Resolution Summary:</strong> {activeSupportSession.resolution_summary}
+                  </div>
+                </div>
+              </Card>
+            )}
+          </div>
+        )}
       </Card>
       </div>
     </>

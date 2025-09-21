@@ -36,8 +36,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, onToggle }) => {
   const navigation = [
     { name: 'Voice Agent', href: '/voice-agent', icon: MicrophoneIcon },
     { name: 'Coral Protocol', href: '/coral-orchestrator', icon: GlobeAltIcon },
+    { name: 'Payment', href: '/coral-protocol/payment', icon: CreditCardIcon },
     { name: 'VM Dashboard', href: '/vm-dashboard', icon: ComputerDesktopIcon },
-    { name: 'Payment', href: '/payment', icon: CreditCardIcon },
     { name: 'SOL Utility', href: '/orgo-utility', icon: CurrencyDollarIcon },
     { name: 'Fraud Detection', href: '/fraud-detection', icon: ShieldCheckIcon },
     { name: 'Token Info', href: '/token-info', icon: InformationCircleIcon },
@@ -74,12 +74,12 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, onToggle }) => {
         <div className="flex flex-col h-full">
           {/* Header */}
           <div className="flex items-center justify-between p-4 border-b border-slate-700 bg-slate-800/30">
-            <div className="flex items-center gap-2">
+            <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
               <div className="w-7 h-7 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-sm">R</span>
               </div>
               <span className="text-lg font-bold text-white">RUSH</span>
-            </div>
+            </Link>
             <div className="flex items-center gap-1">
               {/* Desktop toggle button */}
               <button

@@ -24,8 +24,8 @@ const MobileNav: React.FC = () => {
   const navItems = [
     { path: "/voice-agent", label: "Voice", icon: Mic },
     { path: "/coral-orchestrator", label: "Coral", icon: Network },
+    { path: "/coral-protocol/payment", label: "Pay", icon: CreditCard },
     { path: "/vm-dashboard", label: "VM", icon: Monitor },
-    { path: "/payment", label: "Pay", icon: CreditCard },
     { path: "/support-dashboard", label: "Support", icon: Headphones },
     { path: "/nft-refunds", label: "Refunds", icon: RefreshCw },
     { path: "/customer-support", label: "Chat", icon: MessageSquare },

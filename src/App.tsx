@@ -175,6 +175,7 @@ const App: React.FC = () => {
                             <Route path="coral-hackathon" element={<CoralHackathonDemo />} />
                             <Route path="coral-orchestrator" element={<RealCoralOrchestrator />} />
                             <Route path="agent-registry" element={<AgentRegistry />} />
+                            <Route path="coral-protocol/payment" element={<PaymentPage />} />
                             
                             {/* Legacy Routes */}
                             <Route path="history" element={<SupportHistoryPage />} />
@@ -190,6 +191,9 @@ const App: React.FC = () => {
                             <Route path="support-dashboard" element={<SupportDashboardPage />} />
                             <Route path="nft-refunds" element={<NFTRefundsPage />} />
                             <Route path="customer-support" element={<CustomerSupportPage />} />
+                            
+                            {/* Legacy payment route for backward compatibility */}
+                            <Route path="payment" element={<Navigate to="/coral-protocol/payment" replace />} />
                           </Route>
 
                           {/* Legacy standalone routes */}

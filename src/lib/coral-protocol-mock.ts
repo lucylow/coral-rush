@@ -234,7 +234,7 @@ export class CoralClient {
             estimated_duration: "30 seconds",
             requires_user_confirmation: true
           };
-          responseText = "I can help you process a cross-border payment. For payments to the Philippines, I can facilitate transfers with sub-second settlement using our Coral Protocol network. What amount would you like to send and to which recipient?";
+          responseText = "I can help you process an international payment. For payments to the Philippines, I can facilitate transfers with sub-second settlement using our Coral Protocol network. What amount would you like to send and to which recipient?";
           urgencyLevel = "medium";
         } else if (lowerQuery.includes('transaction') || lowerQuery.includes('status')) {
           intent = "transaction_status";
@@ -266,7 +266,7 @@ export class CoralClient {
             estimated_duration: "10 seconds",
             requires_user_confirmation: false
           };
-          responseText = "I'm here to provide comprehensive Web3 support. I can help with wallet issues, transaction problems, token management, DeFi protocols, cross-border payments, and general blockchain questions. What specific area would you like assistance with?";
+          responseText = "I'm here to provide comprehensive Web3 support. I can help with wallet issues, transaction problems, token management, DeFi protocols, international payments, and general blockchain questions. What specific area would you like assistance with?";
         }
         
         return {

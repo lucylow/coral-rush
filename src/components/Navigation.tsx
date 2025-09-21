@@ -28,9 +28,9 @@ const Navigation = () => {
   const navItems = [
     { path: "/voice-agent", label: "Voice Agent", icon: Mic },
     { path: "/coral-orchestrator", label: "Coral Protocol", icon: Network },
+    { path: "/coral-protocol/payment", label: "Refund Payments", icon: CreditCard },
     { path: "/vm-dashboard", label: "VM Dashboard", icon: Monitor },
     { path: "/fraud-detection", label: "Fraud Detection", icon: Shield },
-    { path: "/payment", label: "Refund Payments", icon: CreditCard },
     { path: "/support-dashboard", label: "Support Hub", icon: Headphones },
     { path: "/nft-refunds", label: "NFT Refunds", icon: RefreshCw },
     { path: "/customer-support", label: "Support", icon: MessageSquare },
@@ -77,9 +77,11 @@ const Navigation = () => {
         <div className="container-responsive">
           <div className="flex items-center justify-between mb-4 sm:mb-6">
             <div className="text-center flex-1">
-              <h1 className="heading-responsive font-bold bg-gradient-to-r from-primary via-purple-500 to-blue-600 bg-clip-text text-transparent">
-                RUSH Payment Agent
-              </h1>
+              <Link to="/" className="block">
+                <h1 className="heading-responsive font-bold bg-gradient-to-r from-primary via-purple-500 to-blue-600 bg-clip-text text-transparent hover:opacity-80 transition-opacity cursor-pointer">
+                  RUSH Payment Agent
+                </h1>
+              </Link>
               <p className="text-muted-foreground mt-2 text-responsive">
               </p>
             </div>

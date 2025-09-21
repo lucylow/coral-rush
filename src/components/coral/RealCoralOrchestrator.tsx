@@ -71,7 +71,7 @@ const RealCoralOrchestrator = () => {
     {
       id: 'executor',
       name: 'ORGO Payment Executor',
-      description: 'Cross-border Payment Processing',
+      description: 'International Payment Processing',
       icon: Zap,
       color: 'bg-green-500',
       capabilities: ['payment-processing', 'token-burning', 'cross-chain-swaps', 'sub-second-settlement'],

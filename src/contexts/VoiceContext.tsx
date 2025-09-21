@@ -364,11 +364,11 @@ export const VoiceProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     } else if (lowerTranscript.includes('wallet') || lowerTranscript.includes('balance')) {
       response = "I'll check your wallet balances across all connected networks. Your current ORGO balance is 1,250.75 tokens, SOL balance is 2.3 tokens, and I can see 12 recent transactions from the past 24 hours. Would you like me to show you the transaction details?";
     } else if (lowerTranscript.includes('payment') || lowerTranscript.includes('send')) {
-      response = "I can help you process a cross-border payment. For payments to the Philippines, I can facilitate transfers with sub-second settlement using our Coral Protocol network. What amount would you like to send and to which recipient?";
+      response = "I can help you process an international payment. For payments to the Philippines, I can facilitate transfers with sub-second settlement using our Coral Protocol network. What amount would you like to send and to which recipient?";
     } else if (lowerTranscript.includes('transaction') || lowerTranscript.includes('status')) {
       response = "I'm analyzing your recent blockchain transactions. I found 3 pending payments and 12 completed transfers. Your latest transaction was confirmed 2 minutes ago with a transaction hash of 0x1234...abcd. Would you like me to provide more details about any specific transaction?";
     } else if (lowerTranscript.includes('help') || lowerTranscript.includes('support')) {
-      response = "I'm here to provide comprehensive Web3 support. I can help with wallet issues, transaction problems, token management, DeFi protocols, cross-border payments, and general blockchain questions. What specific area would you like assistance with?";
+      response = "I'm here to provide comprehensive Web3 support. I can help with wallet issues, transaction problems, token management, DeFi protocols, international payments, and general blockchain questions. What specific area would you like assistance with?";
     }
 
     return { transcript, response, confidence };

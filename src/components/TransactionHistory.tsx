@@ -2,11 +2,10 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ArrowUpRight, ArrowDownLeft, Clock, CheckCircle, XCircle, Search, Filter, ExternalLink, Flame } from "lucide-react";
+import { ArrowUpRight, ArrowDownLeft, Clock, CheckCircle, XCircle, Search, ExternalLink, Flame } from "lucide-react";
 import { useState } from "react";
 export default function TransactionHistory() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [filterType, setFilterType] = useState("all");
   const transactions = [{
     id: "3x8m9fR2qW5nL1",
     type: "payment",
@@ -114,7 +113,7 @@ export default function TransactionHistory() {
     };
     return variants[status as keyof typeof variants] || variants.pending;
   };
-  const filteredTransactions = transactions.filter(tx => filterType === "all" || tx.type === filterType).filter(tx => tx.id.toLowerCase().includes(searchTerm.toLowerCase()) || tx.recipient.toLowerCase().includes(searchTerm.toLowerCase()));
+  const filteredTransactions = transactions.filter(tx => tx.id.toLowerCase().includes(searchTerm.toLowerCase()) || tx.recipient.toLowerCase().includes(searchTerm.toLowerCase()));
   return <div className="space-y-6">
       <div className="text-center">
         <h2 className="text-3xl font-bold">Transaction History</h2>
@@ -141,18 +140,11 @@ export default function TransactionHistory() {
         </Card>
       </div>
 
-      {/* Filters */}
+      {/* Search */}
       <Card className="p-4">
-        <div className="flex flex-col md:flex-row gap-4">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-            <Input placeholder="Search by transaction ID or recipient..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="pl-10" />
-          </div>
-          <div className="flex gap-2">
-            {["all", "payment", "receive", "stake", "swap"].map(type => <Button key={type} variant={filterType === type ? "default" : "outline"} size="sm" onClick={() => setFilterType(type)} className="capitalize">
-                {type === "all" ? "All" : type}
-              </Button>)}
-          </div>
+        <div className="relative">
+          <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+          <Input placeholder="Search by transaction ID or recipient..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="pl-10" />
         </div>
       </Card>
 

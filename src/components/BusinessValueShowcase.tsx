@@ -104,7 +104,7 @@ const BusinessValueShowcase = () => {
           🌊 Coral Protocol: The Future of Agentic Payments
         </h1>
         <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-          Transform your payment infrastructure with AI agents that orchestrate cross-border transactions 
+          Transform your payment infrastructure with AI agents that orchestrate international transactions 
           in milliseconds, not days. Built on Coral Protocol for maximum interoperability and security.
         </p>
         <Button 
@@ -221,7 +221,7 @@ const BusinessValueShowcase = () => {
                 </div>
                 <div className="flex items-center gap-3 text-gray-300">
                   <Globe className="h-5 w-5 text-red-400" />
-                  <span>Limited cross-border support</span>
+                  <span>Limited international support</span>
                 </div>
               </div>
             </div>
@@ -258,7 +258,7 @@ const BusinessValueShowcase = () => {
           </h2>
           <p className="text-gray-300 mb-6 max-w-2xl mx-auto">
             Join the Internet of Agents revolution. Deploy Coral Protocol agents today 
-            and experience the future of cross-border payments.
+            and experience the future of international payments.
           </p>
           <div className="flex gap-4 justify-center">
             <Button size="lg" className="bg-blue-600 hover:bg-blue-700">
