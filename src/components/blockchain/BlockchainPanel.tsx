@@ -139,9 +139,9 @@ const BlockchainPanel = () => {
   }, []);
 
   return (
-    <div className="space-y-4 h-full">
+    <div className="space-y-4 h-full flex flex-col">
       {/* Wallet Connection Card */}
-      <Card className="bg-gray-900/50 border-gray-700 backdrop-blur-sm">
+      <Card className="bg-gray-900/50 border-gray-700 backdrop-blur-sm flex-shrink-0">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-green-400">
             <Wallet className="h-5 w-5" />
@@ -206,8 +206,8 @@ const BlockchainPanel = () => {
       </Card>
 
       {/* NFT Collection */}
-      <Card className="bg-gray-900/50 border-gray-700 backdrop-blur-sm flex-1">
-        <CardHeader>
+      <Card className="bg-gray-900/50 border-gray-700 backdrop-blur-sm flex-1 flex flex-col">
+        <CardHeader className="flex-shrink-0">
           <div className="flex items-center justify-between">
             <CardTitle className="text-white">Your NFTs</CardTitle>
             <Badge variant="secondary">{userNFTs.length}</Badge>
@@ -216,8 +216,8 @@ const BlockchainPanel = () => {
             Collection with live support rewards
           </p>
         </CardHeader>
-        <CardContent>
-          <ScrollArea className="h-64">
+        <CardContent className="flex-1 flex flex-col p-0">
+          <ScrollArea className="flex-1 px-6 pb-6">
             <div className="space-y-3">
               {userNFTs.map((nft) => (
                 <Card key={nft.id} className={cn(
@@ -266,12 +266,12 @@ const BlockchainPanel = () => {
       </Card>
 
       {/* Recent Transactions */}
-      <Card className="bg-gray-900/50 border-gray-700 backdrop-blur-sm">
+      <Card className="bg-gray-900/50 border-gray-700 backdrop-blur-sm flex-shrink-0">
         <CardHeader>
           <CardTitle className="text-white">Recent Activity</CardTitle>
         </CardHeader>
         <CardContent>
-          <ScrollArea className="h-32">
+          <ScrollArea className="h-40">
             <div className="space-y-2">
               {recentTransactions.map((tx, index) => (
                 <div key={index} className="flex items-center justify-between p-2 rounded bg-gray-800/50">

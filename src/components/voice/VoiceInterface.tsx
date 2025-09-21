@@ -1,25 +1,45 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import { Mic, MicOff, Volume2, Play, Pause } from "lucide-react";
+import { Mic, MicOff, Volume2, Play, Pause, Settings, Zap, AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useVoice } from "@/contexts/VoiceContext";
 
 const VoiceInterface = () => {
   const [isListening, setIsListening] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [transcript, setTranscript] = useState("");
-  const [conversationHistory, setConversationHistory] = useState<Array<{role: 'user' | 'agent', message: string, timestamp: Date}>>([]);
+  const [conversationHistory, setConversationHistory] = useState<Array<{role: 'user' | 'agent', message: string, timestamp: Date, confidence?: number, processingTime?: number}>>([]);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [voiceSettings, setVoiceSettings] = useState({
+    sensitivity: 0.5,
+    noiseReduction: true,
+    echoCancellation: true,
+    autoStop: true,
+    autoStopDelay: 3000
+  });
+  const [agentStatus, setAgentStatus] = useState({
+    coralConnected: false,
+    agentsActive: 0,
+    lastActivity: null as Date | null
+  });
   
   const audioVisualizerRef = useRef<HTMLDivElement>(null);
-
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const analyserRef = useRef<AnalyserNode | null>(null);
   const animationFrameRef = useRef<number>();
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const sourceRef = useRef<MediaStreamAudioSourceNode | null>(null);
   const [audioLevel, setAudioLevel] = useState(0);
+  const [isVoiceActive, setIsVoiceActive] = useState(false);
+  const silenceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  
+  const { processVoiceInput, generateSpeech, agentStatus: voiceAgentStatus } = useVoice();
 
   const handleVoiceToggle = async () => {
     if (!isListening) {
@@ -31,27 +51,56 @@ const VoiceInterface = () => {
 
   const startRecording = async () => {
     try {
+      setError(null);
+      
       const stream = await navigator.mediaDevices.getUserMedia({ 
         audio: {
-          echoCancellation: true,
-          noiseSuppression: true,
-          sampleRate: 44100
+          echoCancellation: voiceSettings.echoCancellation,
+          noiseSuppression: voiceSettings.noiseReduction,
+          sampleRate: 44100,
+          channelCount: 1,
+          autoGainControl: true
         }
       });
 
-      // Set up audio analysis for visualization
-      const audioContext = new AudioContext();
+      // Set up advanced audio analysis
+      const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
       const source = audioContext.createMediaStreamSource(stream);
       const analyser = audioContext.createAnalyser();
-      analyser.fftSize = 256;
+      
+      // Enhanced audio analysis settings
+      analyser.fftSize = 512;
+      analyser.smoothingTimeConstant = 0.8;
+      analyser.minDecibels = -90;
+      analyser.maxDecibels = -10;
+      
       source.connect(analyser);
       analyserRef.current = analyser;
+      audioContextRef.current = audioContext;
+      sourceRef.current = source;
 
-      // Start audio level monitoring
+      // Start enhanced audio level monitoring with voice activity detection
       monitorAudioLevel();
 
+      // Enhanced MediaRecorder with better codec support
+      const mimeTypes = [
+        'audio/webm;codecs=opus',
+        'audio/webm',
+        'audio/mp4',
+        'audio/wav'
+      ];
+      
+      let selectedMimeType = 'audio/webm;codecs=opus';
+      for (const mimeType of mimeTypes) {
+        if (MediaRecorder.isTypeSupported(mimeType)) {
+          selectedMimeType = mimeType;
+          break;
+        }
+      }
+
       mediaRecorderRef.current = new MediaRecorder(stream, {
-        mimeType: 'audio/webm;codecs=opus'
+        mimeType: selectedMimeType,
+        audioBitsPerSecond: 128000
       });
       
       audioChunksRef.current = [];
@@ -63,11 +112,20 @@ const VoiceInterface = () => {
       };
       
       mediaRecorderRef.current.onstop = handleRecordingStop;
+      mediaRecorderRef.current.onerror = (event) => {
+        console.error('MediaRecorder error:', event);
+        setError('Recording failed. Please try again.');
+        setIsListening(false);
+      };
+      
       mediaRecorderRef.current.start(100);
       
       setIsListening(true);
+      setAgentStatus(prev => ({ ...prev, lastActivity: new Date() }));
+      
     } catch (error) {
       console.error('Error accessing microphone:', error);
+      setError('Microphone access denied. Please check your permissions.');
       // Fallback to demo mode
       simulateDemoInteraction();
     }
@@ -89,26 +147,115 @@ const VoiceInterface = () => {
 
   const handleRecordingStop = () => {
     const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
-    processVoiceInput(audioBlob);
+    processAudioInput(audioBlob);
   };
 
-  const monitorAudioLevel = () => {
-    if (!analyserRef.current) return;
+  const monitorAudioLevel = useCallback(() => {
+    if (!analyserRef.current || !isListening) return;
 
     const dataArray = new Uint8Array(analyserRef.current.frequencyBinCount);
     analyserRef.current.getByteFrequencyData(dataArray);
     
-    const average = dataArray.reduce((sum, value) => sum + value, 0) / dataArray.length;
-    setAudioLevel(average / 255);
+    // Calculate RMS (Root Mean Square) for better audio level detection
+    const sum = dataArray.reduce((sum, value) => sum + value * value, 0);
+    const rms = Math.sqrt(sum / dataArray.length);
+    const normalizedLevel = rms / 255;
+    
+    setAudioLevel(normalizedLevel);
+    
+    // Voice Activity Detection (VAD)
+    const voiceThreshold = voiceSettings.sensitivity * 0.3; // Adjust threshold based on sensitivity
+    const isCurrentlyActive = normalizedLevel > voiceThreshold;
+    
+    if (isCurrentlyActive !== isVoiceActive) {
+      setIsVoiceActive(isCurrentlyActive);
+      
+      if (isCurrentlyActive) {
+        // Clear silence timeout when voice is detected
+        if (silenceTimeoutRef.current) {
+          clearTimeout(silenceTimeoutRef.current);
+          silenceTimeoutRef.current = null;
+        }
+      } else if (voiceSettings.autoStop) {
+        // Start silence timeout when voice stops
+        silenceTimeoutRef.current = setTimeout(() => {
+          if (isListening) {
+            stopRecording();
+          }
+        }, voiceSettings.autoStopDelay);
+      }
+    }
 
     if (isListening) {
       animationFrameRef.current = requestAnimationFrame(monitorAudioLevel);
     }
-  };
+  }, [isListening, isVoiceActive, voiceSettings.sensitivity, voiceSettings.autoStop, voiceSettings.autoStopDelay]);
 
-  const processVoiceInput = async (audioBlob: Blob) => {
-    // Simulate processing or integrate with ElevenLabs
-    simulateDemoInteraction();
+  const processAudioInput = async (audioBlob: Blob) => {
+    setIsProcessing(true);
+    setError(null);
+    
+    try {
+      const startTime = Date.now();
+      
+      // Convert audio blob to buffer for coral protocol
+      const arrayBuffer = await audioBlob.arrayBuffer();
+      const audioBuffer = Buffer.from(arrayBuffer);
+      
+      // Process with coral protocol orchestrator
+      const result = await processVoiceInput(audioBuffer);
+      
+      const processingTime = Date.now() - startTime;
+      
+      if (result.success) {
+        setTranscript(result.transcript || '');
+        
+        // Add user message to conversation history
+        setConversationHistory(prev => [...prev, {
+          role: 'user',
+          message: result.transcript || 'Voice input processed',
+          timestamp: new Date(),
+          confidence: result.confidence,
+          processingTime: processingTime
+        }]);
+        
+        // Add agent response to conversation history
+        if (result.response) {
+          setConversationHistory(prev => [...prev, {
+            role: 'agent',
+            message: result.response,
+            timestamp: new Date(),
+            processingTime: processingTime
+          }]);
+          
+          // Generate speech for the response
+          const audioResponse = await generateSpeech(result.response);
+          if (audioResponse) {
+            // Store audio response for playback
+            // This would be handled by the audio playback system
+          }
+        }
+        
+        setAgentStatus(prev => ({ 
+          ...prev, 
+          lastActivity: new Date(),
+          coralConnected: true,
+          agentsActive: result.agentsActive || 0
+        }));
+        
+      } else {
+        setError(result.error || 'Voice processing failed');
+      }
+      
+    } catch (error) {
+      console.error('Voice processing error:', error);
+      setError('Failed to process voice input. Please try again.');
+      
+      // Fallback to demo mode
+      simulateDemoInteraction();
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   const simulateDemoInteraction = () => {
@@ -156,13 +303,34 @@ const VoiceInterface = () => {
   }, [isListening]);
 
   return (
-    <div className="space-y-4 h-full">
+    <div className="space-y-4 h-full flex flex-col">
       {/* Voice Control Card */}
-      <Card className="bg-gray-900/50 border-gray-700 backdrop-blur-sm">
+      <Card className="bg-gray-900/50 border-gray-700 backdrop-blur-sm flex-shrink-0">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-blue-400">
-            <Volume2 className="h-5 w-5" />
-            Voice Interface
+          <CardTitle className="flex items-center justify-between text-blue-400">
+            <div className="flex items-center gap-2">
+              <Volume2 className="h-5 w-5" />
+              Voice Interface
+            </div>
+            <div className="flex items-center gap-2">
+              {agentStatus.coralConnected && (
+                <Badge variant="outline" className="text-green-400 border-green-400">
+                  <Zap className="h-3 w-3 mr-1" />
+                  Coral Connected
+                </Badge>
+              )}
+              {isProcessing && (
+                <Badge variant="outline" className="text-yellow-400 border-yellow-400">
+                  Processing...
+                </Badge>
+              )}
+              {error && (
+                <Badge variant="destructive" className="text-red-400 border-red-400">
+                  <AlertCircle className="h-3 w-3 mr-1" />
+                  Error
+                </Badge>
+              )}
+            </div>
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
@@ -213,8 +381,23 @@ const VoiceInterface = () => {
                 isListening ? "bg-red-600" : "bg-gray-700"
               )}
             >
-              {isListening ? "🎤 Listening..." : "Push to Talk"}
+              {isListening ? (isVoiceActive ? "🎤 Speaking..." : "🎤 Listening...") : "Push to Talk"}
             </Badge>
+
+            {/* Error Display */}
+            {error && (
+              <div className="w-full p-3 bg-red-900/30 border border-red-700/50 rounded-md">
+                <p className="text-sm text-red-300">{error}</p>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="mt-2 text-xs text-red-400 hover:text-red-300"
+                  onClick={() => setError(null)}
+                >
+                  Dismiss
+                </Button>
+              </div>
+            )}
 
             {/* Enhanced Audio Visualizer */}
             <div className="space-y-2 w-full">
@@ -266,12 +449,12 @@ const VoiceInterface = () => {
       </Card>
 
       {/* Conversation History */}
-      <Card className="bg-gray-900/50 border-gray-700 backdrop-blur-sm flex-1">
-        <CardHeader>
+      <Card className="bg-gray-900/50 border-gray-700 backdrop-blur-sm flex-1 flex flex-col">
+        <CardHeader className="flex-shrink-0">
           <CardTitle className="text-white">Conversation History</CardTitle>
         </CardHeader>
-        <CardContent>
-          <ScrollArea className="h-64">
+        <CardContent className="flex-1 flex flex-col p-0">
+          <ScrollArea className="flex-1 px-6 pb-6">
             <div className="space-y-4">
               {conversationHistory.length === 0 ? (
                 <div className="text-center text-gray-400 py-8">
@@ -280,39 +463,63 @@ const VoiceInterface = () => {
               ) : (
                 conversationHistory.map((entry, index) => (
                   <div key={index} className={cn(
-                    "p-3 rounded-lg",
+                    "p-3 rounded-lg transition-all duration-200",
                     entry.role === 'user' 
                       ? "bg-blue-900/30 border border-blue-700/50 ml-4" 
                       : "bg-gray-800/50 border border-gray-600/50 mr-4"
                   )}>
                     <div className="flex items-start justify-between mb-2">
-                      <Badge variant={entry.role === 'user' ? "default" : "secondary"}>
-                        {entry.role === 'user' ? 'You' : 'Support Agent'}
-                      </Badge>
+                      <div className="flex items-center gap-2">
+                        <Badge variant={entry.role === 'user' ? "default" : "secondary"}>
+                          {entry.role === 'user' ? 'You' : 'Support Agent'}
+                        </Badge>
+                        {entry.confidence && (
+                          <Badge variant="outline" className="text-xs">
+                            {Math.round(entry.confidence * 100)}% confidence
+                          </Badge>
+                        )}
+                        {entry.processingTime && (
+                          <Badge variant="outline" className="text-xs">
+                            {entry.processingTime}ms
+                          </Badge>
+                        )}
+                      </div>
                       <span className="text-xs text-gray-400">
                         {entry.timestamp.toLocaleTimeString()}
                       </span>
                     </div>
                     <p className="text-sm text-gray-200">{entry.message}</p>
                     {entry.role === 'agent' && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="mt-2 text-xs"
-                        onClick={handlePlayResponse}
-                      >
-                        {isPlaying ? (
-                          <>
-                            <Pause className="h-3 w-3 mr-1" />
-                            Playing...
-                          </>
-                        ) : (
-                          <>
-                            <Play className="h-3 w-3 mr-1" />
-                            Play Audio
-                          </>
-                        )}
-                      </Button>
+                      <div className="flex items-center gap-2 mt-2">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="text-xs"
+                          onClick={handlePlayResponse}
+                        >
+                          {isPlaying ? (
+                            <>
+                              <Pause className="h-3 w-3 mr-1" />
+                              Playing...
+                            </>
+                          ) : (
+                            <>
+                              <Play className="h-3 w-3 mr-1" />
+                              Play Audio
+                            </>
+                          )}
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="text-xs"
+                          onClick={() => {
+                            navigator.clipboard.writeText(entry.message);
+                          }}
+                        >
+                          Copy
+                        </Button>
+                      </div>
                     )}
                   </div>
                 ))

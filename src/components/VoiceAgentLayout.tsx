@@ -41,20 +41,20 @@ const VoiceAgentLayout = () => {
 
       {/* Main Content - Three Panel Layout */}
       <main className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 h-[calc(100vh-180px)]">
+        <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 min-h-[calc(100vh-200px)]">
           
           {/* Panel 1: Voice Interface (Left - 25%) */}
-          <div className="xl:col-span-3">
+          <div className="xl:col-span-3 flex flex-col">
             <VoiceInterface />
           </div>
 
           {/* Panel 2: Agent Activity Theater (Center - 50%) */}
-          <div className="xl:col-span-6">
+          <div className="xl:col-span-6 flex flex-col">
             <AgentOrchestra />
           </div>
 
           {/* Panel 3: Blockchain & Wallet (Right - 25%) */}
-          <div className="xl:col-span-3">
+          <div className="xl:col-span-3 flex flex-col">
             <BlockchainPanel />
           </div>
 

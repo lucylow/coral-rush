@@ -207,15 +207,16 @@ export default function VMDashboard() {
       setIsExecuting(null);
     }
   };
-  const generateInsightFromResult = (vmId: string, result: any): string => {
+  const generateInsightFromResult = (vmId: string, result: Record<string, unknown>): string => {
     const orgoResult = result.orgo?.result;
     const claudeResult = result.claude?.result;
     switch (vmId) {
       case 'routing-optimizer':
         return `ORGO Computer optimized routing: ${orgoResult?.recommendedRoute} network saves ${orgoResult?.estimatedSavings} with ${orgoResult?.processingTime} settlement time.`;
-      case 'risk-management':
+      case 'risk-management': {
         const riskScore = claudeResult?.analysis?.includes('Risk score:') ? claudeResult.analysis.match(/Risk score: ([\d.]+)/)?.[1] : orgoResult?.riskScore;
         return `Live AI analysis: Risk score ${riskScore}/100. ${orgoResult?.threatLevel} threat level. Claude + ORGO monitoring active.`;
+      }
       case 'treasury-management':
         return `Claude AI optimized DeFi strategy: ${orgoResult?.currentAPY} APY achieved. Total value ${orgoResult?.totalValue}. AI recommends ${claudeResult?.recommendations?.[0] || 'maintaining current allocation'}.`;
       case 'compliance-engine':
@@ -424,42 +425,6 @@ export default function VMDashboard() {
   const runningVMs = vms.filter(vm => vm.status === "running").length;
   const totalVMs = vms.length;
   return <div className="space-y-6 animate-fade-in">
-      {/* ORGO Computer Integration Banner */}
-      <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6 rounded-lg border-2 border-blue-400">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-2xl font-bold flex items-center gap-3">
-              <Cpu className="h-8 w-8" />
-              🚀 BUILT USING ORGO COMPUTER ENVIRONMENT
-            </h2>
-            <p className="text-blue-100 mt-2">Key components from the Orgo documentation:
-- `Computer` class to control a virtual desktop
-- `prompt` method to use Claude for natural language control
-- Ability to execute mouse/keyboard actions, take screenshots, and manage the computer state: 
-
-Pre-sign these transactions in the background using the Orgo `Computer` to interact with the wallet
-          </p>
-            <div className="flex items-center gap-4 mt-3">
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
-                <span className="text-sm">Live ORGO Computer Connection</span>
-              </div>
-              <Badge className="bg-green-500 text-white">
-                Real-time VM monitoring via ORGO Computer API
-              </Badge>
-            </div>
-          </div>
-          <div className="text-right">
-            <Button className="bg-white text-blue-600 hover:bg-blue-50 font-bold" onClick={() => window.open('https://www.orgo.ai/projects/computer-p592c68e', '_blank')}>
-              <Eye className="h-4 w-4 mr-2" />
-              View Live ORGO Project
-            </Button>
-            <div className="text-xs text-blue-200 mt-2">
-              orgo.ai/projects/computer-p592c68e
-            </div>
-          </div>
-        </div>
-      </div>
 
       <div className="text-center">
         <h2 className="text-3xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">

@@ -6,6 +6,45 @@ import { Progress } from "@/components/ui/progress";
 import { Zap, Globe, Shield, TrendingUp, Clock, DollarSign, Mic, Brain, AlertCircle, CheckCircle, Lock, Eye, EyeOff, UserCheck, FileText } from "lucide-react";
 import { toast } from "sonner";
 import { coralApi } from "@/utils/coralApi";
+
+// TypeScript interfaces for type safety
+interface VoiceData {
+  amount: number;
+  destination: string;
+  currency: string;
+  intent_confidence: number;
+  extracted_entities: Record<string, unknown>;
+  coral_response: Record<string, unknown>;
+}
+
+interface IntentData {
+  risk_score: number;
+  routing_preference: string;
+  compliance_flags: string[];
+  recommended_actions: string[];
+}
+
+interface FraudData {
+  fraud_score: number;
+  risk_factors: string[];
+  recommendation: 'approve' | 'deny';
+  confidence_level: number;
+  compliance_data: Record<string, unknown>;
+}
+
+interface PaymentData {
+  processing_time: number;
+  burned_orgo: number;
+  transaction_id?: string;
+  status?: string;
+}
+
+interface AIInsight {
+  agent: string;
+  status: string;
+  data: VoiceData | IntentData | FraudData | PaymentData | Record<string, unknown>;
+  timestamp: string;
+}
 export default function LiveDemo() {
   const [isRacing, setIsRacing] = useState(false);
   const [orgoProgress, setOrgoProgress] = useState(0);
@@ -20,7 +59,7 @@ export default function LiveDemo() {
     fraudDetection: 'idle',
     paymentProcessor: 'idle'
   });
-  const [aiInsights, setAiInsights] = useState([]);
+  const [aiInsights, setAiInsights] = useState<AIInsight[]>([]);
   const [coralConnected, setCoralConnected] = useState(false);
   
   // Consent and Privacy States
@@ -82,7 +121,7 @@ export default function LiveDemo() {
   const ANTHROPIC_API_KEY = process.env.REACT_APP_ANTHROPIC_API_KEY || "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";
 
   // AI Agent Functions
-  const processVoiceCommand = async (command: string) => {
+  const processVoiceCommand = async (command: string): Promise<VoiceData | null> => {
     setAgentStatus(prev => ({ ...prev, voiceListener: 'processing' }));
     setVoiceCommand(`Voice Listener: "${command}"`);
     
@@ -137,7 +176,7 @@ export default function LiveDemo() {
     }
   };
 
-  const analyzeIntent = async (voiceData: any) => {
+  const analyzeIntent = async (voiceData: VoiceData): Promise<IntentData | null> => {
     setAgentStatus(prev => ({ ...prev, intentAnalysis: 'processing' }));
     setVoiceCommand('Intent Analysis: Processing payment request...');
     
@@ -181,7 +220,7 @@ export default function LiveDemo() {
     }
   };
 
-  const detectFraud = async (intentData: any, voiceData: any) => {
+  const detectFraud = async (intentData: IntentData, voiceData: VoiceData): Promise<FraudData | null> => {
     setAgentStatus(prev => ({ ...prev, fraudDetection: 'processing' }));
     setVoiceCommand('Fraud Detection: Analyzing transaction patterns...');
     
@@ -212,10 +251,10 @@ export default function LiveDemo() {
       const complianceResult = await response.json();
       
       // Convert compliance result to fraud detection format
-      const result = {
+      const result: FraudData = {
         fraud_score: Math.round(complianceResult.compliance.risk_score * 10),
         risk_factors: complianceResult.compliance.checks_performed || [],
-        recommendation: complianceResult.compliance.approved ? 'approve' : 'deny',
+        recommendation: (complianceResult.compliance.approved ? 'approve' : 'deny') as 'approve' | 'deny',
         confidence_level: 0.95,
         compliance_data: complianceResult.compliance
       };
@@ -237,7 +276,7 @@ export default function LiveDemo() {
     }
   };
 
-  const processPayment = async (fraudData: any, intentData: any, voiceData: any) => {
+  const processPayment = async (fraudData: FraudData, intentData: IntentData, voiceData: VoiceData): Promise<PaymentData | null> => {
     setAgentStatus(prev => ({ ...prev, paymentProcessor: 'processing' }));
     setVoiceCommand('Payment Processor: Executing transaction...');
     

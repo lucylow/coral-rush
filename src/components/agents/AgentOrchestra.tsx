@@ -141,9 +141,9 @@ const AgentOrchestra = () => {
   };
 
   return (
-    <div className="space-y-4 h-full">
-      <Card className="bg-gray-900/50 border-gray-700 backdrop-blur-sm">
-        <CardHeader>
+    <div className="space-y-4 h-full flex flex-col">
+      <Card className="bg-gray-900/50 border-gray-700 backdrop-blur-sm flex-1 flex flex-col">
+        <CardHeader className="flex-shrink-0">
           <div className="flex items-center justify-between">
             <CardTitle className="flex items-center gap-2 text-white">
               <Activity className="h-5 w-5" />
@@ -163,7 +163,7 @@ const AgentOrchestra = () => {
             Watch multi-agent AI coordination in real-time
           </p>
         </CardHeader>
-        <CardContent>
+        <CardContent className="flex-1 flex flex-col p-0">
           {/* Agent Status Bar */}
           <div className="grid grid-cols-3 gap-4 mb-6">
             {Object.entries(agentConfig).map(([key, config]) => {
@@ -203,8 +203,9 @@ const AgentOrchestra = () => {
           </div>
 
           {/* Live Activity Log */}
-          <ScrollArea className="h-80">
-            <div className="space-y-3">
+          <div className="px-6 pb-6 flex-1">
+            <ScrollArea className="h-full">
+              <div className="space-y-3">
               {agentLogs.length === 0 ? (
                 <div className="text-center text-gray-400 py-12">
                   <Activity className="h-12 w-12 mx-auto mb-4 opacity-50" />
@@ -278,8 +279,9 @@ const AgentOrchestra = () => {
                   );
                 })
               )}
-            </div>
-          </ScrollArea>
+              </div>
+            </ScrollArea>
+          </div>
         </CardContent>
       </Card>
     </div>

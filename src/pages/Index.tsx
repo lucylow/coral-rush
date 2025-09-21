@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import LiveDemo from "@/components/LiveDemo";
 import VMDashboard from "@/components/VMDashboard";
 import PaymentForm from "@/components/PaymentForm";
 import TokenInfo from "@/components/TokenInfo";
@@ -43,9 +42,8 @@ const Index = () => {
       </header>
 
       <main className="container mx-auto px-4 py-8">
-        <Tabs defaultValue="demo" className="w-full">
-          <TabsList className="grid w-full grid-cols-4 lg:grid-cols-9 mb-8">
-            <TabsTrigger value="demo">Live Demo</TabsTrigger>
+        <Tabs defaultValue="vm" className="w-full">
+          <TabsList className="grid w-full grid-cols-4 lg:grid-cols-8 mb-8">
             <TabsTrigger value="vm">VM Dashboard</TabsTrigger>
             <TabsTrigger value="payment">Payment</TabsTrigger>
             <TabsTrigger value="orgo">SOL Utility</TabsTrigger>
@@ -55,10 +53,6 @@ const Index = () => {
             <TabsTrigger value="wallet">Wallet</TabsTrigger>
             <TabsTrigger value="history">History</TabsTrigger>
           </TabsList>
-
-          <TabsContent value="demo">
-            <LiveDemo />
-          </TabsContent>
 
           <TabsContent value="vm">
             <VMDashboard />

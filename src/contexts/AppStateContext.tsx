@@ -231,19 +231,12 @@ export const AppStateProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [state, dispatch] = useReducer(appReducer, initialState);
   
   // Safely get wallet connection info with error handling
-  let connection, publicKey, connected;
-  try {
-    const walletContext = useConnection();
-    const walletInfo = useWallet();
-    connection = walletContext.connection;
-    publicKey = walletInfo.publicKey;
-    connected = walletInfo.connected;
-  } catch (error) {
-    // Wallet context not available yet, use defaults
-    connection = null;
-    publicKey = null;
-    connected = false;
-  }
+  const walletContext = useConnection();
+  const walletInfo = useWallet();
+  
+  const connection = walletContext?.connection || null;
+  const publicKey = walletInfo?.publicKey || null;
+  const connected = walletInfo?.connected || false;
 
   // Initialize user when wallet connects
   useEffect(() => {
