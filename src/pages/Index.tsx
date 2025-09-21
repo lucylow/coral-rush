@@ -29,7 +29,6 @@ const Index = () => {
                 RUSH Payment Agent
               </h1>
               <p className="text-muted-foreground mt-2">
-                AI-powered Web3 payments with sub-0.5s settlement • ORGO Hackathon Submission
               </p>
             </div>
             <Button 
