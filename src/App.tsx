@@ -173,10 +173,7 @@ const App: React.FC = () => {
                             <Route path="coral-hackathon" element={<CoralHackathonDemo />} />
                             <Route path="coral-orchestrator" element={<RealCoralOrchestrator />} />
                             <Route path="agent-registry" element={<AgentRegistry />} />
-<<<<<<< HEAD
                             <Route path="winning-demo" element={<WinningHackathonDemo />} />
-=======
->>>>>>> 2425dab44bc5294a7f17e648d2a3288fecfcdc8b
                             
                             {/* Legacy Routes */}
                             <Route path="history" element={<SupportHistoryPage />} />

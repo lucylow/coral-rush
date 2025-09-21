@@ -1,9 +1,9 @@
+/* Import Coral Protocol Components Styles */
+@import './components/coral/CoralComponents.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* Import Coral Protocol Components Styles */
-@import './components/coral/CoralComponents.css';
 
 /* Voice-First Web3 Agent Theater Design System */
 
