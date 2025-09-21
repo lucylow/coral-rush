@@ -242,7 +242,7 @@ export default function LiveDemo() {
     setVoiceCommand('Payment Processor: Executing transaction...');
     
     try {
-      // Use real ORGO backend API for payment processing
+      // Use real Solana backend API for payment processing
       const response = await fetch('http://localhost:5001/api/payment', {
         method: 'POST',
         headers: {
@@ -254,7 +254,7 @@ export default function LiveDemo() {
           source_currency: 'USD',
           target_currency: 'PHP',
           recipient_wallet: 'Philippines_demo_wallet',
-          memo: 'Coral Protocol AI-powered transfer',
+          memo: 'Coral Protocol Solana transfer',
           ai_analysis: {
             fraud_score: fraudData.fraud_score,
             risk_score: intentData.risk_score,
@@ -387,7 +387,7 @@ export default function LiveDemo() {
         setOrgoProgress(prev => {
           if (prev >= 100) {
             clearInterval(orgoInterval);
-            setBurnCounter(prev => prev + (raceData.burned_orgo || 0.1));
+            setBurnCounter(prev => prev + (raceData.burned_sol || 0.1));
             return 100;
           }
           return prev + 25;
@@ -471,20 +471,17 @@ export default function LiveDemo() {
 
               <div className="space-y-4 mb-6">
                 <p className="text-gray-700 leading-relaxed">
-                  Welcome to Coral Protocol Voice Support! Our AI-powered customer support system 
-                  provides instant assistance for Web3 transactions, cross-border payments, and 
-                  financial services. Please review and consent to the following terms to access 
-                  our voice-first support platform.
+                  Coral Protocol Voice Support provides instant AI-powered assistance for Solana transactions and cross-border payments. Please review and consent to access our voice-first platform.
                 </p>
 
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                   <h3 className="font-semibold text-blue-900 mb-2">🎯 Voice Support Features</h3>
                   <ul className="text-sm text-blue-800 space-y-1">
-                    <li>• Natural language voice commands for instant support</li>
-                    <li>• AI-powered fraud detection and risk assessment</li>
-                    <li>• Real-time cross-border payment processing</li>
-                    <li>• Multi-agent coordination for complex transactions</li>
-                    <li>• ORGO token integration for Web3 payments</li>
+                    <li>• Voice commands for instant support</li>
+                    <li>• AI fraud detection</li>
+                    <li>• Real-time Solana payments</li>
+                    <li>• Multi-agent coordination</li>
+                    <li>• SOL token integration</li>
                   </ul>
                 </div>
 
@@ -499,8 +496,7 @@ export default function LiveDemo() {
                     <div className="flex-1">
                       <span className="font-medium text-gray-900">Voice Processing Consent</span>
                       <p className="text-sm text-gray-600">
-                        I consent to the processing of voice commands for customer support purposes. 
-                        Voice data is processed securely and not stored permanently.
+                        I consent to voice command processing for customer support. Voice data is processed securely.
                       </p>
                     </div>
                   </label>
@@ -515,8 +511,7 @@ export default function LiveDemo() {
                     <div className="flex-1">
                       <span className="font-medium text-gray-900">Data Processing Consent</span>
                       <p className="text-sm text-gray-600">
-                        I consent to the temporary storage of session data for the purpose 
-                        of providing customer support and processing transactions.
+                        I consent to temporary session data storage for customer support and transactions.
                       </p>
                     </div>
                   </label>
@@ -531,8 +526,7 @@ export default function LiveDemo() {
                     <div className="flex-1">
                       <span className="font-medium text-gray-900">AI Analysis Consent</span>
                       <p className="text-sm text-gray-600">
-                        I consent to AI-powered analysis of my interactions for fraud detection, 
-                        intent analysis, and payment processing services.
+                        I consent to AI analysis for fraud detection and payment processing.
                       </p>
                     </div>
                   </label>
@@ -547,8 +541,7 @@ export default function LiveDemo() {
                     <div className="flex-1">
                       <span className="font-medium text-gray-900">Service Agreement</span>
                       <p className="text-sm text-gray-600">
-                        I understand this is a customer support service and that all transactions 
-                        are processed through our secure Web3 infrastructure.
+                        I understand this is a customer support service using secure Solana infrastructure.
                       </p>
                     </div>
                   </label>
@@ -572,7 +565,7 @@ export default function LiveDemo() {
 
                 <div className="flex items-center gap-2 text-sm text-gray-600">
                   <Lock className="h-4 w-4" />
-                  <span>Your data is protected with end-to-end encryption and GDPR compliance</span>
+                  <span>Data protected with end-to-end encryption</span>
                 </div>
               </div>
 
@@ -599,12 +592,12 @@ export default function LiveDemo() {
                 <div className="mt-4 p-4 bg-gray-50 rounded-lg">
                   <h4 className="font-semibold mb-2">Privacy Details</h4>
                   <div className="text-sm text-gray-600 space-y-2">
-                    <p><strong>Data Collection:</strong> Voice commands, transaction data, support interactions</p>
-                    <p><strong>Data Usage:</strong> Customer support, transaction processing, service improvement</p>
-                    <p><strong>Data Retention:</strong> Session data deleted after support completion</p>
-                    <p><strong>Third Parties:</strong> Coral Protocol agents, AI services (OpenAI, Anthropic)</p>
-                    <p><strong>Security:</strong> HTTPS encryption, secure API endpoints, encrypted storage</p>
-                    <p><strong>Your Rights:</strong> Withdraw consent anytime, request data deletion</p>
+                    <p><strong>Data:</strong> Voice commands, transaction data</p>
+                    <p><strong>Usage:</strong> Customer support, Solana transactions</p>
+                    <p><strong>Retention:</strong> Session data deleted after completion</p>
+                    <p><strong>Third Parties:</strong> Coral Protocol agents, AI services</p>
+                    <p><strong>Security:</strong> HTTPS encryption, secure endpoints</p>
+                    <p><strong>Rights:</strong> Withdraw consent anytime</p>
                   </div>
                 </div>
               )}
@@ -625,7 +618,7 @@ export default function LiveDemo() {
                 <div>
                   <h3 className="font-semibold text-green-900">Service Authorized</h3>
                   <p className="text-sm text-green-700">
-                    Voice support active • Session started: {consentTimestamp ? new Date(consentTimestamp).toLocaleTimeString() : 'Unknown'}
+                    Voice support active • Started: {consentTimestamp ? new Date(consentTimestamp).toLocaleTimeString() : 'Unknown'}
                   </p>
                 </div>
               </div>
@@ -656,8 +649,8 @@ export default function LiveDemo() {
 
       <div className="space-y-6">
       <div className="text-center">
-        <h2 className="text-3xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">Voice-First Web3 Customer Support</h2>
-        <p className="text-muted-foreground mt-2">Experience instant AI-powered customer support for Web3 transactions. Our voice-first platform handles cross-border payments, fraud detection, and transaction processing through natural language commands. Watch our Coral Protocol agents process a $10,000 USD to Philippines Peso (PHP) transfer in real-time.</p>
+        <h2 className="text-3xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">Voice-First Solana Support</h2>
+        <p className="text-muted-foreground mt-2">AI-powered Solana transaction support. Voice commands handle cross-border payments and fraud detection. Watch Coral Protocol agents process a $10,000 USD to PHP transfer in real-time.</p>
       </div>
 
       {/* Coral Protocol Agent Status */}
@@ -786,7 +779,7 @@ export default function LiveDemo() {
             </div>
             <div className="text-sm space-y-1">
               <div>💰 Fee: $1 (0.01%)</div>
-              <div>🔥 SOL Burned: 1 token</div>
+              <div>🔥 SOL Burned: 1 SOL</div>
               <div>⚡ Network: Solana</div>
             </div>
           </div>
@@ -850,11 +843,11 @@ export default function LiveDemo() {
           {burnCounter.toFixed(2)} SOL
         </div>
         <p className="text-sm text-muted-foreground mt-2">
-          Deflationary tokenomics in action • ${(burnCounter * 4.73).toFixed(2)} value removed
+          Deflationary tokenomics • ${(burnCounter * 4.73).toFixed(2)} value removed
         </p>
         {burnData && (
           <div className="mt-3 text-xs text-gray-500">
-            📊 {burnData.transactions_count} transactions • Last updated: {burnData.last_updated ? new Date(burnData.last_updated).toLocaleTimeString() : 'Unknown'}
+            📊 {burnData.transactions_count} Solana transactions • Updated: {burnData.last_updated ? new Date(burnData.last_updated).toLocaleTimeString() : 'Unknown'}
           </div>
         )}
       </Card>
@@ -885,14 +878,14 @@ export default function LiveDemo() {
 
       {/* Technical Features */}
       <Card className="p-6">
-        <h3 className="text-xl font-semibold mb-4 text-center">Why Coral Protocol Voice Support</h3>
+        <h3 className="text-xl font-semibold mb-4 text-center">Why Coral Protocol</h3>
         <div className="grid md:grid-cols-2 gap-6">
           <div className="space-y-4">
             <div className="flex items-start gap-3">
               <Shield className="h-5 w-5 text-primary mt-1" />
               <div>
                 <h4 className="font-medium">ZK-Proof Identity</h4>
-                <p className="text-sm text-muted-foreground">Privacy-preserving authentication with 99.5% fraud detection accuracy</p>
+                <p className="text-sm text-muted-foreground">Privacy-preserving authentication with 99.5% fraud detection</p>
               </div>
             </div>
             
@@ -900,7 +893,7 @@ export default function LiveDemo() {
               <Clock className="h-5 w-5 text-primary mt-1" />
               <div>
                 <h4 className="font-medium">Pre-signed Transactions</h4>
-                <p className="text-sm text-muted-foreground">Instant execution without user interaction delays</p>
+                <p className="text-sm text-muted-foreground">Instant execution without delays</p>
               </div>
             </div>
           </div>
@@ -910,7 +903,7 @@ export default function LiveDemo() {
               <Globe className="h-5 w-5 text-primary mt-1" />
               <div>
                 <h4 className="font-medium">Atomic Cross-chain Swaps</h4>
-                <p className="text-sm text-muted-foreground">USD → USDC → PHP conversion in single transaction</p>
+                <p className="text-sm text-muted-foreground">USD → USDC → PHP in single Solana transaction</p>
               </div>
             </div>
             
@@ -918,7 +911,7 @@ export default function LiveDemo() {
               <Zap className="h-5 w-5 text-primary mt-1" />
               <div>
                 <h4 className="font-medium">VM Orchestration</h4>
-                <p className="text-sm text-muted-foreground">4 virtual machines managing payment infrastructure</p>
+                <p className="text-sm text-muted-foreground">4 VMs managing Solana payment infrastructure</p>
               </div>
             </div>
           </div>

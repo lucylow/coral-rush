@@ -32,6 +32,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, onToggle }) => {
   const { stats } = useAppState();
 
   const navigation = [
+    { name: 'Voice Agent', href: '/voice-agent', icon: MicrophoneIcon },
+    { name: 'Coral Protocol', href: '/coral-orchestrator', icon: GlobeAltIcon },
     { name: 'Home', href: '/', icon: HomeIcon },
     { name: 'Live Demo', href: '/', icon: PlayCircleIcon },
     { name: 'VM Dashboard', href: '/vm-dashboard', icon: ComputerDesktopIcon },
@@ -41,8 +43,6 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, onToggle }) => {
     { name: 'Token Info', href: '/token-info', icon: InformationCircleIcon },
     { name: 'Wallet', href: '/wallet', icon: WalletIcon },
     { name: 'History', href: '/history', icon: ClockIcon },
-    { name: 'Voice Agent', href: '/voice-agent', icon: MicrophoneIcon },
-    { name: 'Coral Protocol', href: '/coral-orchestrator', icon: GlobeAltIcon },
     { name: 'API Health', href: '/api-health', icon: Cog6ToothIcon },
   ];
 

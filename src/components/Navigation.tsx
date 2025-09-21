@@ -19,6 +19,8 @@ const Navigation = () => {
   const location = useLocation();
   
   const navItems = [
+    { path: "/voice-agent", label: "Voice Agent", icon: Mic },
+    { path: "/coral-orchestrator", label: "Coral Protocol", icon: Network },
     { path: "/", label: "Live Demo", icon: PlayCircle },
     { path: "/vm-dashboard", label: "VM Dashboard", icon: Monitor },
     { path: "/payment", label: "Payment", icon: CreditCard },
@@ -27,8 +29,6 @@ const Navigation = () => {
     { path: "/token-info", label: "Token Info", icon: Info },
     { path: "/wallet", label: "Wallet", icon: Wallet },
     { path: "/history", label: "History", icon: History },
-    { path: "/voice-agent", label: "Voice Agent", icon: Mic },
-    { path: "/coral-orchestrator", label: "Coral Protocol", icon: Network },
     { path: "/api-health", label: "API Health", icon: Settings }
   ];
 
