@@ -64,7 +64,7 @@ interface CustomerSupportScenario {
 
 interface VoiceCommandExample {
   command: string;
-  category: 'payment' | 'support' | 'wallet' | 'defi' | 'security' | 'general';
+  category: 'payment' | 'support' | 'wallet' | 'defi' | 'security' | 'transaction' | 'general';
   expected_response: string;
   confidence_score: number;
   entities_extracted: Record<string, string>;
@@ -263,6 +263,76 @@ export default function LiveDemo() {
         agents_involved: ['voice_listener', 'onboarding_agent', 'education_agent'],
         resolution_summary: 'Created Phantom wallet, funded with test SOL, completed security tutorial',
         timestamp: new Date(Date.now() - 21600000).toISOString()
+      },
+      {
+        id: 'scenario_007',
+        type: 'transaction_help',
+        customer_id: 'user_55555',
+        voice_transcript: "My swap transaction failed and I lost gas fees. Can you help me understand why?",
+        intent: 'transaction_failure_analysis',
+        priority: 'medium',
+        status: 'resolved',
+        resolution_time: 75,
+        customer_satisfaction: 4,
+        agents_involved: ['voice_listener', 'transaction_analyzer', 'fee_specialist'],
+        resolution_summary: 'Identified slippage issue, provided optimal swap parameters, refunded partial gas fees',
+        timestamp: new Date(Date.now() - 18000000).toISOString()
+      },
+      {
+        id: 'scenario_008',
+        type: 'defi_query',
+        customer_id: 'user_66666',
+        voice_transcript: "I provided liquidity to a pool but my tokens are worth less now. What happened?",
+        intent: 'impermanent_loss_explanation',
+        priority: 'medium',
+        status: 'resolved',
+        resolution_time: 150,
+        customer_satisfaction: 5,
+        agents_involved: ['voice_listener', 'defi_specialist', 'education_agent'],
+        resolution_summary: 'Explained impermanent loss concept, provided risk mitigation strategies, showed historical performance',
+        timestamp: new Date(Date.now() - 25200000).toISOString()
+      },
+      {
+        id: 'scenario_009',
+        type: 'security_concern',
+        customer_id: 'user_77777',
+        voice_transcript: "I received a suspicious link claiming to be from Solana. Is this legitimate?",
+        intent: 'phishing_detection',
+        priority: 'high',
+        status: 'resolved',
+        resolution_time: 30,
+        customer_satisfaction: 5,
+        agents_involved: ['voice_listener', 'security_specialist', 'education_agent'],
+        resolution_summary: 'Confirmed phishing attempt, provided security education, blocked malicious domain',
+        timestamp: new Date(Date.now() - 9000000).toISOString()
+      },
+      {
+        id: 'scenario_010',
+        type: 'wallet_problem',
+        customer_id: 'user_88888',
+        voice_transcript: "My wallet is showing the wrong network. How do I switch to Solana mainnet?",
+        intent: 'network_switch',
+        priority: 'low',
+        status: 'resolved',
+        resolution_time: 45,
+        customer_satisfaction: 4,
+        agents_involved: ['voice_listener', 'wallet_specialist'],
+        resolution_summary: 'Guided through network switching process, verified mainnet connection, confirmed balance display',
+        timestamp: new Date(Date.now() - 12600000).toISOString()
+      },
+      {
+        id: 'scenario_011',
+        type: 'payment_issue',
+        customer_id: 'user_99999',
+        voice_transcript: "I'm trying to send SOL but the transaction keeps failing with 'insufficient funds'",
+        intent: 'insufficient_funds',
+        priority: 'medium',
+        status: 'resolved',
+        resolution_time: 60,
+        customer_satisfaction: 4,
+        agents_involved: ['voice_listener', 'wallet_specialist', 'fee_calculator'],
+        resolution_summary: 'Identified need for rent-exempt minimum, provided exact amount calculation, successful transaction',
+        timestamp: new Date(Date.now() - 32400000).toISOString()
       }
     ];
 
@@ -331,6 +401,62 @@ export default function LiveDemo() {
         confidence_score: 0.91,
         entities_extracted: { query: "gas_fee" },
         agent_required: ['voice_listener', 'fee_calculator']
+      },
+      {
+        command: "Help me recover my lost wallet seed phrase",
+        category: 'security',
+        expected_response: "I'll guide you through secure wallet recovery options and best practices.",
+        confidence_score: 0.93,
+        entities_extracted: { issue: "lost_seed_phrase" },
+        agent_required: ['voice_listener', 'security_specialist', 'recovery_agent']
+      },
+      {
+        command: "Explain what impermanent loss means",
+        category: 'defi',
+        expected_response: "Let me explain impermanent loss and how it affects liquidity providers.",
+        confidence_score: 0.89,
+        entities_extracted: { concept: "impermanent_loss" },
+        agent_required: ['voice_listener', 'defi_specialist', 'education_agent']
+      },
+      {
+        command: "Set up price alerts for SOL",
+        category: 'general',
+        expected_response: "I'll help you configure price alerts and notification preferences.",
+        confidence_score: 0.86,
+        entities_extracted: { action: "price_alerts", token: "SOL" },
+        agent_required: ['voice_listener', 'alert_manager']
+      },
+      {
+        command: "Why did my swap fail?",
+        category: 'transaction',
+        expected_response: "Let me analyze the failed transaction and identify the issue.",
+        confidence_score: 0.94,
+        entities_extracted: { issue: "swap_failure" },
+        agent_required: ['voice_listener', 'transaction_analyzer', 'defi_specialist']
+      },
+      {
+        command: "Show me my NFT collection",
+        category: 'wallet',
+        expected_response: "Retrieving your NFT collection and displaying detailed information.",
+        confidence_score: 0.92,
+        entities_extracted: { asset_type: "NFT" },
+        agent_required: ['voice_listener', 'nft_agent']
+      },
+      {
+        command: "What's the best way to earn yield on my USDC?",
+        category: 'defi',
+        expected_response: "Analyzing current yield opportunities and recommending optimal strategies.",
+        confidence_score: 0.88,
+        entities_extracted: { strategy: "yield_farming", token: "USDC" },
+        agent_required: ['voice_listener', 'defi_specialist', 'yield_optimizer']
+      },
+      {
+        command: "I'm getting a connection error",
+        category: 'support',
+        expected_response: "Let me diagnose the connection issue and help you resolve it.",
+        confidence_score: 0.90,
+        entities_extracted: { error_type: "connection_error" },
+        agent_required: ['voice_listener', 'technical_support', 'network_agent']
       }
     ];
 
@@ -395,6 +521,56 @@ export default function LiveDemo() {
         success_rate: 95.7,
         specializations: ['network_monitoring', 'transaction_analysis', 'node_optimization'],
         availability: 'online'
+      },
+      {
+        agent_id: 'nft_agent_001',
+        agent_name: 'NFT Specialist',
+        total_interactions: 567,
+        average_resolution_time: 90.3,
+        customer_satisfaction_avg: 4.7,
+        success_rate: 96.8,
+        specializations: ['nft_management', 'metadata_analysis', 'collection_tracking'],
+        availability: 'online'
+      },
+      {
+        agent_id: 'yield_optimizer_001',
+        agent_name: 'Yield Optimizer',
+        total_interactions: 723,
+        average_resolution_time: 135.2,
+        customer_satisfaction_avg: 4.9,
+        success_rate: 97.5,
+        specializations: ['yield_farming', 'strategy_optimization', 'risk_assessment'],
+        availability: 'busy'
+      },
+      {
+        agent_id: 'education_agent_001',
+        agent_name: 'Education Agent',
+        total_interactions: 1234,
+        average_resolution_time: 200.5,
+        customer_satisfaction_avg: 4.8,
+        success_rate: 98.2,
+        specializations: ['crypto_education', 'tutorial_guidance', 'concept_explanation'],
+        availability: 'online'
+      },
+      {
+        agent_id: 'recovery_agent_001',
+        agent_name: 'Recovery Specialist',
+        total_interactions: 89,
+        average_resolution_time: 300.7,
+        customer_satisfaction_avg: 4.6,
+        success_rate: 85.4,
+        specializations: ['wallet_recovery', 'seed_phrase_help', 'fund_recovery'],
+        availability: 'online'
+      },
+      {
+        agent_id: 'technical_support_001',
+        agent_name: 'Technical Support',
+        total_interactions: 1456,
+        average_resolution_time: 65.8,
+        customer_satisfaction_avg: 4.4,
+        success_rate: 92.3,
+        specializations: ['bug_diagnostics', 'connection_troubleshooting', 'performance_optimization'],
+        availability: 'online'
       }
     ];
 
@@ -458,6 +634,53 @@ export default function LiveDemo() {
         total_session_time: 480,
         satisfaction_rating: 4,
         next_best_action: 'Enable transaction monitoring alerts'
+      },
+      {
+        customer_id: 'user_55555',
+        session_id: 'session_005',
+        journey_type: 'power_user',
+        voice_commands: [
+          "Show me current DeFi yields across all protocols",
+          "Optimize my existing liquidity positions",
+          "Calculate my impermanent loss exposure",
+          "Suggest rebalancing strategy",
+          "Set up automated yield farming"
+        ],
+        issues_resolved: ['yield_analysis', 'position_optimization', 'risk_calculation', 'rebalancing_strategy', 'automation_setup'],
+        total_session_time: 600,
+        satisfaction_rating: 5,
+        next_best_action: 'Monitor performance and adjust strategy weekly'
+      },
+      {
+        customer_id: 'user_77777',
+        session_id: 'session_006',
+        journey_type: 'first_time',
+        voice_commands: [
+          "What is cryptocurrency?",
+          "How do I buy my first crypto?",
+          "Which wallet should I use?",
+          "How do I keep my crypto safe?",
+          "What can I do with crypto?"
+        ],
+        issues_resolved: ['crypto_education', 'fiat_onramp', 'wallet_selection', 'security_basics', 'use_cases'],
+        total_session_time: 720,
+        satisfaction_rating: 5,
+        next_best_action: 'Start with small amounts and explore DeFi gradually'
+      },
+      {
+        customer_id: 'user_88888',
+        session_id: 'session_007',
+        journey_type: 'returning',
+        voice_commands: [
+          "Check my portfolio performance",
+          "Show me recent transactions",
+          "What are the current gas fees?",
+          "Any new DeFi opportunities?"
+        ],
+        issues_resolved: ['portfolio_analysis', 'transaction_history', 'fee_optimization', 'opportunity_scanning'],
+        total_session_time: 180,
+        satisfaction_rating: 4,
+        next_best_action: 'Consider staking rewards for passive income'
       }
     ];
 
@@ -1583,6 +1806,26 @@ export default function LiveDemo() {
 
         {showSupportDashboard && (
           <div className="space-y-6">
+            {/* Dashboard Summary */}
+            <div className="grid md:grid-cols-4 gap-4 mb-6">
+              <Card className="p-4 text-center">
+                <div className="text-2xl font-bold text-blue-600">{supportScenarios.length}</div>
+                <div className="text-sm text-gray-600">Support Scenarios</div>
+              </Card>
+              <Card className="p-4 text-center">
+                <div className="text-2xl font-bold text-green-600">{voiceCommandExamples.length}</div>
+                <div className="text-sm text-gray-600">Voice Commands</div>
+              </Card>
+              <Card className="p-4 text-center">
+                <div className="text-2xl font-bold text-purple-600">{agentPerformance.length}</div>
+                <div className="text-sm text-gray-600">AI Agents</div>
+              </Card>
+              <Card className="p-4 text-center">
+                <div className="text-2xl font-bold text-orange-600">{customerJourneys.length}</div>
+                <div className="text-sm text-gray-600">Customer Journeys</div>
+              </Card>
+            </div>
+
             {/* Support Scenarios */}
             <div>
               <h4 className="text-lg font-medium mb-4">Recent Support Scenarios</h4>
