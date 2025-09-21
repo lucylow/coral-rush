@@ -94,7 +94,7 @@ export class CoralClient {
 
   private async mockListenerAgent(toolName: string, params: any): Promise<any> {
     switch (toolName) {
-      case 'transcribe_speech':
+      case 'transcribe_speech': {
         // Enhanced transcription with realistic scenarios
         const mockTranscriptions = [
           "My NFT mint transaction failed and I lost 0.5 ETH. Can you help me get my money back?",
@@ -119,8 +119,9 @@ export class CoralClient {
           timestamp: new Date().toISOString(),
           operation: "speech_to_text"
         };
+      }
       
-      case 'generate_speech':
+      case 'generate_speech': {
         return {
           success: true,
           audio_data: "mock_audio_base64_data",
@@ -132,8 +133,9 @@ export class CoralClient {
           timestamp: new Date().toISOString(),
           operation: "text_to_speech"
         };
+      }
       
-      case 'get_available_voices':
+      case 'get_available_voices': {
         return {
           success: true,
           voices: [
@@ -149,6 +151,7 @@ export class CoralClient {
           timestamp: new Date().toISOString(),
           operation: "get_voices"
         };
+      }
       
       default:
         throw new Error(`Unknown listener agent tool: ${toolName}`);
@@ -157,7 +160,7 @@ export class CoralClient {
 
   private async mockBrainAgent(toolName: string, params: any): Promise<any> {
     switch (toolName) {
-      case 'analyze_support_query':
+      case 'analyze_support_query': {
         const userQuery = params.user_query || "";
         const lowerQuery = userQuery.toLowerCase();
         
@@ -287,8 +290,9 @@ export class CoralClient {
           operation: "analyze_support_query",
           session_id: params.session_id
         };
+      }
       
-      case 'generate_educational_response':
+      case 'generate_educational_response': {
         return {
           success: true,
           educational_content: {
@@ -314,6 +318,7 @@ export class CoralClient {
           timestamp: new Date().toISOString(),
           operation: "generate_educational_response"
         };
+      }
       
       default:
         throw new Error(`Unknown brain agent tool: ${toolName}`);
@@ -322,7 +327,7 @@ export class CoralClient {
 
   private async mockExecutorAgent(toolName: string, params: any): Promise<any> {
     switch (toolName) {
-      case 'check_transaction_status':
+      case 'check_transaction_status': {
         const txHash = params.transaction_hash || "mock_tx_hash_" + Math.random().toString(36).substr(2, 8);
         const statuses = ["pending", "confirmed", "failed"];
         const status = statuses[Math.floor(Math.random() * statuses.length)];
@@ -343,16 +348,17 @@ export class CoralClient {
           timestamp: new Date().toISOString(),
           operation: "check_transaction_status"
         };
+      }
       
-      case 'mint_compensation_nft':
+      case 'mint_compensation_nft': {
         const nftId = `nft_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`;
-        const txHash = `tx_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`;
+        const nftTxHash = `tx_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`;
         
         return {
           success: true,
           nft_result: {
             nft_id: nftId,
-            transaction_hash: txHash,
+            transaction_hash: nftTxHash,
             status: "completed",
             metadata: {
               name: "RUSH Support Resolution NFT",
@@ -386,8 +392,9 @@ export class CoralClient {
           timestamp: new Date().toISOString(),
           operation: "mint_compensation_nft"
         };
+      }
       
-      case 'get_wallet_info':
+      case 'get_wallet_info': {
         const walletAddress = params.wallet_address || "mock_wallet_" + Math.random().toString(36).substr(2, 8);
         
         return {
@@ -419,6 +426,7 @@ export class CoralClient {
           timestamp: new Date().toISOString(),
           operation: "get_wallet_info"
         };
+      }
       
       default:
         throw new Error(`Unknown executor agent tool: ${toolName}`);
