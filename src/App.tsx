@@ -21,6 +21,7 @@ import WalletBalance from './pages/WalletBalance';
 
 // Coral Protocol Components
 import CoralHackathonDemo from './components/CoralHackathonDemo';
+import AethirDashboard from './components/coral/AethirDashboard';
 import RealCoralOrchestrator from './components/coral/RealCoralOrchestrator';
 import AgentRegistry from './components/coral/AgentRegistry';
 

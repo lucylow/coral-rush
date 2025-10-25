@@ -8,6 +8,9 @@ import {
 } from "@modelcontextprotocol/sdk/types.js";
 import { Mistral } from '@mistralai/mistralai';
 
+// Import Aethir GPU integration
+import { aethirAnalyzeIntent, getAethirStats } from '../services/aethirService.js';
+
 interface AnalysisContext {
   user_wallet?: string;
   recent_transactions?: string[];
@@ -205,6 +208,67 @@ class BrainAgent {
         this.contextMemory.set(args.session_id, args.context);
       }
 
+      // Try Aethir GPU-accelerated intent analysis first
+      try {
+        console.log("🚀 Using Aethir GPU for intent analysis...");
+        
+        const aethirResult = await aethirAnalyzeIntent(args.user_query, args.context);
+        
+        if (!aethirResult.error) {
+          // Use Aethir GPU results
+          const enhancedResult = {
+            intent: aethirResult.intent,
+            confidence: aethirResult.confidence,
+            entities: aethirResult.entities,
+            action: {
+              type: aethirResult.intent,
+              priority: aethirResult.confidence > 0.9 ? 1 : 2,
+              parameters: aethirResult.entities,
+              requires_user_confirmation: aethirResult.confidence < 0.8
+            },
+            response_text: aethirResult.responseSuggestion || `I understand you want to ${aethirResult.intent.replace('_', ' ')}. Let me help you with that.`,
+            follow_up_questions: [],
+            educational_content: {
+              title: `About ${aethirResult.intent.replace('_', ' ')}`,
+              summary: "GPU-accelerated analysis complete",
+              helpful_links: []
+            },
+            gpu_processing: {
+              aethir_node: aethirResult.processingNode,
+              model: aethirResult.model,
+              gpu_accelerated: aethirResult.gpuAccelerated
+            }
+          };
+
+          console.log(`✅ Aethir GPU analysis completed: ${aethirResult.intent} (${aethirResult.confidence})`);
+
+          return {
+            content: [
+              {
+                type: "text",
+                text: JSON.stringify({
+                  success: true,
+                  analysis: enhancedResult,
+                  agent_type: "brain",
+                  timestamp: new Date().toISOString(),
+                  operation: "analyze_support_query",
+                  session_id: args.session_id,
+                  aethir_gpu_used: true,
+                  processing_node: aethirResult.processingNode
+                }, null, 2)
+              }
+            ]
+          };
+        } else {
+          console.warn(`⚠️ Aethir GPU analysis failed: ${aethirResult.error}, falling back to Mistral AI`);
+        }
+      } catch (gpu_error: any) {
+        console.warn(`⚠️ Aethir GPU unavailable: ${gpu_error.message}, using Mistral AI`);
+      }
+
+      // Fallback to Mistral AI
+      console.log("🔧 Using local Mistral AI analysis...");
+
       const systemPrompt = this.buildSystemPrompt(args.context);
       const analysisPrompt = this.buildAnalysisPrompt(args.user_query, args.context);
 
@@ -234,6 +298,13 @@ class BrainAgent {
         args.context
       );
 
+      // Mark as fallback processing
+      (enhancedResult as any).gpu_processing = {
+        aethir_gpu_used: false,
+        fallback_mode: true,
+        local_processing: true
+      };
+
       return {
         content: [
           {
@@ -244,12 +315,14 @@ class BrainAgent {
               agent_type: "brain",
               timestamp: new Date().toISOString(),
               operation: "analyze_support_query",
-              session_id: args.session_id
+              session_id: args.session_id,
+              aethir_gpu_used: false,
+              fallback_mode: true
             }, null, 2)
           }
         ]
       };
-    } catch (error) {
+    } catch (error: any) {
       return {
         content: [
           {

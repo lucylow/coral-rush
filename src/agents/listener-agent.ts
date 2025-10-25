@@ -9,6 +9,9 @@ import {
 import axios from 'axios';
 import FormData from 'form-data';
 
+// Import Aethir GPU integration
+import { aethirTranscribeSpeech, aethirGenerateSpeech } from '../services/aethirService.js';
+
 interface VoiceSettings {
   stability: number;
   similarity_boost: number;
@@ -184,6 +187,45 @@ class ListenerAgent {
     language?: string;
   }) {
     try {
+      // Try Aethir GPU-accelerated speech recognition first
+      try {
+        console.log("🚀 Using Aethir GPU for speech transcription...");
+        
+        const aethirResult = await aethirTranscribeSpeech(args.audio_data, args.language || 'en');
+        
+        if (!aethirResult.error) {
+          console.log(`✅ Aethir GPU transcription completed: "${aethirResult.transcript}"`);
+          
+          return {
+            content: [
+              {
+                type: "text",
+                text: JSON.stringify({
+                  success: true,
+                  transcript: aethirResult.transcript,
+                  confidence: aethirResult.confidence,
+                  language: aethirResult.language,
+                  processing_time: aethirResult.processingTimeMs,
+                  agent_type: "listener",
+                  timestamp: new Date().toISOString(),
+                  operation: "speech_to_text",
+                  aethir_gpu_used: true,
+                  processing_node: aethirResult.processingNode,
+                  model: aethirResult.model
+                }, null, 2)
+              }
+            ]
+          };
+        } else {
+          console.warn(`⚠️ Aethir GPU transcription failed: ${aethirResult.error}, falling back to ElevenLabs`);
+        }
+      } catch (gpu_error: any) {
+        console.warn(`⚠️ Aethir GPU unavailable: ${gpu_error.message}, using ElevenLabs`);
+      }
+
+      // Fallback to ElevenLabs API
+      console.log("🔧 Using ElevenLabs API for transcription...");
+
       // Decode base64 audio data
       const audioBuffer = Buffer.from(args.audio_data, 'base64');
       
@@ -225,12 +267,15 @@ class ListenerAgent {
               processing_time: response.data.processing_time || null,
               agent_type: "listener",
               timestamp: new Date().toISOString(),
-              operation: "speech_to_text"
+              operation: "speech_to_text",
+              aethir_gpu_used: false,
+              fallback_mode: true,
+              api_provider: "elevenlabs"
             }, null, 2)
           }
         ]
       };
-    } catch (error) {
+    } catch (error: any) {
       return {
         content: [
           {
@@ -249,6 +294,47 @@ class ListenerAgent {
   }
 
   private async handleGenerateSpeech(args: SpeechGenerationOptions) {
+    try {
+      // Try Aethir GPU-accelerated text-to-speech first
+      try {
+        console.log("🚀 Using Aethir GPU for speech generation...");
+        
+        const aethirResult = await aethirGenerateSpeech(args.text, args.voice_id || 'default');
+        
+        if (!aethirResult.error) {
+          console.log(`✅ Aethir GPU speech generation completed`);
+          
+          return {
+            content: [
+              {
+                type: "text",
+                text: JSON.stringify({
+                  success: true,
+                  audio_data: aethirResult.audioData,
+                  format: aethirResult.format,
+                  sample_rate: aethirResult.sampleRate,
+                  duration_ms: aethirResult.durationMs,
+                  voice_id: aethirResult.voiceId,
+                  quality: aethirResult.quality,
+                  agent_type: "listener",
+                  timestamp: new Date().toISOString(),
+                  operation: "text_to_speech",
+                  aethir_gpu_used: true,
+                  processing_node: aethirResult.processingNode,
+                  model: aethirResult.model
+                }, null, 2)
+              }
+            ]
+          };
+        } else {
+          console.warn(`⚠️ Aethir GPU speech generation failed: ${aethirResult.error}, falling back to ElevenLabs`);
+        }
+      } catch (gpu_error: any) {
+        console.warn(`⚠️ Aethir GPU unavailable: ${gpu_error.message}, using ElevenLabs`);
+      }
+
+      // Fallback to ElevenLabs API
+      console.log("🔧 Using ElevenLabs API for speech generation...");
     try {
       const requestBody = {
         text: args.text,

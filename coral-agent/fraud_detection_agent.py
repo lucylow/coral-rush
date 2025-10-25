@@ -19,6 +19,9 @@ from sklearn.preprocessing import StandardScaler
 import pickle
 import os
 
+# Import Aethir GPU integration
+from aethir_integration import aethir_service, aethir_detect_fraud
+
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -214,17 +217,73 @@ class CoralFraudDetectionAgent:
     
     async def detect_fraud(self, transaction: TransactionData) -> FraudAnalysis:
         """
-        Main fraud detection method
+        Main fraud detection method - Enhanced with Aethir GPU compute
         
-        Combines rule-based and ML-based approaches for comprehensive fraud detection
+        Uses Aethir's decentralized GPU network for ML inference while maintaining
+        local rule-based analysis for redundancy and speed
         """
         start_time = datetime.now()
         
         try:
+            # Try Aethir GPU-accelerated fraud detection first
+            try:
+                logger.info("🚀 Using Aethir GPU for fraud detection...")
+                aethir_result = await aethir_detect_fraud(asdict(transaction))
+                
+                if not aethir_result.get('error'):
+                    # Use Aethir GPU results as primary
+                    gpu_score = aethir_result.get('fraud_score', 5.0)
+                    gpu_risk_level = aethir_result.get('risk_level', 'medium')
+                    gpu_risk_factors = aethir_result.get('risk_factors', [])
+                    gpu_confidence = aethir_result.get('confidence', 0.95)
+                    
+                    # Add local rule-based analysis for validation
+                    rule_score, rule_factors = await self.rule_based_analysis(transaction)
+                    
+                    # Combine GPU and local results (GPU weighted higher)
+                    combined_score = (gpu_score * 0.8) + (rule_score * 0.2)
+                    all_risk_factors = gpu_risk_factors + rule_factors
+                    
+                    processing_time = int((datetime.now() - start_time).total_seconds() * 1000)
+                    
+                    detailed_analysis = {
+                        "aethir_gpu_score": gpu_score,
+                        "aethir_gpu_factors": gpu_risk_factors,
+                        "aethir_processing_node": aethir_result.get('processing_node'),
+                        "local_rule_score": rule_score,
+                        "local_rule_factors": rule_factors,
+                        "combined_score": combined_score,
+                        "gpu_accelerated": True,
+                        "model_type": aethir_result.get('model_type', 'aethir_gpu_enhanced')
+                    }
+                    
+                    result = FraudAnalysis(
+                        fraud_score=combined_score,
+                        risk_level=gpu_risk_level,
+                        risk_factors=all_risk_factors,
+                        recommendation=self.generate_recommendation(combined_score, gpu_risk_level),
+                        confidence=gpu_confidence,
+                        processing_time_ms=processing_time,
+                        model_version=f"{self.model_version}_aethir_enhanced",
+                        timestamp=datetime.now().isoformat(),
+                        detailed_analysis=detailed_analysis
+                    )
+                    
+                    logger.info(f"✅ Aethir GPU fraud analysis completed: Score={combined_score:.2f}, Risk={gpu_risk_level}")
+                    return result
+                else:
+                    logger.warning(f"⚠️ Aethir GPU analysis failed: {aethir_result.get('error')}, falling back to local analysis")
+                    
+            except Exception as gpu_error:
+                logger.warning(f"⚠️ Aethir GPU unavailable: {gpu_error}, using local analysis")
+            
+            # Fallback to original local analysis
+            logger.info("🔧 Using local fraud detection analysis...")
+            
             # Rule-based analysis
             rule_score, rule_factors = await self.rule_based_analysis(transaction)
             
-            # ML-based analysis
+            # Local ML-based analysis
             ml_score, ml_confidence = await self.ml_based_analysis(transaction)
             
             # Combine scores with weighted approach
@@ -246,7 +305,9 @@ class CoralFraudDetectionAgent:
                 "rule_factors": rule_factors,
                 "ml_confidence": ml_confidence,
                 "combined_score": combined_score,
-                "risk_level": risk_level
+                "risk_level": risk_level,
+                "gpu_accelerated": False,
+                "fallback_mode": True
             }
             
             result = FraudAnalysis(
@@ -261,12 +322,11 @@ class CoralFraudDetectionAgent:
                 detailed_analysis=detailed_analysis
             )
             
-            logger.info(f"Fraud analysis completed: Score={combined_score:.2f}, Risk={risk_level}, Recommendation={recommendation}")
-            
+            logger.info(f"📊 Local fraud analysis completed: Score={combined_score:.2f}, Risk={risk_level}")
             return result
             
         except Exception as e:
-            logger.error(f"Fraud detection failed: {e}")
+            logger.error(f"❌ All fraud detection methods failed: {e}")
             # Return safe default
             return FraudAnalysis(
                 fraud_score=5.0,  # Medium risk as default

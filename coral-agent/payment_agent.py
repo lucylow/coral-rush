@@ -19,6 +19,9 @@ from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
 from mcp.types import Tool, TextContent, ImageContent, EmbeddedResource
 
+# Import Aethir GPU integration
+from aethir_integration import aethir_service, aethir_detect_fraud, aethir_predict_transactions
+
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -160,10 +163,10 @@ class CoralPaymentAgent:
             
             logger.info(f"Processing payment request: {request.amount} {request.currency_from} -> {request.currency_to}")
             
-            # Step 1: Fraud Detection
-            fraud_score = await self._detect_fraud(request)
+            # Step 1: Enhanced Fraud Detection with Aethir GPU
+            fraud_score, fraud_details = await self._detect_fraud_enhanced(request)
             if fraud_score > 7.0:
-                raise Exception(f"Transaction rejected - High fraud risk: {fraud_score}/10")
+                raise Exception(f"Transaction rejected - High fraud risk: {fraud_score}/10 (Aethir GPU Analysis)")
             
             # Step 2: Currency Conversion
             conversion_rate = await self._get_conversion_rate(request.currency_from, request.currency_to)
@@ -197,6 +200,10 @@ class CoralPaymentAgent:
                 blockchain_tx_hash=blockchain_tx_hash
             )
             
+            # Add Aethir processing details to result
+            if fraud_details:
+                result.aethir_details = fraud_details
+            
             # Update session
             self.active_sessions[session_id]["result"] = asdict(result)
             self.active_sessions[session_id]["status"] = "completed"
@@ -227,8 +234,42 @@ class CoralPaymentAgent:
             
             return result
     
-    async def _detect_fraud(self, request: PaymentRequest) -> float:
-        """AI-powered fraud detection with advanced risk assessment"""
+    async def _detect_fraud_enhanced(self, request: PaymentRequest) -> tuple[float, Dict[str, Any]]:
+        """AI-powered fraud detection enhanced with Aethir GPU compute"""
+        # Try Aethir GPU-accelerated fraud detection first
+        try:
+            logger.info("🚀 Using Aethir GPU for payment fraud detection...")
+            transaction_data = {
+                "amount": request.amount,
+                "currency_from": request.currency_from,
+                "currency_to": request.currency_to,
+                "recipient": request.recipient,
+                "purpose": request.purpose,
+                "user_id": request.user_id,
+                "session_id": request.session_id
+            }
+            
+            aethir_result = await aethir_detect_fraud(transaction_data)
+            
+            if not aethir_result.get('error'):
+                gpu_score = aethir_result.get('fraud_score', 5.0)
+                gpu_details = {
+                    "aethir_gpu_used": True,
+                    "processing_node": aethir_result.get('processing_node'),
+                    "model_type": aethir_result.get('model_type'),
+                    "risk_factors": aethir_result.get('risk_factors', []),
+                    "confidence": aethir_result.get('confidence', 0.95)
+                }
+                
+                logger.info(f"✅ Aethir GPU fraud score: {gpu_score:.2f}")
+                return gpu_score, gpu_details
+            else:
+                logger.warning(f"⚠️ Aethir GPU analysis failed: {aethir_result.get('error')}")
+        except Exception as gpu_error:
+            logger.warning(f"⚠️ Aethir GPU unavailable: {gpu_error}")
+        
+        # Fallback to local analysis
+        logger.info("🔧 Using local fraud detection...")
         await asyncio.sleep(0.1)  # Simulate processing time
         
         fraud_score = 0.0
@@ -288,7 +329,16 @@ class CoralPaymentAgent:
         logger.info(f"Risk factors: {risk_factors}")
         logger.info(f"Final fraud score: {fraud_score:.2f}")
         
-        return min(max(fraud_score, 0.0), 10.0)
+        final_score = min(max(fraud_score, 0.0), 10.0)
+        local_details = {
+            "aethir_gpu_used": False,
+            "fallback_mode": True,
+            "risk_factors": risk_factors,
+            "local_analysis": True
+        }
+        
+        logger.info(f"📊 Local fraud score: {final_score:.2f}")
+        return final_score, local_details
     
     async def _get_conversion_rate(self, from_currency: str, to_currency: str) -> float:
         """Get real-time conversion rate from external API"""
