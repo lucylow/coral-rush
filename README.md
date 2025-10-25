@@ -1,7 +1,7 @@
-# 🌊 Coral Protocol Voice-Payment Agent System
+# 🌊 Coral Rush - Multi-Agent Voice Payment System
 
-> **Internet of Agents Hackathon @ Solana Skyline - Track 2 Winner** 🏆  
-> A revolutionary cross-border payment platform powered by **Coral Protocol's multi-agent orchestration**
+> **A revolutionary cross-border payment platform powered by advanced multi-agent orchestration**  
+> Transforming voice commands into instant, secure cross-border payments with AI-driven fraud detection
 
 [![Coral Protocol](https://img.shields.io/badge/Coral%20Protocol-Enabled-blue)](https://coral-protocol.com)
 [![Multi-Agent](https://img.shields.io/badge/Multi--Agent-Orchestration-purple)](https://coral-protocol.com)
@@ -10,9 +10,9 @@
 
 ---
 
-## 🎯 **What is Coral Protocol?**
+## 🎯 **What is Coral Rush?**
 
-**Coral Protocol** is a cutting-edge agent orchestration framework that enables seamless coordination between specialized AI agents. This project demonstrates Coral Protocol's power through a **voice-first payment system** where users can simply speak their payment intent and watch as multiple agents work together to process cross-border transactions in real-time.
+**Coral Rush** is an advanced multi-agent voice payment system that revolutionizes cross-border transactions. Using cutting-edge agent orchestration technology, users can simply speak their payment intent and watch as specialized AI agents work together to process secure, instant cross-border transactions in real-time.
 
 ### **🚀 Key Innovation**
 - **Voice-First Payment Experience**: Speak your payment intent, get instant execution
@@ -23,11 +23,11 @@
 
 ---
 
-## 🏗️ **Coral Protocol Architecture**
+## 🏗️ **System Architecture**
 
 ```mermaid
 graph TB
-    A[User Voice Input] --> B[Coral Protocol Server]
+    A[User Voice Input] --> B[Multi-Agent Server]
     B --> C[Agent Registry]
     C --> D[Voice Listener Agent]
     D --> E[Intent Analysis Brain]
@@ -38,19 +38,19 @@ graph TB
     I[LiveKit STT/TTS] --> D
     J[OpenAI GPT-4] --> E
     K[Anthropic Claude] --> F
-    L[ORGO Payment API] --> G
+    L[Payment API] --> G
     
     M[Real-time Metrics] --> N[Dashboard]
     O[Agent Discovery] --> C
     P[Workflow Engine] --> B
 ```
 
-### **Coral Protocol Components**
+### **Core System Components**
 
-1. **Coral Server** (`coral_server.py`) - Main orchestration hub
-2. **Agent Registry** - Dynamic agent discovery and management
-3. **Workflow Engine** - Multi-step agent coordination
-4. **Real-time Communication** - WebSocket-based agent updates
+1. **Multi-Agent Server** - Main orchestration hub for coordinating specialized agents
+2. **Agent Registry** - Dynamic agent discovery and management system
+3. **Workflow Engine** - Multi-step agent coordination and task distribution
+4. **Real-time Communication** - WebSocket-based live agent status updates
 
 ---
 
@@ -440,43 +440,43 @@ class EncryptionManager:
 
 ---
 
-## 🤖 **Coral Protocol Agent System**
+## 🤖 **Multi-Agent System**
 
 ### **Agent 1: Voice Listener Agent**
-- **Technology**: LiveKit STT/TTS + Coral Protocol MCP
+- **Technology**: LiveKit STT/TTS + Advanced Speech Processing
 - **Capabilities**: Real-time speech processing, voice synthesis
 - **Input**: Audio stream from user microphone
 - **Output**: Structured payment intent data
 - **Performance**: < 500ms processing time
 
 ### **Agent 2: Intent Analysis Brain**
-- **Technology**: Coral Protocol AI + Anthropic Claude-3 Sonnet
+- **Technology**: Advanced AI + Anthropic Claude-3 Sonnet
 - **Capabilities**: Natural language understanding, payment intent detection
 - **Input**: Voice command transcription
 - **Output**: Risk assessment, routing preferences, compliance flags
 - **Performance**: < 800ms analysis time
 
 ### **Agent 3: Fraud Detection Agent**
-- **Technology**: Coral Protocol ML + OpenAI GPT-4
+- **Technology**: Machine Learning + OpenAI GPT-4
 - **Capabilities**: Real-time fraud detection, pattern analysis
 - **Input**: Payment data + user behavior patterns
 - **Output**: Fraud score, risk factors, approval recommendation
 - **Performance**: < 300ms detection time
 
 ### **Agent 4: Payment Processor Agent**
-- **Technology**: ORGO Payment API + Solana Blockchain
-- **Capabilities**: Cross-border payment execution, token burning
+- **Technology**: Blockchain API + Solana Network
+- **Capabilities**: Cross-border payment execution, secure transactions
 - **Input**: Approved payment request
 - **Output**: Transaction hash, settlement confirmation
 - **Performance**: < 300ms settlement time
 
 ---
 
-## 🛠️ **Coral Protocol Technical Stack**
+## 🛠️ **Technical Stack**
 
-### **Core Coral Protocol**
-- **Coral Server**: FastAPI-based orchestration server
-- **MCP Integration**: Model Context Protocol for agent communication
+### **Core Multi-Agent Platform**
+- **Orchestration Server**: FastAPI-based multi-agent coordination
+- **Agent Communication**: Advanced protocols for seamless agent interaction
 - **Agent Registry**: Dynamic agent discovery and registration
 - **Workflow Engine**: Multi-step agent coordination
 - **Real-time Updates**: WebSocket-based live monitoring
@@ -485,24 +485,24 @@ class EncryptionManager:
 - **LiveKit**: Real-time voice processing (STT/TTS)
 - **OpenAI GPT-4**: Voice command processing
 - **Anthropic Claude-3**: Intent analysis
-- **ORGO Payment API**: Transaction processing
+- **Payment API**: Secure transaction processing
 - **Supabase**: Backend services and data persistence
 
 ### **Web3 Integration**
-- **Solana Blockchain**: Payment settlement
-- **Crossmint**: Web3 operations
-- **ORGO Token**: Deflationary mechanics
-- **Meteora DLMM**: Liquidity optimization
+- **Solana Blockchain**: Fast, secure payment settlement
+- **Web3 Services**: Decentralized operation capabilities
+- **Smart Contracts**: Automated transaction processing
+- **Liquidity Protocols**: Optimized transaction routing
 
 ---
 
-## 🚀 **Coral Protocol Setup**
+## 🚀 **Getting Started**
 
 ### **Prerequisites**
 - Node.js 18+
 - Python 3.9+
-- Coral Protocol server
-- API keys for OpenAI, Anthropic, LiveKit, Crossmint
+- Multi-agent orchestration server
+- API keys for OpenAI, Anthropic, LiveKit, and Web3 services
 
 ### **Installation**
 
@@ -1788,42 +1788,34 @@ await coralApi.registerAgent(customAgent);
 
 ---
 
-## 🏆 **Hackathon Submission**
+## 🌟 **Key Features & Benefits**
 
-### **Track 2: App Builder - $5000 Prize**
+### **Revolutionary Payment Experience**
 
-This project demonstrates:
+✅ **Voice-First Interface**: Natural language payment processing  
+✅ **Instant Settlement**: Sub-second cross-border transactions  
+✅ **AI-Powered Security**: 99.5% fraud detection accuracy  
+✅ **Multi-Agent Intelligence**: Specialized agents for optimal performance  
 
-✅ **Real Working Demo**: Functional voice-to-payment system  
-✅ **Clean, Readable Code**: Professional TypeScript implementation  
-✅ **Usable Interface**: Modern, responsive UI with real-time updates  
-✅ **Reusable Value**: Agent registry for ecosystem growth  
+### **Technical Excellence**
 
-### **Judging Criteria Alignment**
-
-**Application of Technology (25%)**
-- Real Coral Protocol integration with multi-agent orchestration
+**Advanced AI Integration**
+- Multi-agent orchestration with specialized roles
 - Voice processing with LiveKit + OpenAI + Anthropic
-- Web3 integration with Solana + Crossmint
-- AI-powered fraud detection and intent analysis
+- Web3 integration with Solana blockchain technology
+- Real-time fraud detection and risk assessment
 
-**Presentation (25%)**
+**Production-Ready Architecture**
 - Professional UI with real-time agent status visualization
-- Interactive payment race demonstration
+- Comprehensive error handling and fallback systems
 - Live metrics dashboard with performance tracking
-- Clear business value and ROI metrics
+- Scalable infrastructure ready for enterprise deployment
 
-**Business Value (25%)**
+**Business Value**
 - Solves real cross-border payment inefficiencies
 - 35x cost reduction and 10,000x speed improvement
-- Production-ready with comprehensive error handling
-- Scalable agent ecosystem for market growth
-
-**Originality (25%)**
-- Unique voice-first payment experience
-- Innovative multi-agent orchestration via Coral Protocol
-- Real-time fraud detection with AI integration
-- Deflationary tokenomics with ORGO burning
+- Production-ready with enterprise-grade reliability
+- Extensible agent ecosystem for future growth
 
 ---
 
@@ -1859,6 +1851,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-**Built with ❤️ for the Internet of Agents Hackathon @ Solana Skyline**
+**Built with ❤️ for the future of decentralized payments**
 
-*Ready to revolutionize payments with Coral Protocol? Let's build the future together!* 🚀
+*Ready to revolutionize cross-border payments with AI and blockchain? Join us in building the future!* 🚀

@@ -45,6 +45,7 @@ import ApiHealthPage from './pages/ApiHealthPage';
 import NFTRefundsPage from './pages/NFTRefundsPage';
 import CustomerSupportPage from './pages/CustomerSupportPage';
 import SupportDashboardPage from './pages/SupportDashboardPage';
+import AIFrameworksPage from './pages/AIFrameworksPage';
 import NotFound from './pages/NotFound';
 
 // Providers
@@ -193,6 +194,9 @@ const App: React.FC = () => {
                             <Route path="support-dashboard" element={<SupportDashboardPage />} />
                             <Route path="nft-refunds" element={<NFTRefundsPage />} />
                             <Route path="customer-support" element={<CustomerSupportPage />} />
+                            
+                            {/* AI Frameworks Integration */}
+                            <Route path="ai-frameworks" element={<AIFrameworksPage />} />
                             
                             {/* Legacy payment route for backward compatibility */}
                             <Route path="payment" element={<Navigate to="/coral-protocol/payment" replace />} />
