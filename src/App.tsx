@@ -174,6 +174,7 @@ const App: React.FC = () => {
                             
                             {/* Coral Protocol Routes */}
                             <Route path="coral-hackathon" element={<CoralHackathonDemo />} />
+                            <Route path="aethir-dashboard" element={<AethirDashboard />} />
                             <Route path="coral-orchestrator" element={<RealCoralOrchestrator />} />
                             <Route path="agent-registry" element={<AgentRegistry />} />
                             <Route path="coral-protocol/payment" element={<PaymentPage />} />
